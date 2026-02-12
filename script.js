@@ -1114,11 +1114,19 @@ function renderMiniCalendar() {
 // --- NOTES LOGIC ---
 function renderNotesList() {
     const list = document.getElementById('notes-list');
+    const container = document.querySelector('.notes-container');
+    if (container) container.style.display = 'grid'; // Base desktop style, overridden by CSS for mobile
     if (!list) return;
 
     list.innerHTML = '';
 
-    if (!notes || notes.length === 0) {
+    // Safety check for notes
+    if (!Array.isArray(notes)) {
+        console.warn('Notes is not an array, resetting...');
+        notes = [];
+    }
+
+    if (notes.length === 0) {
         list.innerHTML = `
             <div class="empty-state">
                 <i data-lucide="edit-3" style="width:24px; color:#A0AEC0; margin-bottom: 8px;"></i>
@@ -1132,18 +1140,31 @@ function renderNotesList() {
     }
 
     // Sort notes by date (newest first)
-    const sortedNotes = [...notes].sort((a, b) => b.date - a.date);
+    const sortedNotes = [...notes].sort((a, b) => {
+        const dateA = a.date instanceof Date ? a.date.getTime() : (Number(a.date) || 0);
+        const dateB = b.date instanceof Date ? b.date.getTime() : (Number(b.date) || 0);
+        return dateB - dateA;
+    });
 
     sortedNotes.forEach(note => {
         const item = document.createElement('div');
         item.className = `note-item ${currentNoteId === note.id ? 'active' : ''}`;
-        item.onclick = () => openNoteOnMobile(note.id);
 
-        const dateStr = note.date instanceof Date ? note.date.toLocaleDateString('uz-UZ', { day: 'numeric', month: 'short' }) : 'Noma\'lum';
+        // Use a more generic click handler for mobile compatibility
+        item.setAttribute('onclick', `openNoteOnMobile(${note.id})`);
+        item.style.cursor = 'pointer';
+
+        let dateDisplay = 'Noma\'lum';
+        try {
+            const d = note.date instanceof Date ? note.date : new Date(note.date);
+            if (!isNaN(d.getTime())) {
+                dateDisplay = d.toLocaleDateString('uz-UZ', { day: 'numeric', month: 'short' });
+            }
+        } catch (e) { }
 
         item.innerHTML = `
             <div class="note-item-title">${note.title || 'Sarlavhasiz qayd'}</div>
-            <div class="note-item-date">${dateStr}</div>
+            <div class="note-item-date">${dateDisplay}</div>
         `;
         list.appendChild(item);
     });
