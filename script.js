@@ -1768,12 +1768,13 @@ function renderAdminBroadcasts(broadcasts) {
     broadcasts.forEach(b => {
         const item = document.createElement('div');
         item.className = 'broadcast-admin-item';
+        item.style.padding = '12px';
         item.innerHTML = `
             <div class="bc-info">
                 <strong>${b.title}</strong>
-                <span>${b.time}</span>
+                <span style="font-size: 0.7rem;">${b.time}</span>
             </div>
-            <button class="bc-delete-btn" onclick="deleteBroadcast('${b.id}')" title="Barcha uchun o'chirish">
+            <button class="bc-delete-btn" onclick="deleteOneBroadcast('${b.id}', '${b.title}')" title="O'chirish">
                 <i data-lucide="trash-2" style="width:14px"></i>
             </button>
         `;
@@ -1782,19 +1783,16 @@ function renderAdminBroadcasts(broadcasts) {
     if (window.lucide) lucide.createIcons();
 }
 
-async function deleteBroadcast(id) {
-    showConfirmModal('Ushbu xabarni barcha foydalanuvchilardan butunlay o\'chirmoqchimisiz?', async () => {
+async function deleteOneBroadcast(id, title) {
+    showConfirmModal(`"${title}" xabarini barcha foydalanuvchi xabarnomalaridan o'chirmoqchimisiz?`, async () => {
         try {
-            // 1. Get broadcast info to know what to delete
             const bRef = window.firebaseRef(window.firebaseDB, 'broadcasts/' + id);
             const bSnap = await window.firebaseGet(bRef);
             if (!bSnap.exists()) return;
 
-            const broadcastData = bSnap.val();
             const updates = {};
-            updates['broadcasts/' + id] = null; // Remove from global records
+            updates['broadcasts/' + id] = null;
 
-            // 2. Loop through all users to remove this message instance
             const usersRef = window.firebaseRef(window.firebaseDB, 'users');
             const usersSnap = await window.firebaseGet(usersRef);
 
@@ -1802,7 +1800,6 @@ async function deleteBroadcast(id) {
                 const allUsers = usersSnap.val();
                 Object.keys(allUsers).forEach(login => {
                     const userMsgs = allUsers[login].messages || {};
-                    // Find messages with the same timestamp/title
                     Object.keys(userMsgs).forEach(msgKey => {
                         const msg = userMsgs[msgKey];
                         if (msg.broadcastId === id) {
@@ -1813,11 +1810,11 @@ async function deleteBroadcast(id) {
             }
 
             await window.firebaseUpdate(window.firebaseRef(window.firebaseDB), updates);
-            alert('Xabar barcha foydalanuvchilardan o\'chirildi! 🗑️');
+            alert('Xabar o\'chirildi! ✅');
         } catch (e) {
             console.error('Xabarni o\'chirishda xatolik:', e);
         }
-    });
+    }, 'Ha, O\'chirilsin');
 }
 
 async function deleteAllBroadcastMessages() {
