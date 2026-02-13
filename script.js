@@ -1552,31 +1552,19 @@ async function renderAdminPanel() {
             list.innerHTML = '';
 
             allUsers.forEach(user => {
-                const row = document.createElement('tr');
+                const card = document.createElement('div');
+                card.className = 'admin-user-card';
                 const initials = (user.name || '??').split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
                 const isOnline = !!onlineData[user.login];
 
-                row.innerHTML = `
-                    <td>
+                card.innerHTML = `
+                    <div class="user-card-header">
                         <div class="user-info-cell">
                             <div class="user-avatar-sm">${initials}</div>
                             <div class="user-name-clickable" onclick="showUserDetails('${user.login}')">
                                 ${user.name || 'Noma\'lum'}
                             </div>
                         </div>
-                    </td>
-                    <td>
-                        <div style="display:flex; flex-direction:column; gap:5px;">
-                            <span class="badge ${user.isAdmin ? 'badge-admin' : 'badge-user'}">
-                                ${user.isAdmin ? 'Admin' : 'Foydalanuvchi'}
-                            </span>
-                            <div class="status-badge-inline ${isOnline ? 'online' : ''}">
-                                <div class="dot"></div>
-                                <span>${isOnline ? 'Onlayn' : 'Offlayn'}</span>
-                            </div>
-                        </div>
-                    </td>
-                    <td>
                         <div class="admin-actions">
                             ${!user.isSuper ? `
                                 <button class="admin-action-btn ${user.isAdmin ? 'demote' : 'promote'}" 
@@ -1589,11 +1577,25 @@ async function renderAdminPanel() {
                                         title="O'chirish">
                                     <i data-lucide="user-x"></i>
                                 </button>
-                            ` : '<span style="color: var(--text-muted); font-size: 0.8rem;">Cheklov</span>'}
+                            ` : '<span style="color: var(--text-muted); font-size: 0.7rem;">Cheklov</span>'}
                         </div>
-                    </td>
+                    </div>
+                    <div class="user-card-body">
+                        <div class="card-status-info">
+                            <span class="badge ${user.isAdmin ? 'badge-admin' : 'badge-user'}">
+                                ${user.isAdmin ? 'Admin' : 'Foydalanuvchi'}
+                            </span>
+                            <div class="status-badge-inline ${isOnline ? 'online' : ''}">
+                                <div class="dot"></div>
+                                <span>${isOnline ? 'Onlayn' : 'Offlayn'}</span>
+                            </div>
+                        </div>
+                        <div class="card-login-info" style="font-size: 0.8rem; color: #a0aec0; margin-top: 8px;">
+                            ID: ${user.login}
+                        </div>
+                    </div>
                 `;
-                list.appendChild(row);
+                list.appendChild(card);
             });
 
             if (onlineUsersEle) onlineUsersEle.textContent = onlineCount;

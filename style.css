@@ -2889,3 +2889,53 @@ input:checked+.slider:before {
         padding: 10px;
     }
 }
+
+/* ADMIN USERS GRID STYLES */
+.admin-users-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    padding: 5px;
+}
+
+.admin-user-card {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 1.25rem;
+    border: 1px solid #edf2f7;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+.admin-user-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.05);
+    border-color: var(--primary-light);
+}
+
+.user-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1.25rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #f7fafc;
+}
+
+.user-card-body {
+    display: flex;
+    flex-direction: column;
+}
+
+.card-status-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Responsive Grid */
+@media (max-width: 900px) {
+    .admin-users-grid {
+        grid-template-columns: 1fr;
+    }
+}
