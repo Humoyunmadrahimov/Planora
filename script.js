@@ -1779,15 +1779,17 @@ function renderMessages() {
     const list = document.getElementById('messages-list');
     if (!list) return;
 
-    if (userMessages.length === 0) {
+    const unreadMessages = userMessages.filter(m => !m.read);
+
+    if (unreadMessages.length === 0) {
         list.innerHTML = `
             <div class="empty-state">
                 <i data-lucide="inbox" style="width:24px; color:#A0AEC0; margin-bottom: 8px;"></i>
-                <p>Xabarlar yo'q</p>
+                <p>Yangi xabarlar yo'q</p>
             </div>`;
     } else {
-        list.innerHTML = userMessages.map(m => `
-            <div class="dropdown-item ${m.read ? '' : 'unread'}" onclick="markMessageRead('${m.id}')">
+        list.innerHTML = unreadMessages.map(m => `
+            <div class="dropdown-item unread" onclick="markMessageRead('${m.id}')">
                 <div class="item-icon item-icon-dynamic" style="background: ${getBgColor(m.type)}; color: ${getTextColor(m.type)}">
                     <i data-lucide="${m.icon || 'mail'}"></i>
                 </div>
@@ -1832,8 +1834,14 @@ function markAllMessagesRead() {
             updates['users/' + currentUser.login + '/messages/' + m.id + '/read'] = true;
         }
     });
+
+    // Locally hide them for this session
+    userMessages = userMessages.map(m => ({ ...m, read: true }));
+    renderMessages();
+
     if (Object.keys(updates).length > 0) {
-        window.firebaseUpdate(window.firebaseRef(window.firebaseDB), updates);
+        const rootRef = window.firebaseRef(window.firebaseDB);
+        window.firebaseUpdate(rootRef, updates);
     }
 }
 
@@ -1922,6 +1930,10 @@ function clearNotifications() {
     notificationsDismissed = true;
     systemNotifications = [];
     renderNotifications();
+
+    // Force badge hide
+    const badge = document.getElementById('notif-badge');
+    if (badge) badge.style.display = 'none';
 }
 
 window.onclick = function (event) {

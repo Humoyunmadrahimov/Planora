@@ -103,8 +103,8 @@
                         <div id="messages-dropdown" class="action-dropdown">
                             <div class="dropdown-header">
                                 <span>Xabarlar</span>
-                                <span onclick="markAllMessagesRead()"
-                                    style="font-size: 0.8rem; color: var(--primary); cursor: pointer;">Hammasini
+                                <span onclick="markAllMessagesRead(); event.stopPropagation();"
+                                    style="font-size: 0.8rem; color: var(--primary); cursor: pointer; padding: 4px 8px; border-radius: 4px; background: rgba(59, 130, 246, 0.05);">Hammasini
                                     o'qish</span>
                             </div>
                             <div id="messages-list" class="dropdown-list">
@@ -121,8 +121,8 @@
                         <div id="notifications-dropdown" class="action-dropdown">
                             <div class="dropdown-header">
                                 <span>Bildirishnomalar</span>
-                                <span onclick="clearNotifications()"
-                                    style="font-size: 0.8rem; color: var(--primary); cursor: pointer;">Tozalash</span>
+                                <span onclick="clearNotifications(); event.stopPropagation();"
+                                    style="font-size: 0.8rem; color: var(--primary); cursor: pointer; padding: 4px 8px; border-radius: 4px; background: rgba(59, 130, 246, 0.05);">Tozalash</span>
                             </div>
                             <div id="notifications-list" class="dropdown-list">
                                 <!-- Notifications will be injected here -->
