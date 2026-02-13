@@ -2611,6 +2611,12 @@ input:checked+.slider:before {
         padding-top: 20px !important;
     }
 
+    .sidebar .logo {
+        margin-top: 50px !important;
+        margin-bottom: 20px !important;
+        padding-left: 20px !important;
+    }
+
     .sidebar.mobile-open {
         transform: translateX(0) !important;
         visibility: visible !important;

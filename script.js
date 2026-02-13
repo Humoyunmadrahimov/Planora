@@ -1833,9 +1833,11 @@ function markAllMessagesRead() {
         }
     });
     if (Object.keys(updates).length > 0) {
-        window.firebaseUpdate(window.ref(window.firebaseDB), updates);
+        window.firebaseUpdate(window.firebaseRef(window.firebaseDB), updates);
     }
 }
+
+let notificationsDismissed = false;
 
 function updateMsgBadge() {
     const badge = document.getElementById('msg-badge');
@@ -1851,6 +1853,10 @@ function updateMsgBadge() {
 }
 
 function generateNotifications() {
+    if (notificationsDismissed) {
+        systemNotifications = [];
+        return;
+    }
     systemNotifications = [];
 
     // Check Tasks
@@ -1913,10 +1919,9 @@ function renderNotifications() {
 }
 
 function clearNotifications() {
+    notificationsDismissed = true;
     systemNotifications = [];
     renderNotifications();
-    const badge = document.getElementById('notif-badge');
-    if (badge) badge.style.display = 'none';
 }
 
 window.onclick = function (event) {
