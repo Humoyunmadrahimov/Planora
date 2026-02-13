@@ -995,8 +995,22 @@ function renderFinance() {
 
 function toggleRestoreDropdown() {
     const dropdown = document.getElementById('restore-dropdown');
+    const msgDropdown = document.getElementById('messages-dropdown');
+    const notifDropdown = document.getElementById('notifications-dropdown');
+    const profileDropdown = document.getElementById('profile-menu');
+
+    if (msgDropdown) msgDropdown.style.display = 'none';
+    if (notifDropdown) notifDropdown.style.display = 'none';
+    if (profileDropdown) profileDropdown.style.display = 'none';
+
     if (!dropdown) return;
-    dropdown.classList.toggle('active');
+
+    if (dropdown.style.display === 'flex') {
+        dropdown.style.display = 'none';
+    } else {
+        dropdown.style.display = 'flex';
+        renderRestoreDropdown();
+    }
     event.stopPropagation();
 }
 
@@ -1022,7 +1036,7 @@ function renderRestoreDropdown() {
             item.innerHTML = `
                 <div class="restore-details">
                     <span class="restore-label">${record.label}</span>
-                    <span class="restore-meta">${record.data.length} ta amal вЂў ${time}</span>
+                    <span class="restore-meta">${record.data.length} ta amal · ${time}</span>
                 </div>
                 <button class="restore-btn-action" onclick="restoreFinanceTrash(${record.id})">
                     <i data-lucide="rotate-ccw" style="width:14px"></i> Tiklash
@@ -1104,7 +1118,7 @@ window.addEventListener('click', function (event) {
 
     const restoreDropdown = document.getElementById('restore-dropdown');
     if (restoreDropdown && !event.target.closest('.action-wrapper')) {
-        restoreDropdown.classList.remove('active');
+        restoreDropdown.style.display = 'none';
     }
 
     // Toggle dropdowns (like the one in Notes)
