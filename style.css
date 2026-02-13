@@ -800,6 +800,13 @@ input:checked+.slider:before {
     border-radius: var(--radius-md);
     box-shadow: var(--shadow-lg);
     animation: slideIn 0.3s ease;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-content .modal-body {
+    overflow-y: auto;
 }
 
 @keyframes slideIn {
@@ -2663,10 +2670,10 @@ input:checked+.slider:before {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px;
+    padding: 8px 12px;
     background: #f8fafc;
     border-radius: 8px;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
     border: 1px solid #edf2f7;
     transition: all 0.2s;
 }
@@ -2679,7 +2686,7 @@ input:checked+.slider:before {
 .broadcast-admin-item .bc-info {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 0px;
 }
 
 .broadcast-admin-item .bc-info strong {
