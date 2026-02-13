@@ -711,7 +711,7 @@ function deleteEvent(id) {
 
 
 // --- FINANCE LOGIC ---
-let currentFinanceView = 'daily'; // 'daily' or 'weekly'
+let currentFinanceView = 'monthly'; // 'daily', 'weekly' or 'monthly'
 let currentFinanceDate = new Date();
 
 function initFinance() {
@@ -728,8 +728,11 @@ function setFinanceView(view) {
 function changeFinanceDate(delta) {
     if (currentFinanceView === 'daily') {
         currentFinanceDate.setDate(currentFinanceDate.getDate() + delta);
-    } else {
+    } else if (currentFinanceView === 'weekly') {
         currentFinanceDate.setDate(currentFinanceDate.getDate() + (delta * 7));
+    } else {
+        // Monthly
+        currentFinanceDate.setMonth(currentFinanceDate.getMonth() + delta);
     }
     renderFinance();
 }
@@ -807,7 +810,7 @@ function renderFinance() {
         startTime = new Date(year, month, date, 0, 0, 0);
         endTime = new Date(year, month, date, 23, 59, 59);
         dateLabel.textContent = `${date} ${uzbekMonths[month]} ${year}`;
-    } else {
+    } else if (currentFinanceView === 'weekly') {
         const day = currentFinanceDate.getDay();
         const diff = currentFinanceDate.getDate() - day + (day === 0 ? -6 : 1);
         const startOfWeek = new Date(currentFinanceDate);
@@ -829,6 +832,11 @@ function renderFinance() {
         } else {
             dateLabel.textContent = `${startOfWeek.getDate()} ${startM} - ${endOfWeek.getDate()} ${endM} ${year}`;
         }
+    } else {
+        // Monthly
+        startTime = new Date(year, month, 1, 0, 0, 0);
+        endTime = new Date(year, month + 1, 0, 23, 59, 59);
+        dateLabel.textContent = `${uzbekMonths[month]} ${year}`;
     }
 
     const filtered = transactions.filter(t => {
