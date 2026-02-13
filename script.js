@@ -1749,38 +1749,83 @@ function closeMessageModal() {
     if (modal) modal.style.display = 'none';
 }
 
+let currentBroadcastPage = 1;
+const broadcastPageSize = 5;
+let allBroadcasts = [];
+
 function initializeBroadcastsListener() {
     if (!currentUser || currentUser.login !== 'admin' || !window.firebaseDB) return;
     const broadcastsRef = window.firebaseRef(window.firebaseDB, 'broadcasts');
     window.firebaseOnValue(broadcastsRef, (snapshot) => {
         const data = snapshot.val() || {};
-        const list = Object.keys(data).map(key => ({ id: key, ...data[key] }));
-        list.sort((a, b) => b.timestamp - a.timestamp);
-        renderAdminBroadcasts(list);
+        allBroadcasts = Object.keys(data).map(key => ({ id: key, ...data[key] }));
+        allBroadcasts.sort((a, b) => b.timestamp - a.timestamp);
+        renderAdminBroadcasts();
     });
 }
 
-function renderAdminBroadcasts(broadcasts) {
-    const container = document.getElementById('admin-broadcasts-list');
-    if (!container) return;
-    container.innerHTML = broadcasts.length === 0 ? '<p style="color:#888; font-size:0.8rem; text-align:center; padding:10px;">Hali xabarlar yuborilmagan.</p>' : '';
+function renderAdminBroadcasts() {
+    const container = document.getElementById('broadcast-history-list');
+    const pagination = document.getElementById('history-pagination');
+    if (!container || !pagination) return;
 
-    broadcasts.forEach(b => {
+    const start = (currentBroadcastPage - 1) * broadcastPageSize;
+    const end = start + broadcastPageSize;
+    const pageItems = allBroadcasts.slice(start, end);
+
+    container.innerHTML = pageItems.length === 0 ? '<p style="color:#888; font-size:0.8rem; text-align:center; padding:10px;">Hali xabarlar yuborilmagan.</p>' : '';
+
+    pageItems.forEach(b => {
         const item = document.createElement('div');
         item.className = 'broadcast-admin-item';
         item.style.padding = '12px';
         item.innerHTML = `
             <div class="bc-info">
-                <strong>${b.title}</strong>
-                <span style="font-size: 0.7rem;">${b.time}</span>
+                <strong style="font-size: 0.95rem;">${b.title}</strong>
+                <span style="font-size: 0.75rem; color: #a0aec0; margin-top: 4px;">${b.time} | Turi: ${b.type}</span>
             </div>
             <button class="bc-delete-btn" onclick="deleteOneBroadcast('${b.id}', '${b.title}')" title="O'chirish">
-                <i data-lucide="trash-2" style="width:14px"></i>
+                <i data-lucide="trash-2" style="width:16px"></i>
             </button>
         `;
         container.appendChild(item);
     });
+
+    // Render Pagination
+    const totalPages = Math.ceil(allBroadcasts.length / broadcastPageSize);
+    pagination.innerHTML = '';
+
+    if (totalPages > 1) {
+        for (let i = 1; i <= totalPages; i++) {
+            const btn = document.createElement('button');
+            btn.textContent = i;
+            btn.style.cssText = `
+                padding: 5px 10px;
+                border: 1px solid ${i === currentBroadcastPage ? 'var(--primary)' : '#ddd'};
+                background: ${i === currentBroadcastPage ? 'var(--primary)' : 'white'};
+                color: ${i === currentBroadcastPage ? 'white' : '#555'};
+                border-radius: 4px;
+                cursor: pointer;
+            `;
+            btn.onclick = () => {
+                currentBroadcastPage = i;
+                renderAdminBroadcasts();
+            };
+            pagination.appendChild(btn);
+        }
+    }
+
     if (window.lucide) lucide.createIcons();
+}
+
+function openBroadcastHistoryModal() {
+    currentBroadcastPage = 1;
+    renderAdminBroadcasts();
+    document.getElementById('broadcast-history-modal').style.display = 'flex';
+}
+
+function closeBroadcastHistoryModal() {
+    document.getElementById('broadcast-history-modal').style.display = 'none';
 }
 
 async function deleteOneBroadcast(id, title) {

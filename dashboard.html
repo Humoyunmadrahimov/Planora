@@ -537,9 +537,15 @@
                 <div class="admin-card">
                     <div class="admin-header-flex">
                         <h2>Foydalanuvchilar Boshqaruvi</h2>
-                        <button class="primary-btn" onclick="openMessageModal()" style="margin: 0 20px;">
-                            <i data-lucide="send"></i> Xabar Yuborish
-                        </button>
+                        <div style="display: flex; gap: 10px; margin: 0 20px;">
+                            <button class="primary-btn" onclick="openMessageModal()">
+                                <i data-lucide="send"></i> Xabar Yuborish
+                            </button>
+                            <button class="secondary-btn" onclick="openBroadcastHistoryModal()"
+                                style="border: 1px solid var(--primary); color: var(--primary);">
+                                <i data-lucide="history"></i> Tarix
+                            </button>
+                        </div>
                         <div class="stats-group">
                             <div class="stat-badge">
                                 <span style="color: var(--text-muted); font-size: 0.9rem;">Jami:</span>
@@ -578,86 +584,100 @@
                                 </select>
 
                                 <button onclick="sendGlobalMessage()" class="modal-submit-btn">Yuborish 🚀</button>
-
-                                <div class="admin-broadcasts-section"
-                                    style="margin-top: 15px; border-top: 1px solid #eee; padding-top: 15px;">
-                                    <div
-                                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                                        <h4 style="font-size: 0.9rem; color: #4A5568; margin: 0;">Yuborilgan xabarlar
-                                        </h4>
-                                        <button onclick="deleteAllBroadcastMessages()"
-                                            style="font-size: 0.75rem; color: #E53E3E; background: #FFF5F5; border: 1px solid #FED7D7; padding: 4px 8px; border-radius: 4px; cursor: pointer;">
-                                            Barchasini tozalash 🧹
-                                        </button>
-                                    </div>
-                                    <div id="admin-broadcasts-list" class="admin-broadcasts-list"
-                                        style="max-height: 200px; overflow-y: auto; padding-right: 5px;">
-                                        <!-- Global broadcasts list -->
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- User Details Modal -->
-                    <div id="user-details-modal" class="modal-overlay" style="display: none;">
-                        <div class="modal-content profile-detail-modal">
+                    <!-- Broadcast History Modal -->
+                    <div id="broadcast-history-modal" class="modal-overlay" style="display: none;">
+                        <div class="modal-content" style="max-width: 600px;">
                             <div class="modal-header">
-                                <h3 id="det-name">Foydalanuvchi Profili</h3>
-                                <button class="close-btn" onclick="closeUserDetailsModal()"><i
+                                <h3>Yuborilgan Xabarlar Tarixi</h3>
+                                <button class="close-btn" onclick="closeBroadcastHistoryModal()"><i
                                         data-lucide="x"></i></button>
                             </div>
                             <div class="modal-body">
-                                <div class="profile-header-main">
-                                    <div class="det-avatar" id="det-avatar">??</div>
-                                    <div class="det-main-info">
-                                        <h2 id="det-full-name">Noma'lum</h2>
-                                        <p id="det-status-badge" class="badge">Foydalanuvchi</p>
-                                    </div>
+                                <div style="display: flex; justify-content: flex-end; margin-bottom: 15px;">
+                                    <button onclick="deleteAllBroadcastMessages()"
+                                        style="font-size: 0.8rem; color: #E53E3E; background: #FFF5F5; border: 1px solid #FED7D7; padding: 6px 12px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 5px;">
+                                        <i data-lucide="trash-2" style="width: 14px;"></i> Barchasini o'chirish
+                                    </button>
                                 </div>
 
-                                <div class="profile-info-grid">
-                                    <div class="info-group">
-                                        <label>Login</label>
-                                        <div class="info-value" id="det-login">-</div>
-                                    </div>
-                                    <div class="info-group">
-                                        <label>Parol</label>
-                                        <div class="info-value password-field" onclick="togglePasswordVisibility(this)">
-                                            <span class="pass-stars">••••••••</span>
-                                            <span class="pass-text" style="display: none;" id="det-pass">-</span>
-                                            <i data-lucide="eye" class="eye-icon"></i>
-                                        </div>
-                                    </div>
-                                    <div class="info-group">
-                                        <label>Gmail</label>
-                                        <div class="info-value" id="det-email">-</div>
-                                    </div>
-                                    <div class="info-group">
-                                        <label>Telefon</label>
-                                        <div class="info-value" id="det-phone">-</div>
-                                    </div>
-                                    <div class="info-group" style="grid-column: span 2;">
-                                        <label>Lokatsiya</label>
-                                        <div class="info-value" id="det-location">-</div>
-                                    </div>
-                                    <div class="info-group" style="grid-column: span 2;">
-                                        <label>Oxirgi faollik</label>
-                                        <div class="info-value" id="det-last-seen">-</div>
-                                    </div>
+                                <div id="broadcast-history-list" class="admin-broadcasts-list"
+                                    style="min-height: 300px;">
+                                    <!-- History items -->
+                                </div>
+
+                                <div class="pagination-container" id="history-pagination"
+                                    style="display: flex; justify-content: center; gap: 10px; margin-top: 20px; padding-top: 15px; border-top: 1px solid #eee;">
+                                    <!-- Pagination buttons -->
                                 </div>
                             </div>
-                        </div>
-                    </div>
-
-                    <div class="admin-users-grid-container">
-                        <div id="admin-users-list" class="admin-users-grid">
-                            <!-- User cards will be injected here -->
                         </div>
                     </div>
                 </div>
             </div>
-        </main>
+    </div>
+
+    <!-- User Details Modal -->
+    <div id="user-details-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content profile-detail-modal">
+            <div class="modal-header">
+                <h3 id="det-name">Foydalanuvchi Profili</h3>
+                <button class="close-btn" onclick="closeUserDetailsModal()"><i data-lucide="x"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="profile-header-main">
+                    <div class="det-avatar" id="det-avatar">??</div>
+                    <div class="det-main-info">
+                        <h2 id="det-full-name">Noma'lum</h2>
+                        <p id="det-status-badge" class="badge">Foydalanuvchi</p>
+                    </div>
+                </div>
+
+                <div class="profile-info-grid">
+                    <div class="info-group">
+                        <label>Login</label>
+                        <div class="info-value" id="det-login">-</div>
+                    </div>
+                    <div class="info-group">
+                        <label>Parol</label>
+                        <div class="info-value password-field" onclick="togglePasswordVisibility(this)">
+                            <span class="pass-stars">••••••••</span>
+                            <span class="pass-text" style="display: none;" id="det-pass">-</span>
+                            <i data-lucide="eye" class="eye-icon"></i>
+                        </div>
+                    </div>
+                    <div class="info-group">
+                        <label>Gmail</label>
+                        <div class="info-value" id="det-email">-</div>
+                    </div>
+                    <div class="info-group">
+                        <label>Telefon</label>
+                        <div class="info-value" id="det-phone">-</div>
+                    </div>
+                    <div class="info-group" style="grid-column: span 2;">
+                        <label>Lokatsiya</label>
+                        <div class="info-value" id="det-location">-</div>
+                    </div>
+                    <div class="info-group" style="grid-column: span 2;">
+                        <label>Oxirgi faollik</label>
+                        <div class="info-value" id="det-last-seen">-</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="admin-users-grid-container">
+        <div id="admin-users-list" class="admin-users-grid">
+            <!-- User cards will be injected here -->
+        </div>
+    </div>
+    </div>
+    </div>
+    </main>
     </div>
 
     <!-- CUSTOM CONFIRM MODAL -->
