@@ -1565,10 +1565,6 @@ async function renderAdminPanel() {
                             </div>
                         </div>
                     </td>
-                    <td>${user.login}</td>
-                    <td style="font-size: 0.85rem; color: var(--text-muted);">${user.location || '-'}</td>
-                    <td>${user.phone || '-'}</td>
-                    <td>${user.email || '-'}</td>
                     <td>
                         <div style="display:flex; flex-direction:column; gap:5px;">
                             <span class="badge ${user.isAdmin ? 'badge-admin' : 'badge-user'}">

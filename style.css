@@ -2850,3 +2850,42 @@ input:checked+.slider:before {
     background: #4CAF50;
     box-shadow: 0 0 8px rgba(76, 175, 80, 0.5);
 }
+
+/* MOBILE ADAPTATION FOR PROFILE MODAL */
+@media (max-width: 600px) {
+    .profile-detail-modal {
+        width: 95% !important;
+        margin: 10px !important;
+    }
+
+    .profile-header-main {
+        flex-direction: column;
+        text-align: center;
+        gap: 10px;
+        padding: 15px;
+    }
+
+    .profile-info-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .det-avatar {
+        width: 60px;
+        height: 60px;
+        font-size: 1.5rem;
+    }
+
+    .det-main-info h2 {
+        font-size: 1.2rem;
+    }
+
+    .info-group label {
+        font-size: 0.7rem;
+    }
+
+    .info-value {
+        font-size: 0.9rem;
+        padding: 10px;
+    }
+}
