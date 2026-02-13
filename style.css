@@ -1223,6 +1223,64 @@ input:checked+.slider:before {
     cursor: pointer;
 }
 
+.restore-dropdown {
+    min-width: 280px !important;
+}
+
+.restore-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    border-bottom: 1px solid #f0f0f0;
+    transition: background 0.2s;
+}
+
+.restore-item:hover {
+    background: #f9f9f9;
+}
+
+.restore-item:last-child {
+    border-bottom: none;
+}
+
+.restore-details {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.restore-label {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--text-main);
+}
+
+.restore-meta {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.restore-btn-action {
+    background: var(--primary-light);
+    color: var(--primary);
+    border: none;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.2s;
+}
+
+.restore-btn-action:hover {
+    background: var(--primary);
+    color: white;
+}
+
 /* FINANCE */
 .finance-summary {
     display: flex;

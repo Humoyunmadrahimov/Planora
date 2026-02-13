@@ -89,6 +89,7 @@ let events = [];
 let transactions = [];
 let notes = [];
 let currentNoteId = null;
+let financeTrashHistory = []; // Stores last 3 deletion operations
 
 // --- Firebase Cloud Storage Handlers ---
 async function saveToCloud() {
@@ -106,6 +107,13 @@ async function saveToCloud() {
             notes: (notes || []).map(n => ({
                 ...n,
                 date: n.date instanceof Date ? n.date.getTime() : n.date
+            })),
+            financeTrashHistory: (financeTrashHistory || []).map(h => ({
+                ...h,
+                data: h.data.map(t => ({
+                    ...t,
+                    date: t.date instanceof Date ? t.date.getTime() : t.date
+                }))
             }))
         };
 
@@ -154,6 +162,10 @@ async function initializeSession() {
                         events = data.events || [];
                         transactions = (data.transactions || []).map(t => ({ ...t, date: new Date(t.date) }));
                         notes = (data.notes || []).map(n => ({ ...n, date: new Date(n.date) }));
+                        financeTrashHistory = (data.financeTrashHistory || []).map(h => ({
+                            ...h,
+                            data: h.data.map(t => ({ ...t, date: new Date(t.date) }))
+                        }));
                     }
                     resolve();
                 }, { onlyOnce: true });
@@ -778,10 +790,44 @@ function addTransaction(type) {
 function deleteTransaction(id) {
     showConfirmModal('Ushbu o\'tkazmani o\'chirmoqchimisiz?', () => {
         const transId = Number(id);
-        transactions = transactions.filter(t => Number(t.id) !== transId);
-        saveToCloud();
-        renderFinance();
+        const toDelete = transactions.find(t => Number(t.id) === transId);
+        if (toDelete) {
+            addToFinanceTrash('Bitta o\'tkazma', [toDelete]);
+            transactions = transactions.filter(t => Number(t.id) !== transId);
+            saveToCloud();
+            renderFinance();
+        }
     });
+}
+
+function addToFinanceTrash(label, data) {
+    financeTrashHistory.unshift({
+        id: Date.now(),
+        label: label,
+        data: [...data],
+        timestamp: new Date()
+    });
+    // Keep only last 3
+    if (financeTrashHistory.length > 3) {
+        financeTrashHistory.pop();
+    }
+}
+
+function restoreFinanceTrash(historyId) {
+    const record = financeTrashHistory.find(h => h.id === historyId);
+    if (!record) return;
+
+    // Add back to transactions
+    transactions = [...record.data, ...transactions];
+    // Sort by date (newest first)
+    transactions.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+    // Remove from trash
+    financeTrashHistory = financeTrashHistory.filter(h => h.id !== historyId);
+
+    saveToCloud();
+    renderFinance();
+    toggleRestoreDropdown();
 }
 
 function clearCurrentPeriodFinance() {
@@ -809,12 +855,12 @@ function clearCurrentPeriodFinance() {
         endTime = new Date(year, month + 1, 0, 23, 59, 59);
     }
 
-    const toDeleteCount = transactions.filter(t => {
+    const filteredToDelete = transactions.filter(t => {
         const tDate = new Date(t.date);
         return tDate >= startTime && tDate <= endTime;
-    }).length;
+    });
 
-    if (toDeleteCount === 0) {
+    if (filteredToDelete.length === 0) {
         alert('Bu davrda o\'chirish uchun o\'tkazmalar yo\'q');
         return;
     }
@@ -822,6 +868,7 @@ function clearCurrentPeriodFinance() {
     const periodLabel = currentFinanceView === 'daily' ? 'bugungi' : (currentFinanceView === 'weekly' ? 'ushbu haftalik' : 'ushbu oylik');
 
     showConfirmModal(`Rostdan ham barcha ${periodLabel} o'tkazmalarni o'chirmoqchimisiz?`, () => {
+        addToFinanceTrash(`${periodLabel.charAt(0).toUpperCase() + periodLabel.slice(1)} tozalash`, filteredToDelete);
         transactions = transactions.filter(t => {
             const tDate = new Date(t.date);
             return tDate < startTime || tDate > endTime;
@@ -943,6 +990,48 @@ function renderFinance() {
 
     lucide.createIcons();
     renderDashboard();
+    renderRestoreDropdown();
+}
+
+function toggleRestoreDropdown() {
+    const dropdown = document.getElementById('restore-dropdown');
+    if (!dropdown) return;
+    dropdown.classList.toggle('active');
+    event.stopPropagation();
+}
+
+function renderRestoreDropdown() {
+    const list = document.getElementById('restore-history-list');
+    const badge = document.getElementById('restore-badge');
+    if (!list) return;
+
+    list.innerHTML = '';
+    if (financeTrashHistory.length === 0) {
+        list.innerHTML = '<div style="padding:15px; text-align:center; color:#888; font-size:0.85rem;">Hech narsa o\'chirilmagan</div>';
+        if (badge) badge.style.display = 'none';
+    } else {
+        if (badge) {
+            badge.style.display = 'flex';
+            badge.textContent = financeTrashHistory.length;
+        }
+
+        financeTrashHistory.forEach(record => {
+            const time = new Date(record.timestamp).toLocaleTimeString('uz-UZ', { hour: '2-digit', minute: '2-digit' });
+            const item = document.createElement('div');
+            item.className = 'restore-item';
+            item.innerHTML = `
+                <div class="restore-details">
+                    <span class="restore-label">${record.label}</span>
+                    <span class="restore-meta">${record.data.length} ta amal вЂў ${time}</span>
+                </div>
+                <button class="restore-btn-action" onclick="restoreFinanceTrash(${record.id})">
+                    <i data-lucide="rotate-ccw" style="width:14px"></i> Tiklash
+                </button>
+            `;
+            list.appendChild(item);
+        });
+    }
+    lucide.createIcons();
 }
 
 function downloadFinancePDF() {
@@ -1011,6 +1100,11 @@ window.addEventListener('click', function (event) {
     const profileMenu = document.getElementById('profile-menu');
     if (profileMenu && !event.target.closest('.user-profile')) {
         profileMenu.style.display = 'none';
+    }
+
+    const restoreDropdown = document.getElementById('restore-dropdown');
+    if (restoreDropdown && !event.target.closest('.action-wrapper')) {
+        restoreDropdown.classList.remove('active');
     }
 
     // Toggle dropdowns (like the one in Notes)
