@@ -1513,6 +1513,11 @@ input:checked+.slider:before {
     color: var(--primary);
 }
 
+.delete-all-btn:hover {
+    background: #fff5f5;
+    color: #EF5C91;
+}
+
 /* DASHBOARD GRID */
 .dashboard-grid {
     display: grid;

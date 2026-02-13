@@ -784,6 +784,53 @@ function deleteTransaction(id) {
     });
 }
 
+function clearCurrentPeriodFinance() {
+    let startTime, endTime;
+    const year = currentFinanceDate.getFullYear();
+    const month = currentFinanceDate.getMonth();
+    const date = currentFinanceDate.getDate();
+
+    if (currentFinanceView === 'daily') {
+        startTime = new Date(year, month, date, 0, 0, 0);
+        endTime = new Date(year, month, date, 23, 59, 59);
+    } else if (currentFinanceView === 'weekly') {
+        const day = currentFinanceDate.getDay();
+        const diff = currentFinanceDate.getDate() - day + (day === 0 ? -6 : 1);
+        const startOfWeek = new Date(currentFinanceDate);
+        startOfWeek.setDate(diff);
+        startOfWeek.setHours(0, 0, 0, 0);
+        const endOfWeek = new Date(startOfWeek);
+        endOfWeek.setDate(startOfWeek.getDate() + 6);
+        endOfWeek.setHours(23, 59, 59, 999);
+        startTime = startOfWeek;
+        endTime = endOfWeek;
+    } else {
+        startTime = new Date(year, month, 1, 0, 0, 0);
+        endTime = new Date(year, month + 1, 0, 23, 59, 59);
+    }
+
+    const toDeleteCount = transactions.filter(t => {
+        const tDate = new Date(t.date);
+        return tDate >= startTime && tDate <= endTime;
+    }).length;
+
+    if (toDeleteCount === 0) {
+        alert('Bu davrda o\'chirish uchun o\'tkazmalar yo\'q');
+        return;
+    }
+
+    const periodLabel = currentFinanceView === 'daily' ? 'bugungi' : (currentFinanceView === 'weekly' ? 'ushbu haftalik' : 'ushbu oylik');
+
+    showConfirmModal(`Rostdan ham barcha ${periodLabel} o'tkazmalarni o'chirmoqchimisiz?`, () => {
+        transactions = transactions.filter(t => {
+            const tDate = new Date(t.date);
+            return tDate < startTime || tDate > endTime;
+        });
+        saveToCloud();
+        renderFinance();
+    });
+}
+
 function renderFinance() {
     const list = document.getElementById('transaction-list');
     const totalIncEle = document.getElementById('total-income');
