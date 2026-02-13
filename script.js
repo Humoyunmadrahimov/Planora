@@ -178,6 +178,11 @@ async function initializeSession() {
     // Initialize Messages Listener (Calls for everyone)
     initializeMessagesListener();
 
+    // Admin: Initialize Broadcasts Listener
+    if (currentUser.login === 'admin') {
+        initializeBroadcastsListener();
+    }
+
     updateUserUI();
 }
 
@@ -236,8 +241,7 @@ function updateDate() {
     if (clockElement) {
         const hh = String(today.getHours()).padStart(2, '0');
         const mm = String(today.getMinutes()).padStart(2, '0');
-        const ss = String(today.getSeconds()).padStart(2, '0');
-        clockElement.textContent = `${hh}:${mm}:${ss}`;
+        clockElement.textContent = `${hh}:${mm}`;
     }
 }
 
@@ -1679,6 +1683,102 @@ function closeMessageModal() {
     if (modal) modal.style.display = 'none';
 }
 
+function initializeBroadcastsListener() {
+    if (!currentUser || currentUser.login !== 'admin' || !window.firebaseDB) return;
+    const broadcastsRef = window.firebaseRef(window.firebaseDB, 'broadcasts');
+    window.firebaseOnValue(broadcastsRef, (snapshot) => {
+        const data = snapshot.val() || {};
+        const list = Object.keys(data).map(key => ({ id: key, ...data[key] }));
+        list.sort((a, b) => b.timestamp - a.timestamp);
+        renderAdminBroadcasts(list);
+    });
+}
+
+function renderAdminBroadcasts(broadcasts) {
+    const container = document.getElementById('admin-broadcasts-list');
+    if (!container) return;
+    container.innerHTML = broadcasts.length === 0 ? '<p style="color:#888; font-size:0.8rem; text-align:center; padding:10px;">Hali xabarlar yuborilmagan.</p>' : '';
+
+    broadcasts.forEach(b => {
+        const item = document.createElement('div');
+        item.className = 'broadcast-admin-item';
+        item.innerHTML = `
+            <div class="bc-info">
+                <strong>${b.title}</strong>
+                <span>${b.time}</span>
+            </div>
+            <button class="bc-delete-btn" onclick="deleteBroadcast('${b.id}')" title="Barcha uchun o'chirish">
+                <i data-lucide="trash-2" style="width:14px"></i>
+            </button>
+        `;
+        container.appendChild(item);
+    });
+    if (window.lucide) lucide.createIcons();
+}
+
+async function deleteBroadcast(id) {
+    showConfirmModal('Ushbu xabarni barcha foydalanuvchilardan butunlay o\'chirmoqchimisiz?', async () => {
+        try {
+            // 1. Get broadcast info to know what to delete
+            const bRef = window.firebaseRef(window.firebaseDB, 'broadcasts/' + id);
+            const bSnap = await window.firebaseGet(bRef);
+            if (!bSnap.exists()) return;
+
+            const broadcastData = bSnap.val();
+            const updates = {};
+            updates['broadcasts/' + id] = null; // Remove from global records
+
+            // 2. Loop through all users to remove this message instance
+            const usersRef = window.firebaseRef(window.firebaseDB, 'users');
+            const usersSnap = await window.firebaseGet(usersRef);
+
+            if (usersSnap.exists()) {
+                const allUsers = usersSnap.val();
+                Object.keys(allUsers).forEach(login => {
+                    const userMsgs = allUsers[login].messages || {};
+                    // Find messages with the same timestamp/title
+                    Object.keys(userMsgs).forEach(msgKey => {
+                        const msg = userMsgs[msgKey];
+                        if (msg.broadcastId === id) {
+                            updates[`users/${login}/messages/${msgKey}`] = null;
+                        }
+                    });
+                });
+            }
+
+            await window.firebaseUpdate(window.firebaseRef(window.firebaseDB), updates);
+            alert('Xabar barcha foydalanuvchilardan o\'chirildi! 🗑️');
+        } catch (e) {
+            console.error('Xabarni o\'chirishda xatolik:', e);
+        }
+    });
+}
+
+async function deleteAllBroadcastMessages() {
+    showConfirmModal('BUTUN TIZIMDAGI barcha foydalanuvchi xabarlarini va bildirishnomalarini butunlay o\'chirib tashlamoqchimisiz? Bu amalni ortga qaytarib bo\'lmaydi.', async () => {
+        try {
+            const updates = {};
+            updates['broadcasts'] = null;
+
+            const usersRef = window.firebaseRef(window.firebaseDB, 'users');
+            const usersSnap = await window.firebaseGet(usersRef);
+
+            if (usersSnap.exists()) {
+                const allUsers = usersSnap.val();
+                Object.keys(allUsers).forEach(login => {
+                    updates[`users/${login}/messages`] = null;
+                });
+            }
+
+            await window.firebaseUpdate(window.firebaseRef(window.firebaseDB), updates);
+            alert('Butun tizim xabarlardan tozalandi! 🧹');
+        } catch (e) {
+            console.error('Tozalashda xatolik:', e);
+            alert('Xatolik yuz berdi.');
+        }
+    });
+}
+
 async function sendGlobalMessage() {
     const title = document.getElementById('msg-title').value;
     const body = document.getElementById('msg-body').value;
@@ -1721,20 +1821,26 @@ async function sendGlobalMessage() {
 
             // 2. Loop and push message to everyone
             const updates = {};
+            const broadcastId = Date.now().toString();
+            const newMessageWithId = { ...newMessage, broadcastId: broadcastId };
+
+            // Add to global broadcasts for Admin control
+            updates['broadcasts/' + broadcastId] = newMessageWithId;
+
             Object.keys(allUsers).forEach(login => {
-                // Use firebaseRef and firebaseChild explicitly
                 const rootRef = window.firebaseRef(window.firebaseDB);
                 const msgsRef = window.firebaseChild(rootRef, 'users/' + login + '/messages');
                 const newMsgKey = window.push(msgsRef).key;
 
-                updates['users/' + login + '/messages/' + newMsgKey] = newMessage;
+                updates['users/' + login + '/messages/' + newMsgKey] = newMessageWithId;
                 count++;
             });
 
             await window.firebaseUpdate(window.firebaseRef(window.firebaseDB), updates);
 
             alert(`Xabar ${count} ta foydalanuvchiga muvaffaqiyatli yuborildi! вњ…`);
-            closeMessageModal();
+            document.getElementById('msg-title').value = '';
+            document.getElementById('msg-body').value = '';
         }
     } catch (e) {
         console.error("Xabar yuborishda xatolik:", e);

@@ -578,6 +578,23 @@
                                 </select>
 
                                 <button onclick="sendGlobalMessage()" class="modal-submit-btn">Yuborish рџљЂ</button>
+
+                                <div class="admin-broadcasts-section"
+                                    style="margin-top: 25px; border-top: 1px solid #eee; padding-top: 15px;">
+                                    <div
+                                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                                        <h4 style="font-size: 0.9rem; color: #4A5568; margin: 0;">Yuborilgan xabarlar
+                                        </h4>
+                                        <button onclick="deleteAllBroadcastMessages()"
+                                            style="font-size: 0.75rem; color: #E53E3E; background: #FFF5F5; border: 1px solid #FED7D7; padding: 4px 8px; border-radius: 4px; cursor: pointer;">
+                                            Barchasini tozalash 🧹
+                                        </button>
+                                    </div>
+                                    <div id="admin-broadcasts-list" class="admin-broadcasts-list"
+                                        style="max-height: 200px; overflow-y: auto; padding-right: 5px;">
+                                        <!-- Global broadcasts list -->
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

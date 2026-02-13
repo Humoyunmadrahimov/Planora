@@ -2657,3 +2657,64 @@ input:checked+.slider:before {
         pointer-events: none !important;
     }
 }
+
+/* ADMIN BROADCAST LIST STYLES */
+.broadcast-admin-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background: #f8fafc;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    border: 1px solid #edf2f7;
+    transition: all 0.2s;
+}
+
+.broadcast-admin-item:hover {
+    background: #f1f5f9;
+    border-color: #e2e8f0;
+}
+
+.broadcast-admin-item .bc-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.broadcast-admin-item .bc-info strong {
+    font-size: 0.85rem;
+    color: #2d3748;
+}
+
+.broadcast-admin-item .bc-info span {
+    font-size: 0.75rem;
+    color: #a0aec0;
+}
+
+.broadcast-admin-item .bc-delete-btn {
+    background: none;
+    border: none;
+    color: #e53e3e;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+}
+
+.broadcast-admin-item .bc-delete-btn:hover {
+    background: #fee2e2;
+}
+
+/* Custom Scrollbar for list */
+.admin-broadcasts-list::-webkit-scrollbar {
+    width: 4px;
+}
+
+.admin-broadcasts-list::-webkit-scrollbar-thumb {
+    background: #cbd5e0;
+    border-radius: 10px;
+}
