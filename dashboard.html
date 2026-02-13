@@ -599,6 +599,57 @@
                         </div>
                     </div>
 
+                    <!-- User Details Modal -->
+                    <div id="user-details-modal" class="modal-overlay" style="display: none;">
+                        <div class="modal-content profile-detail-modal">
+                            <div class="modal-header">
+                                <h3 id="det-name">Foydalanuvchi Profili</h3>
+                                <button class="close-btn" onclick="closeUserDetailsModal()"><i
+                                        data-lucide="x"></i></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="profile-header-main">
+                                    <div class="det-avatar" id="det-avatar">??</div>
+                                    <div class="det-main-info">
+                                        <h2 id="det-full-name">Noma'lum</h2>
+                                        <p id="det-status-badge" class="badge">Foydalanuvchi</p>
+                                    </div>
+                                </div>
+
+                                <div class="profile-info-grid">
+                                    <div class="info-group">
+                                        <label>Login</label>
+                                        <div class="info-value" id="det-login">-</div>
+                                    </div>
+                                    <div class="info-group">
+                                        <label>Parol</label>
+                                        <div class="info-value password-field" onclick="togglePasswordVisibility(this)">
+                                            <span class="pass-stars">••••••••</span>
+                                            <span class="pass-text" style="display: none;" id="det-pass">-</span>
+                                            <i data-lucide="eye" class="eye-icon"></i>
+                                        </div>
+                                    </div>
+                                    <div class="info-group">
+                                        <label>Gmail</label>
+                                        <div class="info-value" id="det-email">-</div>
+                                    </div>
+                                    <div class="info-group">
+                                        <label>Telefon</label>
+                                        <div class="info-value" id="det-phone">-</div>
+                                    </div>
+                                    <div class="info-group" style="grid-column: span 2;">
+                                        <label>Lokatsiya</label>
+                                        <div class="info-value" id="det-location">-</div>
+                                    </div>
+                                    <div class="info-group" style="grid-column: span 2;">
+                                        <label>Oxirgi faollik</label>
+                                        <div class="info-value" id="det-last-seen">-</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="admin-table-wrapper">
                         <table class="admin-table">
                             <thead>

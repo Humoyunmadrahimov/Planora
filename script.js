@@ -1493,6 +1493,10 @@ function updateOnlineStatus() {
 
         window.firebaseSet(userStatusRef, statusData);
 
+        // Also update lastSeen in the persistent user record
+        const persistentUserRef = window.firebaseRef(window.firebaseDB, 'users/' + currentUser.login + '/lastSeen');
+        window.firebaseSet(persistentUserRef, window.firebaseServerTimestamp());
+
         // When user disconnects (closes tab), remove them from the online list
         window.firebaseOnDisconnect(userStatusRef).remove();
 
@@ -1550,35 +1554,31 @@ async function renderAdminPanel() {
             allUsers.forEach(user => {
                 const row = document.createElement('tr');
                 const initials = (user.name || '??').split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
-
                 const isOnline = !!onlineData[user.login];
 
                 row.innerHTML = `
                     <td>
                         <div class="user-info-cell">
                             <div class="user-avatar-sm">${initials}</div>
-                            <div>
-                                <div style="font-weight: 600;">${user.name || 'Noma\'lum'}</div>
-                                <div class="status-indicator">
-                                    <div class="${isOnline ? 'online-dot' : 'offline-dot'}"></div>
-                                    <span style="font-size: 0.75rem; color: ${isOnline ? '#4CAF50' : '#718096'};">
-                                        ${isOnline ? 'Onlayn' : 'Offlayn'}
-                                    </span>
-                                </div>
+                            <div class="user-name-clickable" onclick="showUserDetails('${user.login}')">
+                                ${user.name || 'Noma\'lum'}
                             </div>
                         </div>
                     </td>
                     <td>${user.login}</td>
-                    <td style="font-size: 0.85rem; color: var(--text-muted);">
-                        <i data-lucide="map-pin" style="width: 12px; height: 12px; vertical-align: middle; margin-right: 4px;"></i>
-                        ${user.location || 'Noma\'lum'}
-                    </td>
+                    <td style="font-size: 0.85rem; color: var(--text-muted);">${user.location || '-'}</td>
                     <td>${user.phone || '-'}</td>
                     <td>${user.email || '-'}</td>
                     <td>
-                        <span class="badge ${user.isAdmin ? 'badge-admin' : 'badge-user'}">
-                            ${user.isAdmin ? 'Admin' : 'Foydalanuvchi'}
-                        </span>
+                        <div style="display:flex; flex-direction:column; gap:5px;">
+                            <span class="badge ${user.isAdmin ? 'badge-admin' : 'badge-user'}">
+                                ${user.isAdmin ? 'Admin' : 'Foydalanuvchi'}
+                            </span>
+                            <div class="status-badge-inline ${isOnline ? 'online' : ''}">
+                                <div class="dot"></div>
+                                <span>${isOnline ? 'Onlayn' : 'Offlayn'}</span>
+                            </div>
+                        </div>
                     </td>
                     <td>
                         <div class="admin-actions">
@@ -1605,6 +1605,74 @@ async function renderAdminPanel() {
         }, { onlyOnce: true });
     } catch (err) {
         console.error('Admin panelni yuklashda xatolik:', err);
+    }
+}
+
+async function showUserDetails(login) {
+    if (!window.firebaseDB) return;
+    try {
+        const userRef = window.firebaseRef(window.firebaseDB, 'users/' + login);
+        const snapshot = await window.firebaseGet(userRef);
+        const user = snapshot.val();
+
+        // Handle Admin (not in DB)
+        const displayUser = login === 'admin' ? {
+            name: 'Administrator', login: 'admin', phone: '-', email: 'admin@pitch.io',
+            isAdmin: true, isSuper: true, location: 'Toshkent, Uzbekistan', password: '*****'
+        } : user;
+
+        if (!displayUser) return;
+
+        // Populate Modal
+        document.getElementById('det-full-name').textContent = displayUser.name || 'Noma\'lum';
+        document.getElementById('det-login').textContent = displayUser.login;
+        document.getElementById('det-pass').textContent = displayUser.password || 'Mavjud emas';
+        document.getElementById('det-email').textContent = displayUser.email || '-';
+        document.getElementById('det-phone').textContent = displayUser.phone || '-';
+        document.getElementById('det-location').textContent = displayUser.location || '-';
+
+        // Avatar
+        const initials = (displayUser.name || displayUser.login).split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+        document.getElementById('det-avatar').textContent = initials;
+
+        // Status Badge
+        const badge = document.getElementById('det-status-badge');
+        badge.textContent = displayUser.isAdmin ? 'Admin' : 'Foydalanuvchi';
+        badge.className = 'badge ' + (displayUser.isAdmin ? 'badge-admin' : 'badge-user');
+
+        // Last Seen
+        let lastSeenText = 'Noma\'lum';
+        if (displayUser.lastSeen) {
+            lastSeenText = new Date(displayUser.lastSeen).toLocaleString('uz-UZ');
+        }
+        document.getElementById('det-last-seen').textContent = lastSeenText;
+
+        // Reset Password visibility
+        const passStars = document.querySelector('.pass-stars');
+        const passText = document.getElementById('det-pass');
+        passStars.style.display = 'inline';
+        passText.style.display = 'none';
+
+        document.getElementById('user-details-modal').style.display = 'flex';
+        if (window.lucide) lucide.createIcons();
+    } catch (e) {
+        console.error('User details load error:', e);
+    }
+}
+
+function closeUserDetailsModal() {
+    document.getElementById('user-details-modal').style.display = 'none';
+}
+
+function togglePasswordVisibility(container) {
+    const stars = container.querySelector('.pass-stars');
+    const text = container.querySelector('.pass-text');
+    if (stars.style.display === 'none') {
+        stars.style.display = 'inline';
+        text.style.display = 'none';
+    } else {
+        stars.style.display = 'none';
+        text.style.display = 'inline';
     }
 }
 
