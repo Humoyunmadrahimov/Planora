@@ -1,4 +1,4 @@
-/* Reset & Variables */
+﻿/* Reset & Variables */
 :root {
     --primary: #6B4EFF;
     --primary-light: #EBE6FB;
@@ -212,9 +212,19 @@ body {
     border: none;
     cursor: pointer;
     color: var(--text-muted);
-    padding: 8px;
+    padding: 10px;
     border-radius: 50%;
-    transition: background 0.2s;
+    transition: all 0.2s;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+}
+
+.icon-btn>* {
+    pointer-events: none;
 }
 
 .icon-btn:hover {
@@ -234,6 +244,10 @@ body {
     box-shadow: var(--shadow-sm);
     position: relative;
     user-select: none;
+}
+
+.user-profile>* {
+    pointer-events: none;
 }
 
 .profile-dropdown {
@@ -2352,8 +2366,8 @@ textarea.modal-input {
 
 .badge-count {
     position: absolute;
-    top: -5px;
-    right: -5px;
+    top: 5px;
+    right: 5px;
     background: #EF5C91;
     color: white;
     font-size: 10px;
@@ -2964,12 +2978,15 @@ textarea.modal-input {
 .week-header.sunday {
     color: #EF5C91 !important;
 }
+
 .calendar-cell.sunday {
     background-color: rgba(239, 92, 145, 0.03);
 }
+
 .month-cell.sunday {
     background-color: #FFF5F7 !important;
 }
+
 .month-cell.sunday .month-day-num {
     color: #EF5C91;
 }
@@ -3019,4 +3036,3 @@ textarea.modal-input {
     font-size: 0.85rem;
     color: var(--text-muted);
 }
-
