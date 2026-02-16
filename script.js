@@ -467,8 +467,10 @@ function setCalendarView(view, btn) {
 function changeCalendarDate(delta) {
     if (calendarView === 'week') {
         currentDate.setDate(currentDate.getDate() + (delta * 7));
-    } else {
+    } else if (calendarView === 'month') {
         currentDate.setMonth(currentDate.getMonth() + delta);
+    } else {
+        currentDate.setFullYear(currentDate.getFullYear() + delta);
     }
     renderCalendar();
 }
@@ -509,10 +511,14 @@ function renderCalendar() {
             label.textContent = `${startMonth} - ${endMonth} ${year}`;
         }
 
-    } else {
+    } else if (calendarView === 'month') {
         grid.className = 'calendar-grid month-view';
         renderMonthView(grid);
         label.textContent = `${monthNames[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
+    } else {
+        grid.className = 'calendar-grid year-view';
+        renderYearView(grid);
+        label.textContent = `${currentDate.getFullYear()}-yil`;
     }
 }
 
@@ -549,6 +555,11 @@ function renderWeekView(container) {
             header.classList.add('today');
         }
 
+        // Highlight Sunday
+        if (dayDate.getDay() === 0) {
+            header.classList.add('sunday');
+        }
+
         header.innerHTML = `
             <span>${uzbekDays[i]}</span>
             <div class="day-num">${dayDate.getDate()}</div>
@@ -573,6 +584,7 @@ function renderWeekView(container) {
 
             const cell = document.createElement('div');
             cell.className = 'calendar-cell';
+            if (cellDate.getDay() === 0) cell.classList.add('sunday');
             cell.dataset.date = dateStr;
             cell.dataset.time = timeStr;
             cell.onclick = (e) => {
@@ -611,9 +623,10 @@ function renderMonthView(container) {
 
     // Headers
     const uzbekDaysShort = ['Du', 'Se', 'Ch', 'Pa', 'Ju', 'Sha', 'Ya'];
-    uzbekDaysShort.forEach(day => {
+    uzbekDaysShort.forEach((day, index) => {
         const header = document.createElement('div');
         header.className = 'week-header';
+        if (index === 6) header.classList.add('sunday'); // 'Ya' is always index 6
         header.textContent = day;
         container.appendChild(header);
     });
@@ -646,6 +659,10 @@ function renderMonthView(container) {
             cell.classList.add('today');
         }
 
+        if (cellDate.getDay() === 0) {
+            cell.classList.add('sunday');
+        }
+
         // Header
         const headerDiv = document.createElement('div');
         headerDiv.className = 'month-cell-header';
@@ -675,6 +692,48 @@ function renderMonthView(container) {
 
         container.appendChild(cell);
     }
+}
+
+function renderYearView(container) {
+    container.innerHTML = '';
+    const monthNames = [
+        "Yanvar", "Fevral", "Mart", "Aprel", "May", "Iyun",
+        "Iyul", "Avgust", "Sentabr", "Oktabr", "Noyabr", "Dekabr"
+    ];
+
+    const yearGrid = document.createElement('div');
+    yearGrid.className = 'year-grid-internal';
+
+    for (let i = 0; i < 12; i++) {
+        const monthCard = document.createElement('div');
+        monthCard.className = 'year-month-card';
+
+        // Highlight current month if it's current year
+        const today = new Date();
+        if (today.getFullYear() === currentDate.getFullYear() && today.getMonth() === i) {
+            monthCard.classList.add('current-month');
+        }
+
+        monthCard.innerHTML = `
+            <div class="month-name">${monthNames[i]}</div>
+            <div class="month-preview">Ko'rish uchun bosing</div>
+        `;
+
+        monthCard.onclick = () => selectMonthInYear(i);
+        yearGrid.appendChild(monthCard);
+    }
+    container.appendChild(yearGrid);
+}
+
+function selectMonthInYear(monthIndex) {
+    currentDate.setMonth(monthIndex);
+    calendarView = 'month';
+    // Update UI buttons
+    document.querySelectorAll('.view-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.getAttribute('onclick').includes("'month'")) btn.classList.add('active');
+    });
+    renderCalendar();
 }
 
 // --- Event Modal Functions ---
