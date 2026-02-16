@@ -5,6 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pitch.io Dashboard</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#6B4EFF">
+    <link rel="apple-touch-icon" href="assets/icon-192.png">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -227,7 +230,7 @@
                 <div class="kanban-wrapper">
                     <div class="kanban-controls">
                         <h2>Vazifalar Doskasi</h2>
-                        <button class="primary-btn" onclick="toggleTaskModal()">
+                        <button class="primary-btn" onclick="openTaskModal()">
                             <i data-lucide="plus"></i> Yangi Vazifa
                         </button>
                     </div>
@@ -236,8 +239,8 @@
                     <div id="task-modal" class="modal-overlay" style="display: none;">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h3>Yangi Vazifa Qo'shish</h3>
-                                <button class="close-btn" onclick="toggleTaskModal()"><i data-lucide="x"></i></button>
+                                <h3 id="task-modal-title">Yangi Vazifa Qo'shish</h3>
+                                <button class="close-btn" onclick="closeTaskModal()"><i data-lucide="x"></i></button>
                             </div>
                             <div class="modal-body">
                                 <label>Vazifa Nomi</label>
@@ -247,6 +250,7 @@
                                 <label>Izoh</label>
                                 <textarea id="k-desc" placeholder="Qisqacha izoh..." class="modal-input"></textarea>
 
+                                <input type="hidden" id="edit-task-id">
                                 <button onclick="addKanbanTask()" class="modal-submit-btn">Saqlash</button>
                             </div>
                         </div>
@@ -738,6 +742,13 @@
     <script src="script.js?v=1.2"></script>
     <script>
         lucide.createIcons();
+    </script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js');
+            });
+        }
     </script>
 </body>
 

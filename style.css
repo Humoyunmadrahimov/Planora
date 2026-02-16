@@ -694,7 +694,7 @@ input:checked+.slider:before {
     padding: 1rem;
     border-radius: var(--radius-sm);
     box-shadow: var(--shadow-sm);
-    cursor: grab;
+    cursor: pointer;
     transition: transform 0.2s, box-shadow 0.2s;
     border-left: 4px solid transparent;
     position: relative;

@@ -309,14 +309,20 @@ function createKanbanCard(task) {
     const div = document.createElement('div');
     div.className = `kanban-card status-${task.status}`;
     div.setAttribute('draggable', true);
-    // Add drag attribute for functionality
     div.setAttribute('ondragstart', `drag(event, ${task.id})`);
+
+    // Add click event for editing, but prevent it when clicking the delete button
+    div.onclick = (e) => {
+        if (!e.target.closest('.card-delete-btn')) {
+            openEditTaskModal(task.id);
+        }
+    };
 
     div.innerHTML = `
         <div class="card-title">${task.title}</div>
         <div class="card-desc">${task.desc || ''}</div>
         <div class="card-footer">
-            <button class="card-delete-btn" onclick="deleteTask(${task.id})" title="O'chirish">
+            <button class="card-delete-btn" onclick="deleteTask(${task.id}); event.stopPropagation();" title="O'chirish">
                 <i data-lucide="trash-2" style="width:16px"></i>
             </button>
         </div>
@@ -362,16 +368,24 @@ function drop(ev, newStatus) {
 
 
 // Modal Functions
-function toggleTaskModal() {
-    const modal = document.getElementById('task-modal');
-    if (modal.style.display === 'none' || modal.style.display === '') {
-        modal.style.display = 'flex';
-    } else {
-        modal.style.display = 'none';
-    }
-}
 
 function openTaskModal() {
+    // Reset for adding
+    document.getElementById('task-modal-title').textContent = 'Yangi Vazifa Qo\'shish';
+    document.getElementById('k-title').value = '';
+    document.getElementById('k-desc').value = '';
+    document.getElementById('edit-task-id').value = '';
+    document.getElementById('task-modal').style.display = 'flex';
+}
+
+function openEditTaskModal(id) {
+    const task = tasks.find(t => t.id === Number(id));
+    if (!task) return;
+
+    document.getElementById('task-modal-title').textContent = 'Vazifani Tahrirlash';
+    document.getElementById('k-title').value = task.title;
+    document.getElementById('k-desc').value = task.desc || '';
+    document.getElementById('edit-task-id').value = task.id;
     document.getElementById('task-modal').style.display = 'flex';
 }
 
@@ -382,23 +396,35 @@ function closeTaskModal() {
 function addKanbanTask() {
     const titleEle = document.getElementById('k-title');
     const descEle = document.getElementById('k-desc');
+    const idEle = document.getElementById('edit-task-id');
 
     const title = titleEle.value.trim();
     const desc = descEle.value.trim();
+    const editId = idEle.value;
 
     if (!title) {
         alert('Iltimos, vazifa nomini kiriting');
         return;
     }
 
-    const newTask = {
-        id: Date.now(),
-        title: title,
-        desc: desc,
-        status: 'todo', // Default status is always TODO
-    };
+    if (editId) {
+        // Update existing task
+        const taskIndex = tasks.findIndex(t => t.id === Number(editId));
+        if (taskIndex !== -1) {
+            tasks[taskIndex].title = title;
+            tasks[taskIndex].desc = desc;
+        }
+    } else {
+        // Add new task
+        const newTask = {
+            id: Date.now(),
+            title: title,
+            desc: desc,
+            status: 'todo',
+        };
+        tasks.push(newTask);
+    }
 
-    tasks.push(newTask);
     saveToCloud();
     renderKanbanTasks();
     closeTaskModal();
@@ -406,6 +432,7 @@ function addKanbanTask() {
     // Reset inputs
     titleEle.value = '';
     descEle.value = '';
+    idEle.value = '';
 }
 
 function deleteTask(id) {
@@ -1194,11 +1221,13 @@ function renderDashTasks() {
     ongoing.forEach(task => {
         const item = document.createElement('div');
         item.className = 'dash-task-item';
+        item.style.cursor = 'pointer';
+        item.onclick = () => openEditTaskModal(task.id);
         item.innerHTML = `
             <div class="task-status-dot" style="background: #F4B846;"></div>
             <div class="dash-task-info">
                 <div style="font-weight:600; font-size:0.95rem;">${task.title}</div>
-                <div style="font-size:0.8rem; color:#888;">${task.desc}</div>
+                <div style="font-size:0.8rem; color:#888;">${task.desc || ''}</div>
             </div>
         `;
         list.appendChild(item);
