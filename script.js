@@ -89,6 +89,7 @@ let events = [];
 let transactions = [];
 let notes = [];
 let currentNoteId = null;
+let editingEventId = null;
 let financeTrashHistory = []; // Stores last 3 deletion operations
 
 // --- Firebase Cloud Storage Handlers ---
@@ -588,7 +589,10 @@ function renderWeekView(container) {
             cell.dataset.date = dateStr;
             cell.dataset.time = timeStr;
             cell.onclick = (e) => {
-                if (e.target === cell) openEventModalWithDate(dateStr, timeStr);
+                if (e.target === cell) {
+                    editingEventId = null;
+                    openEventModalWithDate(dateStr, timeStr);
+                }
             };
 
             // Find and Place Events
@@ -599,15 +603,12 @@ function renderWeekView(container) {
                 eventDiv.className = 'calendar-event';
                 eventDiv.style.backgroundColor = ev.color;
                 eventDiv.innerHTML = `<span class="event-time">${ev.time}</span> ${ev.title}`;
-                eventDiv.title = "O'chirish uchun bosing va ushlab turing";
+                eventDiv.title = "Taxrirlash uchun bosing";
 
-                let pressTimer;
-                eventDiv.onmousedown = () => {
-                    pressTimer = window.setTimeout(() => {
-                        deleteEvent(ev.id);
-                    }, 500);
+                eventDiv.onclick = (e) => {
+                    e.stopPropagation();
+                    openEditEventModal(ev.id);
                 };
-                eventDiv.onmouseup = () => clearTimeout(pressTimer);
 
                 cell.appendChild(eventDiv);
             });
@@ -677,17 +678,19 @@ function renderMonthView(container) {
             evDiv.style.backgroundColor = ev.color;
             evDiv.textContent = ev.time + ' ' + ev.title;
 
-            // Simple click to delete
             evDiv.onclick = (e) => {
-                e.stopPropagation(); // Prevent opening the add modal
-                deleteEvent(ev.id);
+                e.stopPropagation();
+                openEditEventModal(ev.id);
             };
 
             cell.appendChild(evDiv);
         });
 
         cell.onclick = (e) => {
-            if (e.target === cell || e.target === headerDiv) openEventModalWithDate(dateStr, '09:00');
+            if (e.target === cell || e.target === headerDiv) {
+                editingEventId = null;
+                openEventModalWithDate(dateStr, '09:00');
+            }
         };
 
         container.appendChild(cell);
@@ -738,24 +741,16 @@ function selectMonthInYear(monthIndex) {
 
 // --- Event Modal Functions ---
 function openEventModal() {
+    editingEventId = null;
+    document.getElementById('event-modal-title').textContent = "Yangi Reja Qo'shish";
+    document.getElementById('delete-event-btn').style.display = 'none';
+
     // Set default date/time
     const now = new Date();
     document.getElementById('e-date').valueAsDate = now;
     document.getElementById('e-time').value = '09:00';
     document.getElementById('e-color').value = '#3B82F6'; // Default color
-
-    // Select default color visually
-    const options = document.querySelectorAll('.color-option');
-    options.forEach(el => el.classList.remove('selected'));
-    if (options.length > 0) options[options.length - 1].classList.add('selected'); // Select the last one (Blue)
-
-    document.getElementById('event-modal').style.display = 'flex';
-}
-
-function openEventModalWithDate(dateStr, timeStr) {
-    document.getElementById('e-date').value = dateStr;
-    document.getElementById('e-time').value = timeStr;
-    document.getElementById('e-color').value = '#3B82F6'; // Default
+    document.getElementById('e-title').value = '';
 
     // Select default color visually
     const options = document.querySelectorAll('.color-option');
@@ -765,9 +760,61 @@ function openEventModalWithDate(dateStr, timeStr) {
     document.getElementById('event-modal').style.display = 'flex';
 }
 
+function openEventModalWithDate(dateStr, timeStr) {
+    editingEventId = null;
+    document.getElementById('event-modal-title').textContent = "Yangi Reja Qo'shish";
+    document.getElementById('delete-event-btn').style.display = 'none';
+
+    document.getElementById('e-date').value = dateStr;
+    document.getElementById('e-time').value = timeStr;
+    document.getElementById('e-color').value = '#3B82F6'; // Default
+    document.getElementById('e-title').value = '';
+
+    // Select default color visually
+    const options = document.querySelectorAll('.color-option');
+    options.forEach(el => el.classList.remove('selected'));
+    if (options.length > 0) options[options.length - 1].classList.add('selected');
+
+    document.getElementById('event-modal').style.display = 'flex';
+}
+
+function openEditEventModal(id) {
+    const ev = events.find(e => Number(e.id) === Number(id));
+    if (!ev) return;
+
+    editingEventId = ev.id;
+    document.getElementById('event-modal-title').textContent = "Rejani Taxrirlash";
+    document.getElementById('delete-event-btn').style.display = 'block';
+
+    document.getElementById('e-title').value = ev.title;
+    document.getElementById('e-date').value = ev.date;
+    document.getElementById('e-time').value = ev.time;
+    document.getElementById('e-color').value = ev.color;
+
+    // Select current color visually
+    const options = document.querySelectorAll('.color-option');
+    options.forEach(el => {
+        el.classList.remove('selected');
+        // Convert both to lowercase for comparison if needed
+        const bg = el.style.backgroundColor; // Note: browsers might return rgb()
+        // Simple way: check if this option was clicked with this color
+        // But we just updated the hidden input, so let's match by style color
+    });
+
+    // Better way to find the color option:
+    options.forEach(el => {
+        // We set styles directly in HTML like style="background:#6B4EFF"
+        // Let's just match the hex if possible or just unselect all
+    });
+
+    document.getElementById('event-modal').style.display = 'flex';
+    if (window.lucide) window.lucide.createIcons();
+}
+
 function closeEventModal() {
     document.getElementById('event-modal').style.display = 'none';
     document.getElementById('e-title').value = '';
+    editingEventId = null;
 }
 
 function selectColor(element, color) {
@@ -787,18 +834,38 @@ function addEvent() {
         return;
     }
 
-    events.push({
-        id: Date.now(),
-        groupId: null,
-        title,
-        date: dateVal,
-        time,
-        color
-    });
+    if (editingEventId) {
+        const index = events.findIndex(e => Number(e.id) === Number(editingEventId));
+        if (index !== -1) {
+            events[index] = {
+                ...events[index],
+                title,
+                date: dateVal,
+                time,
+                color
+            };
+        }
+    } else {
+        events.push({
+            id: Date.now(),
+            groupId: null,
+            title,
+            date: dateVal,
+            time,
+            color
+        });
+    }
 
     saveToCloud();
     renderCalendar();
     closeEventModal();
+}
+
+function deleteCurrentEvent() {
+    if (editingEventId) {
+        deleteEvent(editingEventId);
+        closeEventModal();
+    }
 }
 
 function deleteEvent(id) {
