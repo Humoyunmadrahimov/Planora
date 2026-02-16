@@ -167,6 +167,84 @@
             font-size: 0.9rem;
             text-align: center;
         }
+
+        /* Success Modal Styles */
+        .success-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(107, 78, 255, 0.1);
+            backdrop-filter: blur(8px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .success-card {
+            background: white;
+            padding: 40px;
+            border-radius: 30px;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 90%;
+            transform: scale(0.8);
+            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: #4ADB97;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 40px;
+            box-shadow: 0 10px 20px rgba(74, 219, 151, 0.3);
+        }
+
+        .success-card h2 {
+            color: #2D3748;
+            margin-bottom: 10px;
+            font-size: 1.5rem;
+        }
+
+        .success-card p {
+            color: #718096;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes popIn {
+            to {
+                transform: scale(1);
+            }
+        }
+
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #6B4EFF;
+            border-radius: 50%;
+        }
     </style>
 </head>
 
@@ -258,6 +336,18 @@
             <div class="switch-auth">
                 <a onclick="toggleAuth('login')">Kirishga qaytish</a>
             </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="success-modal" class="success-overlay">
+        <div class="success-card">
+            <div class="success-icon">
+                <i data-lucide="party-popper"></i>
+            </div>
+            <h2>Tabriklaymiz! 🎉</h2>
+            <p>Siz muvaffaqiyatli ro'yxatdan o'tdingiz! Endi platformadan to'liq foydalanishingiz mumkin.</p>
+            <button class="btn-submit" onclick="closeSuccessModal()">Davom etish</button>
         </div>
     </div>
 
@@ -437,12 +527,21 @@
                 // Save to Firebase
                 await window.set(window.ref(window.db, `users/${login}`), newUser);
 
-                alert('Tabriklaymiz! Ro\'yxatdan o\'tdingiz. Endi login va parolingiz bilan kirishingiz mumkin.');
-                toggleAuth('login');
+                showSuccessModal();
             } catch (error) {
                 errorEle.textContent = 'Xatolik yuz berdi: ' + error.message;
                 errorEle.style.display = 'block';
             }
+        }
+
+        function showSuccessModal() {
+            document.getElementById('success-modal').style.display = 'flex';
+            if (window.lucide) lucide.createIcons();
+        }
+
+        function closeSuccessModal() {
+            document.getElementById('success-modal').style.display = 'none';
+            toggleAuth('login');
         }
     </script>
     <script>
