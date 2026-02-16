@@ -315,24 +315,44 @@
             recoveryForm.style.display = (mode === 'recovery') ? 'block' : 'none';
         }
 
-        function handleRecovery(e) {
+        async function handleRecovery(e) {
             e.preventDefault();
             const email = document.getElementById('rec-email').value.trim();
             const phone = document.getElementById('rec-phone').value.trim();
             const errorMsg = document.getElementById('recovery-error');
             const successMsg = document.getElementById('recovery-success');
 
-            const users = JSON.parse(localStorage.getItem('dashboard_users') || '[]');
-            const user = users.find(u => u.email === email && u.phone === phone);
+            errorMsg.textContent = 'Tekshirilmoqda...';
+            errorMsg.style.display = 'block';
 
-            if (user) {
-                errorMsg.style.display = 'none';
-                successMsg.style.display = 'block';
-                successMsg.innerHTML = `Sizning parolingiz: <strong style="font-size: 1.2rem; color: #6B4EFF;">${user.password}</strong><br><small>Iltimos, uni eslab qoling!</small>`;
-            } else {
+            try {
+                const snapshot = await window.get(window.ref(window.db, 'users'));
+                if (snapshot.exists()) {
+                    const usersData = snapshot.val();
+                    let foundUser = null;
+
+                    for (let login in usersData) {
+                        const u = usersData[login];
+                        if (u.email === email && u.phone === phone) {
+                            foundUser = u;
+                            break;
+                        }
+                    }
+
+                    if (foundUser) {
+                        errorMsg.style.display = 'none';
+                        successMsg.style.display = 'block';
+                        successMsg.innerHTML = `Sizning parolingiz: <strong style="font-size: 1.2rem; color: #6B4EFF;">${foundUser.password}</strong><br><small>Iltimos, uni eslab qoling!</small>`;
+                    } else {
+                        throw new Error('Bunday ma\'lumotlarga ega foydalanuvchi topilmadi.');
+                    }
+                } else {
+                    throw new Error('Hali hech qanday foydalanuvchi ro\'yxatdan o\'tmagan.');
+                }
+            } catch (error) {
                 successMsg.style.display = 'none';
                 errorMsg.style.display = 'block';
-                errorMsg.textContent = 'Bunday ma\'lumotlarga ega foydalanuvchi topilmadi.';
+                errorMsg.textContent = error.message;
             }
         }
 
