@@ -1,4 +1,4 @@
-﻿// --- Custom Confirm Modal Logic ---
+// --- Custom Confirm Modal Logic ---
 let confirmCallback = null;
 
 function showConfirmModal(message, onConfirm, btnText = 'Ha, O\'chirish') {
@@ -194,11 +194,16 @@ function updateUserUI() {
 
     if (usernameEle) usernameEle.textContent = currentUser.name || currentUser.login;
     if (avatarEle) {
+        if (currentUser.avatar) {
+            avatarEle.innerHTML = `<img src="${currentUser.avatar}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">`;
+            avatarEle.style.background = "none";
+        } else {
         const nameParts = (currentUser.name || currentUser.login || "U").split(' ');
         const initials = nameParts.length > 1
             ? (nameParts[0][0] + nameParts[nameParts.length - 1][0]).toUpperCase()
             : nameParts[0].substring(0, 2).toUpperCase();
         avatarEle.textContent = initials;
+        }
     }
 
     // Show Admin Nav if login is admin OR isAdmin property exists
@@ -271,14 +276,24 @@ function switchTab(tabId, element) {
         'calendar': 'Kalendar',
         'finance': 'Moliya',
         'notes': 'Qaydlar',
-        'admin': 'Admin Panel'
+        'admin': 'Admin Panel',
+        'settings': 'Profil Sozlamalari'
     };
     if (tabId === 'dashboard') renderDashboard();
     if (tabId === 'calendar') initCalendar();
     if (tabId === 'finance') initFinance();
     if (tabId === 'notes') renderNotesList();
     if (tabId === 'admin') renderAdminPanel();
-    document.getElementById('page-heading').textContent = headings[tabId];
+    if (tabId === 'settings') loadSettings();
+    document.getElementById('page-heading').textContent = headings[tabId] || 'PlanPro';
+    if (window.lucide) window.lucide.createIcons();
+
+    // If element is not a nav-item (like coming from profile menu), don't try to add active class
+    if (element && element.classList.contains('nav-item')) {
+        const navItems = document.querySelectorAll('.nav-item');
+        navItems.forEach(item => item.classList.remove('active'));
+        element.classList.add('active');
+    }
 }
 
 // --- Kanban Logic ---
@@ -1193,7 +1208,7 @@ function renderRestoreDropdown() {
             item.innerHTML = `
                 <div class="restore-details">
                     <span class="restore-label">${record.label}</span>
-                    <span class="restore-meta">${record.data.length} ta amal · ${time}</span>
+                    <span class="restore-meta">${record.data.length} ta amal � ${time}</span>
                 </div>
                 <button class="restore-btn-action" onclick="restoreFinanceTrash(${record.id})">
                     <i data-lucide="rotate-ccw" style="width:14px"></i> Tiklash
@@ -2010,7 +2025,7 @@ async function deleteOneBroadcast(id, title) {
             }
 
             await window.firebaseUpdate(window.firebaseRef(window.firebaseDB), updates);
-            alert('Xabar o\'chirildi! ✅');
+            alert('Xabar o\'chirildi! ?');
         } catch (e) {
             console.error('Xabarni o\'chirishda xatolik:', e);
         }
@@ -2034,7 +2049,7 @@ async function deleteAllBroadcastMessages() {
             }
 
             await window.firebaseUpdate(window.firebaseRef(window.firebaseDB), updates);
-            alert('Butun tizim xabarlardan tozalandi! 🧹');
+            alert('Butun tizim xabarlardan tozalandi! ??');
         } catch (e) {
             console.error('Tozalashda xatolik:', e);
             alert('Xatolik yuz berdi.');
@@ -2101,7 +2116,7 @@ async function sendGlobalMessage() {
 
             await window.firebaseUpdate(window.firebaseRef(window.firebaseDB), updates);
 
-            alert(`Xabar ${count} ta foydalanuvchiga muvaffaqiyatli yuborildi! вњ…`);
+            alert(`Xabar ${count} ta foydalanuvchiga muvaffaqiyatli yuborildi! ✅`);
             document.getElementById('msg-title').value = '';
             document.getElementById('msg-body').value = '';
         }
@@ -2393,3 +2408,161 @@ document.addEventListener('DOMContentLoaded', () => {
     // The HTML onclick="safeToggleSidebar()" is the primary handler now.
     console.log('Mobile menu logic initialized (Inline handler active)');
 });
+
+// --- Settings Logic ---
+function loadSettings() {
+    if (!currentUser) return;
+
+    // Load profile sidebar info
+    const fullName = currentUser.name || currentUser.login;
+    document.getElementById('settings-user-fullname').textContent = fullName;
+    document.getElementById('settings-user-role').textContent = currentUser.isAdmin ? 'Administrator' : 'Foydalanuvchi';
+    
+    if (currentUser.avatar) {
+        document.getElementById('settings-avatar-img').src = currentUser.avatar;
+    } else {
+        document.getElementById('settings-avatar-img').src = 'assets/default-avatar.png';
+    }
+
+    // Load form data
+    document.getElementById('s-fullname').value = currentUser.name || '';
+    document.getElementById('s-login').value = currentUser.login || '';
+    document.getElementById('s-email').value = currentUser.email || '';
+    document.getElementById('s-phone').value = currentUser.phone || '';
+    document.getElementById('s-location').value = currentUser.location || '';
+    
+    // Clear security tab
+    document.getElementById('s-current-password').value = '';
+    document.getElementById('s-new-password').value = '';
+    document.getElementById('s-confirm-password').value = '';
+}
+
+function showSettingsTab(tabName) {
+    // Update nav active state
+    document.querySelectorAll('.settings-nav-item').forEach(item => item.classList.remove('active'));
+    document.getElementById('set-nav-' + tabName).classList.add('active');
+
+    // Show selected tab content
+    document.querySelectorAll('.settings-tab-content').forEach(tab => tab.style.display = 'none');
+    document.getElementById('settings-tab-' + tabName).style.display = 'block';
+}
+
+function handleAvatarUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    if (file.size > 500000) { // 500KB limit for base64 roughly
+        alert('Rasm hajmi juda katta (max 500KB). Iltimos, kichikroq rasm tanlang.');
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const base64Image = e.target.result;
+        document.getElementById('settings-avatar-img').src = base64Image;
+        
+        // Save avatar immediately to state
+        currentUser.avatar = base64Image;
+        saveUserSettings(true); // silent save for avatar
+    };
+    reader.readAsDataURL(file);
+}
+
+async function saveUserSettings(silent = false) {
+    const name = document.getElementById('s-fullname').value.trim();
+    const email = document.getElementById('s-email').value.trim();
+    const phone = document.getElementById('s-phone').value.trim();
+    const location = document.getElementById('s-location').value.trim();
+
+    if (!name || !email || !phone) {
+        if (!silent) alert('Iltimos, asosiy maydonlarni to\'ldiring!');
+        return;
+    }
+
+    // Update local state
+    currentUser.name = name;
+    currentUser.email = email;
+    currentUser.phone = phone;
+    currentUser.location = location;
+
+    try {
+        // Save to Firebase
+        const userRef = window.firebaseRef(window.firebaseDB, 'users/' + currentUser.login);
+        await window.firebaseUpdate(userRef, {
+            name: currentUser.name,
+            email: currentUser.email,
+            phone: currentUser.phone,
+            location: currentUser.location,
+            avatar: currentUser.avatar || null
+        });
+
+        // Update localStorage
+        localStorage.setItem('dashboard_current_user', JSON.stringify(currentUser));
+        
+        // Update Header UI
+        document.querySelector('.username').textContent = currentUser.name || currentUser.login;
+        if (currentUser.avatar) {
+             const avatarEl = document.querySelector('.avatar');
+             avatarEl.innerHTML = '<img src=\"' + currentUser.avatar + '\" style=\"width:100%; height:100%; border-radius:50%; object-fit:cover;\">';
+             avatarEl.style.background = 'none';
+        }
+
+        if (!silent) alert('Ma\'lumotlar muvaffaqiyatli saqlandi! ?');
+        loadSettings(); // Refresh sidebar info
+    } catch (e) {
+        console.error('Sozlamalarni saqlashda xatolik:', e);
+        if (!silent) alert('Xatolik yuz berdi. Iltimos qaytadan urinib ko\'ring.');
+    }
+}
+
+async function updatePassword() {
+    const currentPass = document.getElementById('s-current-password').value;
+    const newPass = document.getElementById('s-new-password').value;
+    const confirmPass = document.getElementById('s-confirm-password').value;
+
+    if (!currentPass || !newPass || !confirmPass) {
+        alert('Iltimos, barcha parollarni kiriting!');
+        return;
+    }
+
+    if (currentPass !== currentUser.password) {
+        alert('Amaldagi parol noto\'g\'ri!');
+        return;
+    }
+
+    if (newPass.length < 4) {
+        alert('Yangi parol kamida 4 ta belgidan iborat bo\'lishi kerak!');
+        return;
+    }
+
+    if (newPass !== confirmPass) {
+        alert('Yangi parollar bir-biriga mos kelmadi!');
+        return;
+    }
+
+    try {
+        const userRef = window.firebaseRef(window.firebaseDB, 'users/' + currentUser.login);
+        await window.firebaseUpdate(userRef, { password: newPass });
+
+        currentUser.password = newPass;
+        localStorage.setItem('dashboard_current_user', JSON.stringify(currentUser));
+
+        alert('Parol muvaffaqiyatli o\'zgartirildi! ?');
+        
+        // Clear inputs
+        document.getElementById('s-current-password').value = '';
+        document.getElementById('s-new-password').value = '';
+        document.getElementById('s-confirm-password').value = '';
+        
+        showSettingsTab('personal');
+    } catch (e) {
+        console.error('Parol yangilashda xatolik:', e);
+        alert('Xatolik yuz berdi.');
+    }
+}
+
+function resetSettingsForm() {
+    loadSettings();
+    showSettingsTab('personal');
+}
+

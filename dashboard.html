@@ -138,6 +138,10 @@
                         <span class="username">Admin</span>
                         <i data-lucide="chevron-down"></i>
                         <div id="profile-menu" class="profile-dropdown">
+                            <button onclick="switchTab('settings', this); toggleProfileMenu();">
+                                <i data-lucide="settings" style="width:16px"></i>
+                                Sozlamalar
+                            </button>
                             <button onclick="logout()">
                                 <i data-lucide="log-out" style="width:16px"></i>
                                 Chiqish
@@ -544,6 +548,128 @@
                     </div>
                 </div>
             </div>
+
+            <!-- SETTINGS VIEW -->
+            <div id="view-settings" class="content-view" style="display: none;">
+                <div class="settings-container">
+                    <!-- Settings Sidebar -->
+                    <div class="settings-sidebar">
+                        <div class="settings-user-info">
+                            <div class="settings-avatar-wrapper">
+                                <img id="settings-avatar-img" src="assets/default-avatar.png" alt="Avatar"
+                                    class="settings-avatar">
+                                <label for="avatar-upload" class="avatar-edit-icon" title="Rasm yuklash">
+                                    <i data-lucide="camera"></i>
+                                </label>
+                                <input type="file" id="avatar-upload" accept="image/*" style="display: none;"
+                                    onchange="handleAvatarUpload(event)">
+                            </div>
+                            <h3 id="settings-user-fullname">Ism Familiya</h3>
+                            <p id="settings-user-role">Foydalanuvchi</p>
+                        </div>
+                        <nav class="settings-nav">
+                            <a href="#" id="set-nav-personal" class="settings-nav-item active"
+                                onclick="showSettingsTab('personal')">
+                                <i data-lucide="user"></i>
+                                <span>Shaxsiy ma'lumotlar</span>
+                            </a>
+                            <a href="#" id="set-nav-security" class="settings-nav-item"
+                                onclick="showSettingsTab('security')">
+                                <i data-lucide="lock"></i>
+                                <span>Xavfsizlik</span>
+                            </a>
+                            <a href="#" class="settings-nav-item danger" onclick="logout()">
+                                <i data-lucide="log-out"></i>
+                                <span>Chiqish</span>
+                            </a>
+                        </nav>
+                    </div>
+
+                    <!-- Settings Content -->
+                    <div class="settings-content-card">
+                        <!-- Personal Info Tab -->
+                        <div id="settings-tab-personal" class="settings-tab-content">
+                            <div class="settings-header">
+                                <h2>Shaxsiy ma'lumotlar</h2>
+                                <p>Ma'lumotlaringizni shu yerda boshqarishingiz mumkin.</p>
+                            </div>
+                            <div class="settings-form">
+                                <div class="form-row">
+                                    <div class="form-group-settings">
+                                        <label>Ism Familiya</label>
+                                        <input type="text" id="s-fullname" class="settings-input"
+                                            placeholder="Ismingizni kiriting">
+                                    </div>
+                                    <div class="form-group-settings">
+                                        <label>Login (Username)</label>
+                                        <input type="text" id="s-login" class="settings-input" disabled
+                                            title="Loginni o'zgartirib bo'lmaydi">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group-settings" style="flex: 1;">
+                                        <label>Gmail manzilingiz</label>
+                                        <div class="input-with-icon-wrapper">
+                                            <input type="email" id="s-email" class="settings-input"
+                                                placeholder="example@gmail.com">
+                                            <span class="verified-badge"><i data-lucide="check-circle"></i>
+                                                Tasdiqlangan</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group-settings">
+                                        <label>Telefon raqam</label>
+                                        <input type="tel" id="s-phone" class="settings-input"
+                                            placeholder="+998 90 123 45 67">
+                                    </div>
+                                    <div class="form-group-settings">
+                                        <label>Manzil (Ixtiyoriy)</label>
+                                        <input type="text" id="s-location" class="settings-input"
+                                            placeholder="Toshkent, O'zbekiston">
+                                    </div>
+                                </div>
+                                <div class="settings-footer">
+                                    <button class="secondary-btn"
+                                        onclick="switchTab('dashboard', document.querySelector('.nav-item'))">Bekor
+                                        qilish</button>
+                                    <button class="primary-btn" onclick="saveUserSettings()">O'zgarishlarni
+                                        saqlash</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Security Tab -->
+                        <div id="settings-tab-security" class="settings-tab-content" style="display: none;">
+                            <div class="settings-header">
+                                <h2>Xavfsizlik</h2>
+                                <p>Akkountingiz xavfsizligini ta'minlash uchun parolni yangilang.</p>
+                            </div>
+                            <div class="settings-form">
+                                <div class="form-group-settings">
+                                    <label>Joriy parol</label>
+                                    <input type="password" id="s-current-password" class="settings-input"
+                                        placeholder="Amaldagi parolni kiriting">
+                                </div>
+                                <div class="form-group-settings">
+                                    <label>Yangi parol</label>
+                                    <input type="password" id="s-new-password" class="settings-input"
+                                        placeholder="Yangi parol o'ylab toping">
+                                </div>
+                                <div class="form-group-settings">
+                                    <label>Yangi parolni tasdiqlang</label>
+                                    <input type="password" id="s-confirm-password" class="settings-input"
+                                        placeholder="Yangi parolni qayta kiriting">
+                                </div>
+                                <div class="settings-footer">
+                                    <button class="primary-btn" onclick="updatePassword()">Parolni yangilash</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Admin View -->
             <div id="view-admin" class="content-view" style="display: none;">
                 <div class="admin-card">
