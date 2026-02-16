@@ -168,7 +168,7 @@ body {
     border-radius: var(--radius-sm);
     cursor: pointer;
     width: 100%;
-    font-weight: 600;
+    font-weight: 500;
 }
 
 /* Main Content */
@@ -246,7 +246,7 @@ body {
     user-select: none;
 }
 
-.user-profile>* {
+.user-profile>*:not(.profile-dropdown) {
     pointer-events: none;
 }
 
@@ -257,7 +257,8 @@ body {
     background: var(--white);
     border-radius: var(--radius-md);
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-    min-width: 150px;
+    min-width: 170px;
+    pointer-events: auto !important;
     padding: 8px;
     display: none;
     z-index: 1000;
@@ -269,8 +270,8 @@ body {
     text-align: left;
     background: none;
     border: none;
-    color: #FF4D4D;
-    font-weight: 600;
+    color: var(--dark);
+    font-weight: 500;
     cursor: pointer;
     border-radius: var(--radius-sm);
     display: flex;
@@ -280,7 +281,15 @@ body {
 }
 
 .profile-dropdown button:hover {
-    background: #FFF5F5;
+    background: var(--gray-light);
+}
+
+.profile-dropdown button:last-child {
+    color: #EF5C91;
+}
+
+.profile-dropdown button:last-child:hover {
+    background: #FFF5F7;
 }
 
 /* Generic Dropdown styles for Notes */
@@ -331,7 +340,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: 600;
+    font-weight: 500;
     font-size: 0.875rem;
 }
 
@@ -490,7 +499,7 @@ body {
 
 .meta-info {
     font-size: 0.75rem;
-    font-weight: 600;
+    font-weight: 500;
     color: var(--text-main);
     background: var(--gray-light);
     padding: 2px 8px;
@@ -607,7 +616,7 @@ input:checked+.slider:before {
     display: flex;
     align-items: center;
     gap: 8px;
-    font-weight: 600;
+    font-weight: 500;
 }
 
 .primary-btn:hover {
@@ -650,7 +659,7 @@ input:checked+.slider:before {
 
 .header-title h3 {
     font-size: 1rem;
-    font-weight: 600;
+    font-weight: 500;
     color: var(--dark);
 }
 
@@ -689,7 +698,7 @@ input:checked+.slider:before {
     background: var(--gray-medium);
     color: var(--text-muted);
     font-size: 0.75rem;
-    font-weight: 600;
+    font-weight: 500;
     padding: 2px 8px;
     border-radius: 10px;
 }
@@ -733,7 +742,7 @@ input:checked+.slider:before {
 }
 
 .card-title {
-    font-weight: 600;
+    font-weight: 500;
     margin-bottom: 0.5rem;
     color: var(--dark);
     font-size: 0.95rem;
@@ -911,7 +920,7 @@ textarea.modal-input {
     padding: 12px;
     border: none;
     border-radius: var(--radius-sm);
-    font-weight: 600;
+    font-weight: 500;
     cursor: pointer;
     margin-top: 1rem;
     align-self: flex-end;
@@ -1101,7 +1110,7 @@ textarea.modal-input {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    font-weight: 600;
+    font-weight: 500;
     color: var(--text-muted);
     padding: 10px;
 }
@@ -1229,7 +1238,7 @@ textarea.modal-input {
 }
 
 .month-day-num {
-    font-weight: 600;
+    font-weight: 500;
     color: var(--text-muted);
     width: 24px;
     height: 24px;
@@ -1285,7 +1294,7 @@ textarea.modal-input {
 }
 
 .restore-label {
-    font-weight: 600;
+    font-weight: 500;
     font-size: 0.9rem;
     color: var(--text-main);
 }
@@ -1302,7 +1311,7 @@ textarea.modal-input {
     padding: 6px 10px;
     border-radius: 6px;
     font-size: 0.8rem;
-    font-weight: 600;
+    font-weight: 500;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -1413,7 +1422,7 @@ textarea.modal-input {
     padding: 10px 20px;
     border-radius: var(--radius-sm);
     cursor: pointer;
-    font-weight: 600;
+    font-weight: 500;
 }
 
 .danger-btn:hover {
@@ -1481,7 +1490,7 @@ textarea.modal-input {
 }
 
 .h-title {
-    font-weight: 600;
+    font-weight: 500;
     color: var(--text-main);
 }
 
@@ -1583,10 +1592,11 @@ textarea.modal-input {
 }
 
 .date-label {
-    font-weight: 600;
+    font-weight: 500;
     color: var(--text-main);
     font-size: 1rem;
-    min-width: 150px;
+    min-width: 170px;
+    pointer-events: auto !important;
     text-align: center;
 }
 
@@ -1606,7 +1616,7 @@ textarea.modal-input {
 }
 
 .delete-all-btn:hover {
-    background: #fff5f5;
+    background: var(--gray-light);
     color: #EF5C91;
 }
 
@@ -1662,7 +1672,7 @@ textarea.modal-input {
     grid-template-columns: repeat(7, 1fr);
     text-align: center;
     font-size: 0.75rem;
-    font-weight: 600;
+    font-weight: 500;
     color: var(--text-muted);
     margin-bottom: 0.5rem;
 }
@@ -1712,7 +1722,7 @@ textarea.modal-input {
     font-size: 0.85rem;
     color: var(--primary);
     text-decoration: none;
-    font-weight: 600;
+    font-weight: 500;
 }
 
 .dash-task-list,
@@ -1832,7 +1842,7 @@ textarea.modal-input {
 }
 
 .note-item-title {
-    font-weight: 600;
+    font-weight: 500;
     font-size: 0.9rem;
     white-space: nowrap;
     overflow: hidden;
@@ -1997,7 +2007,7 @@ textarea.modal-input {
     padding: 1.2rem;
     border-radius: 30px;
     font-size: 1rem;
-    font-weight: 600;
+    font-weight: 500;
     cursor: pointer;
     transition: transform 0.2s, background 0.2s;
     width: 100%;
@@ -2012,7 +2022,7 @@ textarea.modal-input {
     background: none;
     border: none;
     color: #F85F5F;
-    font-weight: 600;
+    font-weight: 500;
     font-size: 1rem;
     cursor: pointer;
     padding: 0.5rem;
@@ -2052,7 +2062,7 @@ textarea.modal-input {
     padding: 12px 16px;
     border-bottom: 2px solid var(--gray-light);
     color: var(--text-muted);
-    font-weight: 600;
+    font-weight: 500;
     font-size: 0.85rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -2092,7 +2102,7 @@ textarea.modal-input {
     padding: 4px 12px;
     border-radius: 20px;
     font-size: 0.75rem;
-    font-weight: 600;
+    font-weight: 500;
 }
 
 .badge-user {
@@ -2279,7 +2289,7 @@ textarea.modal-input {
 .dropdown-header {
     padding: 16px;
     border-bottom: 1px solid var(--gray-medium);
-    font-weight: 600;
+    font-weight: 500;
     color: var(--dark);
     display: flex;
     justify-content: space-between;
@@ -2344,7 +2354,7 @@ textarea.modal-input {
 
 .item-title {
     font-size: 0.9rem;
-    font-weight: 600;
+    font-weight: 500;
     color: var(--dark);
     margin-bottom: 4px;
 }
@@ -2815,7 +2825,7 @@ textarea.modal-input {
 .info-value {
     font-size: 0.95rem;
     color: #2d3748;
-    font-weight: 600;
+    font-weight: 500;
     padding: 8px 12px;
     background: #f8fafc;
     border-radius: 8px;
@@ -2847,7 +2857,7 @@ textarea.modal-input {
 .user-name-clickable {
     cursor: pointer;
     color: var(--primary);
-    font-weight: 600;
+    font-weight: 500;
     transition: color 0.2s;
 }
 
@@ -3036,6 +3046,7 @@ textarea.modal-input {
     font-size: 0.85rem;
     color: var(--text-muted);
 }
+
 /* Settings Page Styles */
 .settings-container {
     display: flex;
@@ -3126,7 +3137,8 @@ textarea.modal-input {
     width: 20px;
 }
 
-.settings-nav-item:hover, .settings-nav-item.active {
+.settings-nav-item:hover,
+.settings-nav-item.active {
     background: var(--primary-light);
     color: var(--primary);
 }
@@ -3184,7 +3196,7 @@ textarea.modal-input {
 
 .form-group-settings label {
     font-size: 0.9rem;
-    font-weight: 600;
+    font-weight: 500;
     color: var(--dark);
 }
 
@@ -3225,7 +3237,7 @@ textarea.modal-input {
     right: 15px;
     color: #4ADB97;
     font-size: 0.8rem;
-    font-weight: 600;
+    font-weight: 500;
     display: flex;
     align-items: center;
     gap: 4px;
@@ -3244,12 +3256,13 @@ textarea.modal-input {
     .settings-container {
         flex-direction: column;
     }
+
     .settings-sidebar {
         flex: none;
         width: 100%;
     }
+
     .form-row {
         flex-direction: column;
     }
 }
-
