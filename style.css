@@ -1,7 +1,8 @@
 ﻿/* Reset & Variables */
 :root {
-    --primary: #6B4EFF;
-    --primary-light: #EBE6FB;
+    --primary: #7C4DFF;
+    /* More vibrant purple matching logo's PRO box */
+    --primary-light: #F1EDFF;
     --secondary: #EF5C91;
     --accent: #F4B846;
     --dark: #1A1A1A;
