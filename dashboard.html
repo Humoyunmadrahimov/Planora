@@ -255,6 +255,22 @@
                                 <label>Izoh</label>
                                 <textarea id="k-desc" placeholder="Qisqacha izoh..." class="modal-input"></textarea>
 
+                                <div class="modal-row">
+                                    <div class="field-group">
+                                        <label>Muhimlik</label>
+                                        <select id="k-priority" class="modal-select">
+                                            <option value="low">Past</option>
+                                            <option value="medium" selected>O'rtacha</option>
+                                            <option value="high">Yuqori</option>
+                                            <option value="urgent">Shoshilinch</option>
+                                        </select>
+                                    </div>
+                                    <div class="field-group">
+                                        <label>Muddati</label>
+                                        <input type="date" id="k-deadline" class="modal-input">
+                                    </div>
+                                </div>
+
                                 <input type="hidden" id="edit-task-id">
                                 <button onclick="addKanbanTask()" class="modal-submit-btn">Saqlash</button>
                             </div>

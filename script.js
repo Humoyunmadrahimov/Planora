@@ -1,4 +1,4 @@
-// --- Custom Confirm Modal Logic ---
+ï»¿// --- Custom Confirm Modal Logic ---
 let confirmCallback = null;
 
 function showConfirmModal(message, onConfirm, btnText = 'Ha, O\'chirish') {
@@ -198,11 +198,11 @@ function updateUserUI() {
             avatarEle.innerHTML = `<img src="${currentUser.avatar}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">`;
             avatarEle.style.background = "none";
         } else {
-        const nameParts = (currentUser.name || currentUser.login || "U").split(' ');
-        const initials = nameParts.length > 1
-            ? (nameParts[0][0] + nameParts[nameParts.length - 1][0]).toUpperCase()
-            : nameParts[0].substring(0, 2).toUpperCase();
-        avatarEle.textContent = initials;
+            const nameParts = (currentUser.name || currentUser.login || "U").split(' ');
+            const initials = nameParts.length > 1
+                ? (nameParts[0][0] + nameParts[nameParts.length - 1][0]).toUpperCase()
+                : nameParts[0].substring(0, 2).toUpperCase();
+            avatarEle.textContent = initials;
         }
     }
 
@@ -260,24 +260,20 @@ function switchTab(tabId, element) {
         toggleSidebar();
     }
 
-
     const views = document.querySelectorAll('.content-view');
     views.forEach(view => view.style.display = 'none');
 
-    document.getElementById(`view-${tabId}`).style.display = 'block';
-
-    const navItems = document.querySelectorAll('.nav-item');
-    navItems.forEach(item => item.classList.remove('active'));
-    element.classList.add('active');
+    const targetView = document.getElementById(`view-${tabId}`);
+    if (targetView) targetView.style.display = 'block';
 
     const headings = {
-        'dashboard': 'Bosh sahifa',
+        'dashboard': 'Asosiy',
         'tasks': 'Vazifalar',
         'calendar': 'Kalendar',
         'finance': 'Moliya',
         'notes': 'Qaydlar',
-        'admin': 'Admin Panel',
-        'settings': 'Profil Sozlamalari'
+        'admin': 'Admin',
+        'settings': 'Sozlamalar'
     };
     if (tabId === 'dashboard') renderDashboard();
     if (tabId === 'calendar') initCalendar();
@@ -288,56 +284,138 @@ function switchTab(tabId, element) {
     document.getElementById('page-heading').textContent = headings[tabId] || 'PlanPro';
     if (window.lucide) window.lucide.createIcons();
 
-    // If element is not a nav-item (like coming from profile menu), don't try to add active class
-    if (element && element.classList.contains('nav-item')) {
-        const navItems = document.querySelectorAll('.nav-item');
-        navItems.forEach(item => item.classList.remove('active'));
-        element.classList.add('active');
+    // Handle active state
+    if (element) {
+        document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+        if (element.classList.contains('nav-item')) {
+            element.classList.add('active');
+        } else {
+            const correspondingNav = document.querySelector(`.nav-item[onclick*="'${tabId}'"]`);
+            if (correspondingNav) correspondingNav.classList.add('active');
+        }
     }
 }
 
 // --- Kanban Logic ---
-function renderKanbanTasks() {
-    // Clear lists
-    document.getElementById('list-todo').innerHTML = '';
-    document.getElementById('list-in-progress').innerHTML = '';
-    document.getElementById('list-done').innerHTML = '';
+function updateTaskStatus(id, newStatus) {
+    const task = tasks.find(t => t.id === Number(id));
+    if (task && task.status !== newStatus) {
+        task.status = newStatus;
+        saveToCloud();
+        renderKanbanTasks();
+    }
+}
 
-    // Reset counts
+function renderKanbanTasks() {
+    const listIds = ['todo', 'in-progress', 'done'];
+    const listEles = listIds.map(id => document.getElementById(`list-${id}`));
+    listEles.forEach(list => { if (list) list.innerHTML = ''; });
+
     let counts = { 'todo': 0, 'in-progress': 0, 'done': 0 };
 
     tasks.forEach(task => {
-        counts[task.status]++;
-        const card = createKanbanCard(task);
-        document.getElementById(`list-${task.status}`).appendChild(card);
+        if (counts.hasOwnProperty(task.status)) {
+            counts[task.status]++;
+            const card = createKanbanCard(task);
+            const targetList = document.getElementById(`list-${task.status}`);
+            if (targetList) targetList.appendChild(card);
+        }
     });
 
-    // Update counts
-    document.getElementById('count-todo').textContent = counts['todo'];
-    document.getElementById('count-in-progress').textContent = counts['in-progress'];
-    document.getElementById('count-done').textContent = counts['done'];
+    // Empty States
+    listIds.forEach(id => {
+        const list = document.getElementById(`list-${id}`);
+        if (list && list.children.length === 0) {
+            list.innerHTML = `
+                <div class="empty-state" style="padding: 1.5rem 1rem; border: none; background: transparent;">
+                    <i data-lucide="inbox" style="width:20px; opacity:0.3; margin-bottom: 0.5rem;"></i>
+                    <p style="font-size: 0.8rem; opacity: 0.6;">Vazifalar yo'q</p>
+                </div>`;
+        }
+    });
 
-    lucide.createIcons();
+    if (document.getElementById('count-todo')) document.getElementById('count-todo').textContent = counts['todo'];
+    if (document.getElementById('count-in-progress')) document.getElementById('count-in-progress').textContent = counts['in-progress'];
+    if (document.getElementById('count-done')) document.getElementById('count-done').textContent = counts['done'];
+
+    if (window.lucide) window.lucide.createIcons();
     renderDashboard();
 }
 
 function createKanbanCard(task) {
     const div = document.createElement('div');
-    div.className = `kanban-card status-${task.status}`;
+    div.className = `kanban-card status-${task.status} priority-${task.priority || 'medium'}`;
     div.setAttribute('draggable', true);
     div.setAttribute('ondragstart', `drag(event, ${task.id})`);
 
-    // Add click event for editing, but prevent it when clicking the delete button
+    // Add click event for editing, but prevent it when clicking the action buttons
     div.onclick = (e) => {
-        if (!e.target.closest('.card-delete-btn')) {
+        if (!e.target.closest('.card-delete-btn') && !e.target.closest('.card-move-btn')) {
             openEditTaskModal(task.id);
         }
     };
 
+    let moveButtons = '';
+    if (task.status === 'todo') {
+        moveButtons = `
+            <button class="card-move-btn next" onclick="updateTaskStatus(${task.id}, 'in-progress'); event.stopPropagation();" title="Boshlash">
+                <i data-lucide="play" style="width:14px"></i>
+                <span>Boshlash</span>
+            </button>
+        `;
+    } else if (task.status === 'in-progress') {
+        moveButtons = `
+            <div class="move-actions-group">
+                <button class="card-move-btn prev" onclick="updateTaskStatus(${task.id}, 'todo'); event.stopPropagation();" title="Orqaga">
+                    <i data-lucide="arrow-left" style="width:14px"></i>
+                </button>
+                <button class="card-move-btn next finish" onclick="updateTaskStatus(${task.id}, 'done'); event.stopPropagation();" title="Tugatish">
+                    <i data-lucide="check" style="width:14px"></i>
+                    <span>Tugatish</span>
+                </button>
+            </div>
+        `;
+    } else if (task.status === 'done') {
+        moveButtons = `
+            <button class="card-move-btn prev" onclick="updateTaskStatus(${task.id}, 'in-progress'); event.stopPropagation();" title="Qaytarish">
+                <i data-lucide="rotate-ccw" style="width:14px"></i>
+                <span>Qaytarish</span>
+            </button>
+        `;
+    }
+
+    const priorityLabels = {
+        'low': 'Past',
+        'medium': 'O\'rtacha',
+        'high': 'Yuqori',
+        'urgent': 'Shoshilinch'
+    };
+
+    const deadlineHTML = task.deadline ? `
+        <div class="card-meta-item deadline">
+            <i data-lucide="calendar" style="width:12px"></i>
+            <span>${task.deadline}</span>
+        </div>
+    ` : '';
+
+    const initials = currentUser.name ? currentUser.name.split(' ').map(n => n[0]).join('').toUpperCase() : 'U';
+
     div.innerHTML = `
+        <div class="card-priority-tag">${priorityLabels[task.priority || 'medium']}</div>
         <div class="card-title">${task.title}</div>
         <div class="card-desc">${task.desc || ''}</div>
+        
+        <div class="card-meta">
+            ${deadlineHTML}
+            <div class="card-user-avatar" title="${currentUser.name || currentUser.login}">
+                ${currentUser.avatar ? `<img src="${currentUser.avatar}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">` : initials}
+            </div>
+        </div>
+
         <div class="card-footer">
+            <div class="card-actions-left">
+                ${moveButtons}
+            </div>
             <button class="card-delete-btn" onclick="deleteTask(${task.id}); event.stopPropagation();" title="O'chirish">
                 <i data-lucide="trash-2" style="width:16px"></i>
             </button>
@@ -390,6 +468,8 @@ function openTaskModal() {
     document.getElementById('task-modal-title').textContent = 'Yangi Vazifa Qo\'shish';
     document.getElementById('k-title').value = '';
     document.getElementById('k-desc').value = '';
+    document.getElementById('k-priority').value = 'medium';
+    document.getElementById('k-deadline').value = '';
     document.getElementById('edit-task-id').value = '';
     document.getElementById('task-modal').style.display = 'flex';
 }
@@ -401,6 +481,8 @@ function openEditTaskModal(id) {
     document.getElementById('task-modal-title').textContent = 'Vazifani Tahrirlash';
     document.getElementById('k-title').value = task.title;
     document.getElementById('k-desc').value = task.desc || '';
+    document.getElementById('k-priority').value = task.priority || 'medium';
+    document.getElementById('k-deadline').value = task.deadline || '';
     document.getElementById('edit-task-id').value = task.id;
     document.getElementById('task-modal').style.display = 'flex';
 }
@@ -412,10 +494,14 @@ function closeTaskModal() {
 function addKanbanTask() {
     const titleEle = document.getElementById('k-title');
     const descEle = document.getElementById('k-desc');
+    const priorityEle = document.getElementById('k-priority');
+    const deadlineEle = document.getElementById('k-deadline');
     const idEle = document.getElementById('edit-task-id');
 
     const title = titleEle.value.trim();
     const desc = descEle.value.trim();
+    const priority = priorityEle.value;
+    const deadline = deadlineEle.value;
     const editId = idEle.value;
 
     if (!title) {
@@ -429,6 +515,8 @@ function addKanbanTask() {
         if (taskIndex !== -1) {
             tasks[taskIndex].title = title;
             tasks[taskIndex].desc = desc;
+            tasks[taskIndex].priority = priority;
+            tasks[taskIndex].deadline = deadline;
         }
     } else {
         // Add new task
@@ -436,6 +524,8 @@ function addKanbanTask() {
             id: Date.now(),
             title: title,
             desc: desc,
+            priority: priority,
+            deadline: deadline,
             status: 'todo',
         };
         tasks.push(newTask);
@@ -1208,7 +1298,7 @@ function renderRestoreDropdown() {
             item.innerHTML = `
                 <div class="restore-details">
                     <span class="restore-label">${record.label}</span>
-                    <span class="restore-meta">${record.data.length} ta amal · ${time}</span>
+                    <span class="restore-meta">${record.data.length} ta amal ï¿½ ${time}</span>
                 </div>
                 <button class="restore-btn-action" onclick="restoreFinanceTrash(${record.id})">
                     <i data-lucide="rotate-ccw" style="width:14px"></i> Tiklash
@@ -1727,10 +1817,15 @@ async function renderAdminPanel() {
                 const initials = (user.name || '??').split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
                 const isOnline = !!onlineData[user.login];
 
+                const avatarContent = user.avatar
+                    ? `<img src="${user.avatar}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">`
+                    : initials;
+                const avatarStyle = user.avatar ? 'background: none;' : '';
+
                 card.innerHTML = `
                     <div class="user-card-header">
                         <div class="user-info-cell">
-                            <div class="user-avatar-sm">${initials}</div>
+                            <div class="user-avatar-sm" style="${avatarStyle}">${avatarContent}</div>
                             <div class="user-name-clickable" onclick="showUserDetails('${user.login}')">
                                 ${user.name || 'Noma\'lum'}
                             </div>
@@ -1801,7 +1896,14 @@ async function showUserDetails(login) {
 
         // Avatar
         const initials = (displayUser.name || displayUser.login).split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
-        document.getElementById('det-avatar').textContent = initials;
+        const detAvatar = document.getElementById('det-avatar');
+        if (displayUser.avatar) {
+            detAvatar.innerHTML = `<img src="${displayUser.avatar}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">`;
+            detAvatar.style.background = 'none';
+        } else {
+            detAvatar.textContent = initials;
+            detAvatar.style.background = '';
+        }
 
         // Status Badge
         const badge = document.getElementById('det-status-badge');
@@ -2403,10 +2505,22 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.prepend(overlay);
     }
 
-    // Fallback: Bind to class selector too
-    // REMOVED to prevent double-toggle interference with inline safeToggleSidebar
-    // The HTML onclick="safeToggleSidebar()" is the primary handler now.
     console.log('Mobile menu logic initialized (Inline handler active)');
+
+    // Header Scroll Effect
+    const mainContent = document.querySelector('.main-content');
+    if (mainContent) {
+        mainContent.addEventListener('scroll', () => {
+            const topBar = document.querySelector('.top-bar');
+            if (topBar) {
+                if (mainContent.scrollTop > 20) {
+                    topBar.classList.add('scrolled');
+                } else {
+                    topBar.classList.remove('scrolled');
+                }
+            }
+        });
+    }
 });
 
 // --- Settings Logic ---
@@ -2417,7 +2531,7 @@ function loadSettings() {
     const fullName = currentUser.name || currentUser.login;
     document.getElementById('settings-user-fullname').textContent = fullName;
     document.getElementById('settings-user-role').textContent = currentUser.isAdmin ? 'Administrator' : 'Foydalanuvchi';
-    
+
     if (currentUser.avatar) {
         document.getElementById('settings-avatar-img').src = currentUser.avatar;
     } else {
@@ -2430,7 +2544,7 @@ function loadSettings() {
     document.getElementById('s-email').value = currentUser.email || '';
     document.getElementById('s-phone').value = currentUser.phone || '';
     document.getElementById('s-location').value = currentUser.location || '';
-    
+
     // Clear security tab
     document.getElementById('s-current-password').value = '';
     document.getElementById('s-new-password').value = '';
@@ -2457,10 +2571,10 @@ function handleAvatarUpload(event) {
     }
 
     const reader = new FileReader();
-    reader.onload = function(e) {
+    reader.onload = function (e) {
         const base64Image = e.target.result;
         document.getElementById('settings-avatar-img').src = base64Image;
-        
+
         // Save avatar immediately to state
         currentUser.avatar = base64Image;
         saveUserSettings(true); // silent save for avatar
@@ -2498,13 +2612,13 @@ async function saveUserSettings(silent = false) {
 
         // Update localStorage
         localStorage.setItem('dashboard_current_user', JSON.stringify(currentUser));
-        
+
         // Update Header UI
         document.querySelector('.username').textContent = currentUser.name || currentUser.login;
         if (currentUser.avatar) {
-             const avatarEl = document.querySelector('.avatar');
-             avatarEl.innerHTML = '<img src=\"' + currentUser.avatar + '\" style=\"width:100%; height:100%; border-radius:50%; object-fit:cover;\">';
-             avatarEl.style.background = 'none';
+            const avatarEl = document.querySelector('.avatar');
+            avatarEl.innerHTML = '<img src=\"' + currentUser.avatar + '\" style=\"width:100%; height:100%; border-radius:50%; object-fit:cover;\">';
+            avatarEl.style.background = 'none';
         }
 
         if (!silent) alert('Ma\'lumotlar muvaffaqiyatli saqlandi! ?');
@@ -2548,12 +2662,12 @@ async function updatePassword() {
         localStorage.setItem('dashboard_current_user', JSON.stringify(currentUser));
 
         alert('Parol muvaffaqiyatli o\'zgartirildi! ?');
-        
+
         // Clear inputs
         document.getElementById('s-current-password').value = '';
         document.getElementById('s-new-password').value = '';
         document.getElementById('s-confirm-password').value = '';
-        
+
         showSettingsTab('personal');
     } catch (e) {
         console.error('Parol yangilashda xatolik:', e);
