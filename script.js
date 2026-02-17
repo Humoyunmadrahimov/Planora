@@ -362,6 +362,8 @@ function createKanbanCard(task) {
     div.className = `kanban-card status-${task.status}`;
     div.setAttribute('draggable', true);
     div.setAttribute('ondragstart', `drag(event, ${task.id})`);
+    div.setAttribute('ondragend', 'dragEnd(event)');
+    div.setAttribute('data-task-id', task.id);
 
     // Add click event for editing, but prevent it when clicking the action buttons
     div.onclick = (e) => {
@@ -406,26 +408,20 @@ function createKanbanCard(task) {
         </div>
     ` : '';
 
-    const initials = currentUser.name ? currentUser.name.split(' ').map(n => n[0]).join('').toUpperCase() : 'U';
-
     div.innerHTML = `
         <div class="card-title">${task.title}</div>
         <div class="card-desc">${task.desc || ''}</div>
         
-        <div class="card-meta">
-            ${deadlineHTML}
-            <div class="card-user-avatar" title="${currentUser.name || currentUser.login}">
-                ${currentUser.avatar ? `<img src="${currentUser.avatar}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">` : initials}
+        <div class="card-footer" style="border-top: 1px solid #f1f5f9; padding-top: 10px; margin-top: 10px;">
+            <div class="card-meta" style="border:none; padding:0; margin:0;">
+                ${deadlineHTML}
             </div>
-        </div>
-
-        <div class="card-footer">
-            <div class="card-actions-left">
+            <div class="card-actions-right" style="display: flex; align-items: center; gap: 8px;">
                 ${moveButtons}
+                <button class="card-delete-btn" onclick="deleteTask(${task.id}); event.stopPropagation();" title="O'chirish">
+                    <i data-lucide="trash-2" style="width:16px"></i>
+                </button>
             </div>
-            <button class="card-delete-btn" onclick="deleteTask(${task.id}); event.stopPropagation();" title="O'chirish">
-                <i data-lucide="trash-2" style="width:16px"></i>
-            </button>
         </div>
     `;
     return div;
@@ -434,9 +430,13 @@ function createKanbanCard(task) {
 // --- Drag and Drop Logic ---
 
 function drag(ev, taskId) {
-    // Ensure we are setting data correctly. taskId is number, convert to string just in case
     ev.dataTransfer.setData("text", taskId);
     ev.dataTransfer.effectAllowed = "move";
+    ev.target.classList.add('dragging');
+}
+
+function dragEnd(ev) {
+    ev.target.classList.remove('dragging');
 }
 
 function allowDrop(ev) {
@@ -455,16 +455,55 @@ function dragLeave(ev) {
 
 function drop(ev, newStatus) {
     ev.preventDefault();
-    ev.currentTarget.classList.remove('drag-over');
+    const container = ev.currentTarget;
+    container.classList.remove('drag-over');
 
     const taskId = parseInt(ev.dataTransfer.getData("text"));
-    const task = tasks.find(t => t.id === taskId);
+    const taskIndex = tasks.findIndex(t => t.id === taskId);
+    if (taskIndex === -1) return;
 
-    if (task && task.status !== newStatus) {
-        task.status = newStatus;
-        saveToCloud();
-        renderKanbanTasks();
+    const task = tasks[taskIndex];
+
+    // Find where it was dropped within the specific list container
+    const listContainer = document.getElementById(`list-${newStatus}`);
+    const afterElement = getDragAfterElement(listContainer, ev.clientY);
+
+    // Remove from current position
+    tasks.splice(taskIndex, 1);
+
+    // Update status
+    task.status = newStatus;
+
+    if (afterElement == null) {
+        // Appending to the end of the list: Find the last task of this status and insert after it
+        // Or just push to the end of the array if visibility order is maintained
+        tasks.push(task);
+    } else {
+        const afterTaskId = parseInt(afterElement.getAttribute('data-task-id'));
+        const insertIndex = tasks.findIndex(t => t.id === afterTaskId);
+        if (insertIndex !== -1) {
+            tasks.splice(insertIndex, 0, task);
+        } else {
+            tasks.push(task);
+        }
     }
+
+    saveToCloud();
+    renderKanbanTasks();
+}
+
+function getDragAfterElement(container, y) {
+    const draggableElements = [...container.querySelectorAll('.kanban-card:not(.dragging)')];
+
+    return draggableElements.reduce((closest, child) => {
+        const box = child.getBoundingClientRect();
+        const offset = y - box.top - box.height / 2;
+        if (offset < 0 && offset > closest.offset) {
+            return { offset: offset, element: child };
+        } else {
+            return closest;
+        }
+    }, { offset: Number.NEGATIVE_INFINITY }).element;
 }
 
 
