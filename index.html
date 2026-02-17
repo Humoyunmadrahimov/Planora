@@ -54,33 +54,14 @@
         }
 
         .logo-text-large {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 30px;
-        }
-
-        .logo-text-large .logo-plan {
-            color: #5D6370;
-            font-size: 2.5rem;
-            /* Balanced size */
-            font-weight: 800;
-            letter-spacing: -1px;
-        }
-
-        .logo-text-large .logo-pro-box {
-            background: linear-gradient(135deg, #9D50FF 0%, #3CC7F5 100%);
-            color: white;
-            padding: 4px 14px;
-            border-radius: 12px;
-            font-size: 2.1rem;
-            /* Smaller than 'Plan' to align heights visually */
-            font-weight: 900;
-            margin-left: 10px;
-            text-transform: uppercase;
-            line-height: 1.1;
-            display: flex;
-            align-items: center;
+            display: block;
+            width: 250px;
+            height: 80px;
+            margin: 0 auto 30px;
+            background-image: url('assets/logo.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
         }
 
         .form-group {
@@ -270,10 +251,7 @@
 
 <body>
     <div class="auth-container">
-        <div class="logo-text-large">
-            <span class="logo-plan">Plan</span>
-            <div class="logo-pro-box">Pro</div>
-        </div>
+        <div class="logo-text-large"></div>
 
         <div id="login-form">
             <div class="auth-header">
