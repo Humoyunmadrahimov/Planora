@@ -2821,10 +2821,19 @@ textarea.modal-input {
         padding-top: 20px !important;
     }
 
+    .plan-pro-logo {
+        width: 160px !important;
+        height: 40px !important;
+    }
+
     .sidebar .logo {
-        margin-top: 50px !important;
-        margin-bottom: 20px !important;
-        padding-left: 20px !important;
+        margin-top: 12px !important;
+        margin-bottom: 30px !important;
+        padding-left: 65px !important;
+        display: flex !important;
+        align-items: center !important;
+        height: 42px !important;
+        /* Match menu button height */
     }
 
     .sidebar.mobile-open {
@@ -2834,7 +2843,6 @@ textarea.modal-input {
     }
 
     /* Ensure internal items are visible */
-    .sidebar .logo,
     .sidebar .nav-item {
         display: flex;
         visibility: visible !important;
