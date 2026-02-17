@@ -344,7 +344,7 @@ function renderKanbanTasks() {
 
 function createKanbanCard(task) {
     const div = document.createElement('div');
-    div.className = `kanban-card status-${task.status} priority-${task.priority || 'medium'}`;
+    div.className = `kanban-card status-${task.status}`;
     div.setAttribute('draggable', true);
     div.setAttribute('ondragstart', `drag(event, ${task.id})`);
 
@@ -384,13 +384,6 @@ function createKanbanCard(task) {
         `;
     }
 
-    const priorityLabels = {
-        'low': 'Past',
-        'medium': 'O\'rtacha',
-        'high': 'Yuqori',
-        'urgent': 'Shoshilinch'
-    };
-
     const deadlineHTML = task.deadline ? `
         <div class="card-meta-item deadline">
             <i data-lucide="calendar" style="width:12px"></i>
@@ -401,7 +394,6 @@ function createKanbanCard(task) {
     const initials = currentUser.name ? currentUser.name.split(' ').map(n => n[0]).join('').toUpperCase() : 'U';
 
     div.innerHTML = `
-        <div class="card-priority-tag">${priorityLabels[task.priority || 'medium']}</div>
         <div class="card-title">${task.title}</div>
         <div class="card-desc">${task.desc || ''}</div>
         
@@ -468,7 +460,6 @@ function openTaskModal() {
     document.getElementById('task-modal-title').textContent = 'Yangi Vazifa Qo\'shish';
     document.getElementById('k-title').value = '';
     document.getElementById('k-desc').value = '';
-    document.getElementById('k-priority').value = 'medium';
     document.getElementById('k-deadline').value = '';
     document.getElementById('edit-task-id').value = '';
     document.getElementById('task-modal').style.display = 'flex';
@@ -481,7 +472,6 @@ function openEditTaskModal(id) {
     document.getElementById('task-modal-title').textContent = 'Vazifani Tahrirlash';
     document.getElementById('k-title').value = task.title;
     document.getElementById('k-desc').value = task.desc || '';
-    document.getElementById('k-priority').value = task.priority || 'medium';
     document.getElementById('k-deadline').value = task.deadline || '';
     document.getElementById('edit-task-id').value = task.id;
     document.getElementById('task-modal').style.display = 'flex';
@@ -494,13 +484,11 @@ function closeTaskModal() {
 function addKanbanTask() {
     const titleEle = document.getElementById('k-title');
     const descEle = document.getElementById('k-desc');
-    const priorityEle = document.getElementById('k-priority');
     const deadlineEle = document.getElementById('k-deadline');
     const idEle = document.getElementById('edit-task-id');
 
     const title = titleEle.value.trim();
     const desc = descEle.value.trim();
-    const priority = priorityEle.value;
     const deadline = deadlineEle.value;
     const editId = idEle.value;
 
@@ -515,7 +503,6 @@ function addKanbanTask() {
         if (taskIndex !== -1) {
             tasks[taskIndex].title = title;
             tasks[taskIndex].desc = desc;
-            tasks[taskIndex].priority = priority;
             tasks[taskIndex].deadline = deadline;
         }
     } else {
@@ -524,7 +511,6 @@ function addKanbanTask() {
             id: Date.now(),
             title: title,
             desc: desc,
-            priority: priority,
             deadline: deadline,
             status: 'todo',
         };
