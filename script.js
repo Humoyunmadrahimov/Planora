@@ -275,6 +275,21 @@ function switchTab(tabId, element) {
         'admin': 'Admin',
         'settings': 'Sozlamalar'
     };
+
+    // Update Sidebar Logo dynamically
+    const logoMap = {
+        'dashboard': 'logo.png',
+        'tasks': 'vazifa-01.png',
+        'finance': 'moliya-01.png',
+        'calendar': 'kalendar-01.png',
+        'notes': 'qaydlar-01.png'
+    };
+    const logoEle = document.getElementById('sidebar-logo');
+    if (logoEle) {
+        const logoFile = logoMap[tabId] || 'logo.png';
+        logoEle.style.backgroundImage = `url('assets/${logoFile}')`;
+    }
+
     if (tabId === 'dashboard') renderDashboard();
     if (tabId === 'calendar') initCalendar();
     if (tabId === 'finance') initFinance();
