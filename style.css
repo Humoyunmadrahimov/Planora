@@ -72,22 +72,26 @@ body {
 
 .plan-pro-logo .logo-plan {
     color: #5D6370;
-    font-size: 1.8rem;
-    font-weight: 700;
+    font-size: 1.6rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
 }
 
 .plan-pro-logo .logo-pro-box {
     background: linear-gradient(135deg, #9D50FF 0%, #3CC7F5 100%);
     color: white;
-    padding: 2px 10px;
-    border-radius: 8px;
-    font-size: 1.6rem;
-    font-weight: 800;
-    margin-left: 8px;
+    padding: 3px 10px;
+    border-radius: 10px;
+    /* More rounded as in image */
+    font-size: 1.4rem;
+    /* Slightly smaller to match 'Plan' height */
+    font-weight: 900;
+    margin-left: 6px;
     display: flex;
     align-items: center;
     justify-content: center;
     text-transform: uppercase;
+    line-height: 1;
 }
 
 .logo {
