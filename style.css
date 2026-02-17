@@ -2818,12 +2818,12 @@ textarea.modal-input {
         display: flex;
         flex-direction: column !important;
         box-shadow: 5px 0 25px rgba(0, 0, 0, 0.1) !important;
-        padding-top: 20px !important;
+        padding-top: 0 !important;
     }
 
     .plan-pro-logo {
         width: 160px !important;
-        height: 40px !important;
+        height: 42px !important;
     }
 
     .sidebar .logo {
@@ -2833,7 +2833,6 @@ textarea.modal-input {
         display: flex !important;
         align-items: center !important;
         height: 42px !important;
-        /* Match menu button height */
     }
 
     .sidebar.mobile-open {
