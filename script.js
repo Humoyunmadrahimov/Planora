@@ -593,6 +593,7 @@ function deleteTask(id) {
 
 // --- CALENDAR LOGIC ---
 let currentDate = new Date();
+let selectedDate = new Date();
 let calendarView = 'month'; // 'week' or 'month'
 
 // Initialize Calendar
@@ -626,16 +627,21 @@ function setCalendarView(view, btn) {
 function changeCalendarDate(delta) {
     if (calendarView === 'week') {
         currentDate.setDate(currentDate.getDate() + (delta * 7));
+        selectedDate = new Date(currentDate);
     } else if (calendarView === 'month') {
         currentDate.setMonth(currentDate.getMonth() + delta);
+        // On month change, select the 1st of that month
+        selectedDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
     } else {
         currentDate.setFullYear(currentDate.getFullYear() + delta);
+        selectedDate = new Date(currentDate.getFullYear(), 0, 1);
     }
     renderCalendar();
 }
 
 function goToToday() {
     currentDate = new Date();
+    selectedDate = new Date();
 
     // If in year view, switch to month view to see the actual day
     if (calendarView === 'year') {
@@ -687,6 +693,11 @@ function renderCalendar() {
         grid.className = 'calendar-grid-v3 month-view';
         renderMonthView(grid);
         label.textContent = `${monthNames[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
+
+        // Mobile optimization: update events list for selected date
+        if (window.innerWidth <= 768) {
+            renderDayEvents(selectedDate.toISOString().split('T')[0]);
+        }
     } else if (calendarView === 'year') {
         grid.className = 'calendar-grid-v3 year-view';
         renderYearView(grid);
@@ -792,6 +803,9 @@ function renderMonthView(container) {
         container.appendChild(empty);
     }
 
+    const todayStr = new Date().toISOString().split('T')[0];
+    const selDateStr = selectedDate.toISOString().split('T')[0];
+
     for (let i = 1; i <= lastDayOfMonth.getDate(); i++) {
         const cellDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), i);
         const dateStr = cellDate.toISOString().split('T')[0];
@@ -799,12 +813,17 @@ function renderMonthView(container) {
         const cell = document.createElement('div');
         cell.className = 'v3-cell';
 
-        const today = new Date();
-        if (dateStr === today.toISOString().split('T')[0]) cell.classList.add('today');
-
-        cell.innerHTML = `<div class="v3-day-num">${i}</div>`;
+        if (dateStr === todayStr) cell.classList.add('today');
+        if (dateStr === selDateStr) cell.classList.add('selected');
 
         const dayEvents = events.filter(e => e.date === dateStr);
+        if (dayEvents.length > 0) cell.classList.add('has-events');
+
+        cell.innerHTML = `
+            <div class="v3-day-num">${i}</div>
+            <div class="v3-dot-indicator"></div>
+        `;
+
         dayEvents.forEach(ev => {
             const evDiv = document.createElement('div');
             evDiv.className = 'v3-event';
@@ -820,14 +839,65 @@ function renderMonthView(container) {
         });
 
         cell.onclick = (e) => {
-            if (e.target === cell || e.target.classList.contains('v3-day-num')) {
-                editingEventId = null;
-                openEventModalWithDate(dateStr, '09:00');
+            if (window.innerWidth <= 768) {
+                selectedDate = new Date(dateStr);
+                renderMonthView(container);
+                renderDayEvents(dateStr);
+            } else {
+                if (e.target === cell || e.target.classList.contains('v3-day-num') || e.target.classList.contains('v3-dot-indicator')) {
+                    editingEventId = null;
+                    openEventModalWithDate(dateStr, '09:00');
+                }
             }
         };
 
         container.appendChild(cell);
     }
+}
+
+function renderDayEvents(dateStr) {
+    const panel = document.getElementById('event-details-panel');
+    if (!panel) return;
+
+    const dayEvents = events.filter(e => e.date === dateStr);
+    const d = new Date(dateStr);
+    const monthNames = ["Yanvar", "Fevral", "Mart", "Aprel", "May", "Iyun", "Iyul", "Avgust", "Sentabr", "Oktabr", "Noyabr", "Dekabr"];
+    const formattedDate = `${d.getDate()}-${monthNames[d.getMonth()]}`;
+
+    if (dayEvents.length === 0) {
+        panel.innerHTML = `
+            <div class="no-selection-state">
+                <div class="illus-circle"><i data-lucide="calendar"></i></div>
+                <h3>${formattedDate}</h3>
+                <p>Ushbu kunda rejalar yo'q.</p>
+                <button class="primary-btn-modern" onclick="openEventModalWithDate('${dateStr}', '09:00')" style="margin-top:15px;">
+                    <i data-lucide="plus"></i> Reja qo'shish
+                </button>
+            </div>
+        `;
+    } else {
+        panel.innerHTML = `
+            <div class="day-events-header">
+                <h3>${formattedDate} rejalari</h3>
+            </div>
+            <div class="day-events-list">
+                ${dayEvents.map(ev => `
+                    <div class="day-event-card" onclick="showEventDetails(${ev.id})">
+                        <div class="event-card-color" style="background:${ev.color}"></div>
+                        <div class="event-card-info">
+                            <div class="event-card-time">${ev.time}</div>
+                            <div class="event-card-title">${ev.title}</div>
+                        </div>
+                        <i data-lucide="chevron-right"></i>
+                    </div>
+                `).join('')}
+            </div>
+            <button class="primary-btn-modern" onclick="openEventModalWithDate('${dateStr}', '09:00')" style="margin-top:15px; width:100%;">
+                <i data-lucide="plus"></i> Yana qo'shish
+            </button>
+        `;
+    }
+    if (window.lucide) window.lucide.createIcons();
 }
 
 
