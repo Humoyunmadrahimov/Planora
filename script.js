@@ -1730,6 +1730,7 @@ function renderDashboard() {
     renderDashTasks();
     renderMiniCalendar();
     renderDashEvents();
+    renderFocusBlock(); // Add Focus Block
 
     // Update completed task count and efficiency
     const totalTasks = tasks.length;
@@ -1743,6 +1744,96 @@ function renderDashboard() {
 
     const efficiencyEle = document.getElementById('dash-efficiency');
     if (efficiencyEle) efficiencyEle.textContent = efficiency + '%';
+}
+
+function renderFocusBlock() {
+    const block = document.getElementById('focus-block');
+    if (!block) return;
+
+    // Ensure block is visible
+    block.style.display = 'block';
+
+    const todayStr = new Date().toISOString().split('T')[0];
+    const now = new Date();
+
+    // 1. Today's Tasks
+    const todayTasks = tasks.filter(t => t.deadline === todayStr && t.status !== 'done');
+    const todayTasksCount = todayTasks.length;
+
+    // 2. Overdue Tasks
+    const overdueTasks = tasks.filter(t => {
+        if (!t.deadline || t.status === 'done' || t.status === 'archived') return false;
+        return t.deadline < todayStr;
+    });
+    const overdueCount = overdueTasks.length;
+
+    // 3. Next Event Logic
+    // Convert current time to string "HH:MM" for comparison
+    const currentHH = String(now.getHours()).padStart(2, '0');
+    const currentMM = String(now.getMinutes()).padStart(2, '0');
+    const currentTimeStr = `${currentHH}:${currentMM}`;
+
+    // Filter events for today and time > now
+    const todayEvents = events.filter(e => e.date === todayStr);
+    const nextEvents = todayEvents.filter(e => e.time > currentTimeStr);
+
+    // Sort by time
+    nextEvents.sort((a, b) => a.time.localeCompare(b.time));
+    const nextEvent = nextEvents.length > 0 ? nextEvents[0] : null;
+
+    // Check for next urgent task within today if no events
+    let nextTask = null;
+    if (!nextEvent && todayTasksCount > 0) {
+        // Just pick the first todo task
+        nextTask = todayTasks[0];
+    }
+
+    // Update UI elements
+    const countEl = document.getElementById('focus-today-count');
+    const overdueEl = document.getElementById('focus-overdue-count');
+    const nextEl = document.getElementById('focus-next-time');
+
+    if (countEl) {
+        if (todayTasksCount === 0) {
+            countEl.textContent = "Bugun uchun vazifalar rejalashtirilmagan";
+        } else {
+            countEl.textContent = `Bugun ${todayTasksCount} ta vazifa rejalangan`;
+        }
+    }
+
+    if (overdueEl) {
+        // Handle Previous Sibling (Dot) visibility
+        const prevDot = overdueEl.previousElementSibling;
+
+        if (overdueCount > 0) {
+            overdueEl.textContent = `${overdueCount} tasi kechikkan`;
+            overdueEl.style.display = 'inline';
+            if (prevDot) prevDot.style.display = 'inline';
+        } else {
+            overdueEl.style.display = 'none';
+            if (prevDot) prevDot.style.display = 'none';
+        }
+    }
+
+    if (nextEl) {
+        // Handle Previous Sibling (Dot) visibility for nextEl
+        const prevDot = nextEl.previousElementSibling;
+
+        if (nextEvent) {
+            nextEl.textContent = `Keyingi reja: ${nextEvent.time} (${nextEvent.title})`;
+            nextEl.className = 'focus-dim'; // Normal style
+        } else if (todayTasksCount > 0) {
+            nextEl.textContent = "Vazifalarni bajarish vaqti!";
+            nextEl.className = 'focus-highlight'; // Highlight action
+        } else {
+            nextEl.textContent = "Barchasi bajarildi ✅";
+            nextEl.className = 'focus-highlight'; // Success style
+        }
+    }
+
+    if (window.lucide) window.lucide.createIcons();
+
+
 }
 
 function renderDashBalance() {

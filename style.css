@@ -4556,3 +4556,119 @@ textarea.modal-input {
         width: 16px;
     }
 }
+
+/* Focus Block */
+.focus-section {
+    margin-bottom: 2rem;
+    animation: fadeIn 0.5s ease-out;
+}
+
+.focus-card {
+    background: var(--white);
+    padding: 1.25rem 1.5rem;
+    border-radius: var(--radius-lg);
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    position: relative;
+    /* Gradient Border Trick for Rounded Corners */
+    border: double 2px transparent;
+    border-radius: var(--radius-lg);
+    background-image: linear-gradient(white, white),
+        linear-gradient(135deg, var(--primary), var(--secondary));
+    background-origin: border-box;
+    background-clip: content-box, border-box;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.3s ease;
+}
+
+.focus-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(124, 77, 255, 0.15);
+}
+
+.focus-icon-box {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(124, 77, 255, 0.1), rgba(239, 92, 145, 0.1));
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.focus-icon-box i {
+    width: 24px;
+    height: 24px;
+}
+
+.focus-content {
+    flex: 1;
+}
+
+.focus-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+    color: var(--dark);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.focus-details {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    font-size: 0.95rem;
+    color: var(--text-muted);
+}
+
+.focus-dot {
+    color: var(--gray-medium);
+}
+
+.focus-highlight {
+    color: var(--secondary);
+    font-weight: 600;
+}
+
+.focus-dim {
+    color: var(--text-muted);
+    opacity: 0.9;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 768px) {
+    .focus-card {
+        flex-direction: column;
+        text-align: center;
+        padding: 1.5rem;
+        gap: 1rem;
+    }
+
+    .focus-details {
+        justify-content: center;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .focus-dot {
+        display: none;
+    }
+}
