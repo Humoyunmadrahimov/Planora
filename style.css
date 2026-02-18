@@ -4557,58 +4557,92 @@ textarea.modal-input {
     }
 }
 
-/* Focus Block - Premium Smart Card */
+/* Focus Block - High-End SaaS Smart Card */
 .focus-section {
     margin-bottom: 2rem;
-    animation: fadeIn 0.5s ease-out;
+    animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .focus-card {
     position: relative;
-    padding: 1.25rem 1.5rem;
-    border-radius: var(--radius-lg);
+    padding: 1.5rem 1.75rem;
+    border-radius: 24px;
+    /* Slightly softer corners */
     display: flex;
     align-items: center;
-    gap: 1.5rem;
-    /* Gradient Border Maintained but Thinner via transparent border and background clip */
-    border: 1px solid transparent;
-    background-image: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)),
-        linear-gradient(135deg, var(--primary), var(--secondary));
-    background-origin: border-box;
-    background-clip: padding-box, border-box;
-    /* Soft Glass Effect */
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    box-shadow: 0 8px 30px rgba(107, 78, 255, 0.08);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    gap: 1.75rem;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.8) 100%);
+
+    /* Depth and Glow Effect */
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow:
+        0 10px 40px rgba(107, 78, 255, 0.06),
+        0 0 0 1px rgba(107, 78, 255, 0.05),
+        inset 0 0 12px rgba(255, 255, 255, 0.5);
+
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    overflow: hidden;
+}
+
+/* Edge Glow Gradient */
+.focus-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: inherit;
+    padding: 1.5px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0.6;
+    pointer-events: none;
 }
 
 .focus-card:hover {
-    transform: scale(1.005);
-    box-shadow: 0 12px 35px rgba(107, 78, 255, 0.12);
+    transform: translateY(-2px) scale(1.005);
+    box-shadow:
+        0 20px 50px rgba(107, 78, 255, 0.12),
+        0 0 15px rgba(124, 77, 255, 0.1);
 }
 
 .focus-icon-box {
-    width: 52px;
-    height: 52px;
-    border-radius: 50%;
-    /* Glassy Icon Background */
-    background: rgba(255, 255, 255, 0.7);
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    box-shadow: 0 4px 12px rgba(124, 77, 255, 0.08);
+    width: 56px;
+    height: 56px;
+    border-radius: 18px;
+    /* Squircle style */
+    background: #fff;
     color: var(--primary);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.5rem;
     flex-shrink: 0;
-    backdrop-filter: blur(4px);
+    position: relative;
+
+    /* Floating Effect with Dual Shadow */
+    box-shadow:
+        0 8px 16px rgba(124, 77, 255, 0.1),
+        0 2px 4px rgba(0, 0, 0, 0.02);
+    border: 1px solid rgba(124, 77, 255, 0.05);
+    transition: all 0.3s ease;
+}
+
+.focus-card:hover .focus-icon-box {
+    transform: translateY(-4px) rotate(-5deg);
+    box-shadow:
+        0 12px 24px rgba(124, 77, 255, 0.15),
+        0 4px 8px rgba(0, 0, 0, 0.04);
 }
 
 .focus-icon-box i {
-    width: 26px;
-    height: 26px;
-    filter: drop-shadow(0 2px 4px rgba(124, 77, 255, 0.15));
+    width: 28px;
+    height: 28px;
+    stroke-width: 2.2px;
 }
 
 .focus-content {
@@ -4616,21 +4650,21 @@ textarea.modal-input {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    /* Vertical Balance */
-    gap: 10px;
-    /* Increased vertical spacing */
+    gap: 12px;
+    text-align: left;
+    /* Optical balance to left */
 }
 
 .focus-title {
     font-family: var(--font-heading);
-    font-size: 1.15rem;
+    font-size: 1.2rem;
     font-weight: 700;
-    color: var(--dark);
+    color: var(--dark-purple);
     display: flex;
     align-items: center;
     gap: 8px;
     margin: 0;
-    line-height: 1.2;
+    letter-spacing: -0.01em;
 }
 
 .focus-details {
@@ -4638,32 +4672,39 @@ textarea.modal-input {
     align-items: center;
     flex-wrap: wrap;
     gap: 12px;
-    /* Increased spacing between chips */
 }
 
-/* Badge / Chip Styles */
+/* Premium Glass Chip Style */
 .focus-badge {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 0.85rem;
-    font-weight: 500;
-    transition: all 0.2s ease;
+    gap: 8px;
+    padding: 7px 14px;
+    border-radius: 12px;
+    font-size: 0.875rem;
+    font-weight: 600;
+
+    /* Glass Effect for badges */
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.focus-badge:hover {
+    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 .focus-badge.default {
-    background: rgba(124, 77, 255, 0.08);
-    /* Primary Light */
+    background: rgba(124, 77, 255, 0.06);
     color: var(--primary);
 }
 
 .focus-badge.warning {
-    background: rgba(239, 92, 145, 0.1);
-    /* Secondary Light */
+    background: rgba(239, 92, 145, 0.08);
     color: var(--secondary);
-    font-weight: 600;
 }
 
 .focus-badge.info {
@@ -4672,27 +4713,14 @@ textarea.modal-input {
 }
 
 .focus-badge i {
-    width: 14px;
-    height: 14px;
-}
-
-.focus-dot {
-    display: none;
-    /* Removed in favor of badges */
-}
-
-.focus-highlight {
-    /* Inherited by badge warning/info */
-}
-
-.focus-dim {
-    /* Inherited by badge */
+    width: 15px;
+    height: 15px;
 }
 
 @keyframes fadeIn {
     from {
         opacity: 0;
-        transform: translateY(10px);
+        transform: translateY(15px);
     }
 
     to {
@@ -4705,16 +4733,17 @@ textarea.modal-input {
     .focus-card {
         flex-direction: column;
         text-align: center;
-        padding: 1.5rem;
-        gap: 1rem;
+        padding: 2rem 1.5rem;
+        gap: 1.25rem;
+        border-radius: 30px;
     }
 
     .focus-content {
         align-items: center;
+        text-align: center;
     }
 
     .focus-details {
         justify-content: center;
-        gap: 8px;
     }
 }
