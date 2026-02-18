@@ -3068,19 +3068,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
     console.log('Mobile menu logic initialized (Inline handler active)');
 
-    // Header Scroll Effect
+    // Header Scroll Effect - Optimized for Apple-level smoothness
     const mainContent = document.querySelector('.main-content');
-    if (mainContent) {
+    const topBar = document.querySelector('.top-bar');
+
+    if (mainContent && topBar) {
+        let lastScrolled = false;
+
         mainContent.addEventListener('scroll', () => {
-            const topBar = document.querySelector('.top-bar');
-            if (topBar) {
-                if (mainContent.scrollTop > 20) {
-                    topBar.classList.add('scrolled');
-                } else {
-                    topBar.classList.remove('scrolled');
-                }
+            const isScrolled = mainContent.scrollTop > 10;
+
+            if (isScrolled !== lastScrolled) {
+                lastScrolled = isScrolled;
+                requestAnimationFrame(() => {
+                    topBar.classList.toggle('scrolled', isScrolled);
+                });
             }
-        });
+        }, { passive: true });
     }
 });
 
