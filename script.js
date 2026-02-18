@@ -1918,35 +1918,6 @@ function insertHorizontalLine() {
     saveCurrentNote();
 }
 
-function insertTable() {
-    const textarea = document.getElementById('note-content');
-    if (!textarea) return;
-
-    // Simple prompt-based table generator
-    const r = prompt("Qatorlar soni (Rows):", "3");
-    const c = prompt("Ustunlar soni (Cols):", "3");
-    const rows = parseInt(r);
-    const cols = parseInt(c);
-
-    if (rows > 0 && cols > 0) {
-        let table = "\n";
-        // Header
-        for (let j = 0; j < cols; j++) { table += "|       "; }
-        table += "|\n";
-        // Separator
-        for (let j = 0; j < cols; j++) { table += "|-------"; }
-        table += "|\n";
-        // Body
-        for (let i = 0; i < rows; i++) {
-            for (let j = 0; j < cols; j++) { table += "|       "; }
-            table += "|\n";
-        }
-        table += "\n";
-        textarea.value += table;
-        saveCurrentNote();
-    }
-}
-
 function deleteCurrentNote() {
     if (!currentNoteId) return;
 
