@@ -1873,8 +1873,13 @@ function renderDashboardSummary() {
 
     list.innerHTML = '';
 
-    // Format Date Header
-    const dateStr = selectedDashboardDate.toLocaleDateString('uz-UZ', { day: 'numeric', month: 'long' });
+    // Format Date Header manually
+    const monthIndex = selectedDashboardDate.getMonth();
+    const day = selectedDashboardDate.getDate();
+    const uzbekMonths = ["Yanvar", "Fevral", "Mart", "Aprel", "May", "Iyun", "Iyul", "Avgust", "Sentabr", "Oktabr", "Noyabr", "Dekabr"];
+    // e.g. "11-Fevral"
+    const dateStr = `${day}-${uzbekMonths[monthIndex]}`;
+
     header.textContent = `${dateStr}dagi ko'rsatkichlar`;
 
     // 1. Filter Data
@@ -1935,6 +1940,7 @@ function renderDashboardSummary() {
             item.className = 'dash-event-item';
 
             let icon = 'calendar';
+            const typeLabel = ev.type || 'Umumiy';
             if (ev.type === 'personal') icon = 'user';
             else if (ev.type === 'work') icon = 'briefcase';
 
@@ -1942,7 +1948,7 @@ function renderDashboardSummary() {
                 <div class="dash-event-time">${ev.time}</div>
                 <div class="dash-event-info">
                     <div class="dash-event-title">${ev.title}</div>
-                    <div class="dash-event-type"><i data-lucide="${icon}" style="width:12px"></i> ${ev.type}</div>
+                    <div class="dash-event-type"><i data-lucide="${icon}" style="width:12px"></i> ${typeLabel}</div>
                 </div>
             `;
             list.appendChild(item);
