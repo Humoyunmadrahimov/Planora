@@ -1834,6 +1834,14 @@ function renderFocusBlock() {
     if (window.lucide) window.lucide.createIcons();
 }
 
+let isBalancePrivate = localStorage.getItem('planpro_balance_private') !== 'false';
+
+function toggleBalancePrivacy() {
+    isBalancePrivate = !isBalancePrivate;
+    localStorage.setItem('planpro_balance_private', isBalancePrivate);
+    renderDashBalance();
+}
+
 function renderDashBalance() {
     let allTimeIncome = 0;
     let allTimeExpense = 0;
@@ -1843,7 +1851,24 @@ function renderDashBalance() {
     });
     const balance = allTimeIncome - allTimeExpense;
     const dashBalEle = document.getElementById('dash-balance');
-    if (dashBalEle) dashBalEle.textContent = formatMoney(balance);
+    const eyeIcon = document.getElementById('balance-eye-icon');
+
+    if (dashBalEle) {
+        // Subtle fade transition for the value
+        dashBalEle.style.opacity = '0';
+
+        setTimeout(() => {
+            if (isBalancePrivate) {
+                dashBalEle.textContent = "********* so'm";
+                if (eyeIcon) eyeIcon.setAttribute('data-lucide', 'eye-off');
+            } else {
+                dashBalEle.textContent = formatMoney(balance);
+                if (eyeIcon) eyeIcon.setAttribute('data-lucide', 'eye');
+            }
+            dashBalEle.style.opacity = '1';
+            if (window.lucide) window.lucide.createIcons();
+        }, 120);
+    }
 }
 
 function renderDashTasks() {
