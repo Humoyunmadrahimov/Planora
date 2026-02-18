@@ -376,7 +376,7 @@ function createKanbanCard(task) {
     if (task.status === 'todo') {
         moveButtons = `
             <button class="card-move-btn next" onclick="updateTaskStatus(${task.id}, 'in-progress'); event.stopPropagation();" title="Boshlash">
-                <i data-lucide="play" style="width:14px"></i>
+                <i data-lucide="play"></i>
                 <span>Boshlash</span>
             </button>
         `;
@@ -384,10 +384,10 @@ function createKanbanCard(task) {
         moveButtons = `
             <div class="move-actions-group">
                 <button class="card-move-btn prev" onclick="updateTaskStatus(${task.id}, 'todo'); event.stopPropagation();" title="Orqaga">
-                    <i data-lucide="arrow-left" style="width:14px"></i>
+                    <i data-lucide="arrow-left"></i>
                 </button>
                 <button class="card-move-btn next finish" onclick="updateTaskStatus(${task.id}, 'done'); event.stopPropagation();" title="Tugatish">
-                    <i data-lucide="check" style="width:14px"></i>
+                    <i data-lucide="check"></i>
                     <span>Tugatish</span>
                 </button>
             </div>
@@ -395,7 +395,7 @@ function createKanbanCard(task) {
     } else if (task.status === 'done') {
         moveButtons = `
             <button class="card-move-btn prev" onclick="updateTaskStatus(${task.id}, 'in-progress'); event.stopPropagation();" title="Qaytarish">
-                <i data-lucide="rotate-ccw" style="width:14px"></i>
+                <i data-lucide="rotate-ccw"></i>
                 <span>Qaytarish</span>
             </button>
         `;
@@ -403,7 +403,6 @@ function createKanbanCard(task) {
 
     const deadlineHTML = task.deadline ? `
         <div class="card-meta-item deadline">
-            <i data-lucide="calendar" style="width:12px"></i>
             <span>${task.deadline}</span>
         </div>
     ` : '';
@@ -412,14 +411,14 @@ function createKanbanCard(task) {
         <div class="card-title">${task.title}</div>
         <div class="card-desc">${task.desc || ''}</div>
         
-        <div class="card-footer" style="border-top: 1px solid #f1f5f9; padding-top: 10px; margin-top: 10px;">
-            <div class="card-meta" style="border:none; padding:0; margin:0;">
+        <div class="card-footer">
+            <div class="card-meta">
                 ${deadlineHTML}
             </div>
-            <div class="card-actions-right" style="display: flex; align-items: center; gap: 8px;">
+            <div class="card-actions-right">
                 ${moveButtons}
                 <button class="card-delete-btn" onclick="deleteTask(${task.id}); event.stopPropagation();" title="O'chirish">
-                    <i data-lucide="trash-2" style="width:16px"></i>
+                    <i data-lucide="trash-2"></i>
                 </button>
             </div>
         </div>
@@ -1497,8 +1496,8 @@ function renderDashTasks() {
         item.innerHTML = `
             <div class="task-status-dot" style="background: #F4B846;"></div>
             <div class="dash-task-info">
-                <div style="font-weight:600; font-size:0.95rem;">${task.title}</div>
-                <div style="font-size:0.8rem; color:#888;">${task.desc || ''}</div>
+                <div class="dash-task-title">${task.title}</div>
+                <div class="dash-task-desc">${task.desc || ''}</div>
             </div>
         `;
         list.appendChild(item);
@@ -1573,6 +1572,12 @@ function renderMiniCalendar() {
         const span = document.createElement('span');
         span.className = 'mini-cal-day';
         if (isCurrentMonth && d === today) span.classList.add('today');
+
+        // Check if this day has any events
+        const dStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+        const hasEvent = events.some(e => e.date === dStr);
+        if (hasEvent) span.classList.add('has-event');
+
         span.textContent = d;
         grid.appendChild(span);
     }
