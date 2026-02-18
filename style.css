@@ -402,38 +402,53 @@ body {
     background: var(--white);
     padding: 1.5rem 1.25rem;
     border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-sm);
+    box-shadow: 0 8px 24px rgba(149, 157, 165, 0.06);
+    /* Soft Apple-style shadow */
     display: flex;
     align-items: center;
     gap: 1.25rem;
-    transition: transform 0.2s;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     min-height: 110px;
+    border: 1px solid rgba(0, 0, 0, 0.02);
+    position: relative;
+    overflow: hidden;
 }
 
 .stat-card:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px rgba(149, 157, 165, 0.1);
 }
 
 .stat-card.dark {
-    background: var(--card-bg, var(--dark-purple));
+    background: linear-gradient(135deg, #451C6C 0%, #351455 100%);
     color: white;
+    border: none;
 }
 
 .stat-card.dark .stat-label {
-    color: rgba(255, 255, 255, 0.8);
+    color: rgba(255, 255, 255, 0.7);
 }
 
 .stat-icon-wrapper {
     width: 48px;
     height: 48px;
-    border-radius: 12px;
-    background: var(--card-bg, #f0f0f0);
+    border-radius: 14px;
+    background: var(--card-bg, #f8f9fa);
     color: var(--card-color, #333);
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 1.25rem;
+    /* Dual soft shadow for floating effect */
+    box-shadow:
+        0 4px 10px rgba(0, 0, 0, 0.04),
+        0 1px 2px rgba(0, 0, 0, 0.02);
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover .stat-icon-wrapper {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.06);
 }
 
 .stat-card.dark .stat-icon-wrapper {
@@ -4567,26 +4582,38 @@ textarea.modal-input {
     position: relative;
     padding: 1.5rem 1.75rem;
     border-radius: 24px;
-    /* Slightly softer corners */
+    border-radius: 24px;
     display: flex;
     align-items: center;
     gap: 1.75rem;
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.8) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0.92) 100%);
 
-    /* Depth and Glow Effect */
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+    /* Premium Depth & Soft Glow */
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
     box-shadow:
-        0 10px 40px rgba(107, 78, 255, 0.06),
-        0 0 0 1px rgba(107, 78, 255, 0.05),
-        inset 0 0 12px rgba(255, 255, 255, 0.5);
+        0 10px 40px rgba(107, 78, 255, 0.04),
+        0 0 0 1px rgba(255, 255, 255, 0.5),
+        inset 0 0 30px rgba(255, 255, 255, 0.4);
 
     transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     overflow: hidden;
 }
 
-/* Edge Glow Gradient */
+/* Radial Light Glow */
+.focus-card::after {
+    content: '';
+    position: absolute;
+    top: -40%;
+    left: -15%;
+    width: 70%;
+    height: 120%;
+    background: radial-gradient(circle at center, rgba(124, 77, 255, 0.05) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+}
+
 .focus-card::before {
     content: '';
     position: absolute;
@@ -4595,20 +4622,21 @@ textarea.modal-input {
     right: 0;
     bottom: 0;
     border-radius: inherit;
-    padding: 1.5px;
-    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    padding: 1px;
+    background: linear-gradient(135deg, rgba(124, 77, 255, 0.4), rgba(239, 92, 145, 0.2));
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
-    opacity: 0.6;
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    opacity: 0.3;
     pointer-events: none;
+    z-index: 1;
 }
 
 .focus-card:hover {
-    transform: translateY(-2px) scale(1.005);
-    box-shadow:
-        0 20px 50px rgba(107, 78, 255, 0.12),
-        0 0 15px rgba(124, 77, 255, 0.1);
+    transform: translateY(-1px);
+    box-shadow: 0 20px 50px rgba(107, 78, 255, 0.08);
 }
 
 .focus-icon-box {
@@ -4624,12 +4652,13 @@ textarea.modal-input {
     flex-shrink: 0;
     position: relative;
 
-    /* Floating Effect with Dual Shadow */
+    /* Dual Shadow + Inner Highlight */
     box-shadow:
-        0 8px 16px rgba(124, 77, 255, 0.1),
-        0 2px 4px rgba(0, 0, 0, 0.02);
-    border: 1px solid rgba(124, 77, 255, 0.05);
-    transition: all 0.3s ease;
+        0 8px 16px rgba(124, 77, 255, 0.08),
+        0 2px 4px rgba(0, 0, 0, 0.02),
+        inset 0 1px 1px rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(124, 77, 255, 0.06);
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .focus-card:hover .focus-icon-box {
@@ -4657,9 +4686,12 @@ textarea.modal-input {
 
 .focus-title {
     font-family: var(--font-heading);
-    font-size: 1.2rem;
+    font-size: 1.15rem;
     font-weight: 700;
-    color: var(--dark-purple);
+    /* Subtle Gradient Tint */
+    background: linear-gradient(135deg, var(--dark-purple) 0%, #632ea5 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
     display: flex;
     align-items: center;
     gap: 8px;
@@ -4687,28 +4719,28 @@ textarea.modal-input {
     /* Glass Effect for badges */
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .focus-badge:hover {
-    transform: translateY(-2px);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
     background: rgba(255, 255, 255, 1);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 .focus-badge.default {
-    background: rgba(124, 77, 255, 0.06);
+    background: rgba(124, 77, 255, 0.04);
     color: var(--primary);
 }
 
 .focus-badge.warning {
-    background: rgba(239, 92, 145, 0.08);
+    background: rgba(239, 92, 145, 0.06);
     color: var(--secondary);
 }
 
 .focus-badge.info {
-    background: rgba(59, 130, 246, 0.08);
+    background: rgba(59, 130, 246, 0.06);
     color: #3B82F6;
 }
 
