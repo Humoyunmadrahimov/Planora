@@ -4189,6 +4189,8 @@ textarea.modal-input {
     #calendar-grid-v3.month-view,
     #calendar-grid-v3.week-view {
         grid-template-columns: repeat(7, 1fr) !important;
+        grid-template-rows: auto !important;
+        /* Prevent stretching */
         gap: 2px !important;
         padding: 0 !important;
         width: 100% !important;
@@ -4208,8 +4210,12 @@ textarea.modal-input {
         width: 100%;
     }
 
+    #calendar-grid-v3 {
+        min-height: auto !important;
+    }
+
     .v3-cell {
-        min-height: auto;
+        min-height: 40px !important;
         padding: 6px;
         border-radius: 8px;
     }
@@ -4219,8 +4225,8 @@ textarea.modal-input {
     }
 
     #calendar-grid-v3.week-view .v3-cell {
-        min-height: 80px;
-        border-left: 3px solid #e2e8f0;
+        min-height: 60px !important;
+        border: 1px solid #e2e8f0;
     }
 
     #calendar-grid-v3.week-view .v3-cell.today {
