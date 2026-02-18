@@ -2574,7 +2574,50 @@ textarea.modal-input {
     }
 }
 
-/* Message and Notification Dropdowns */
+/* Dashboard Summary Card Updates */
+.mini-cal-day.selected {
+    background: var(--primary);
+    color: white;
+    box-shadow: 0 2px 5px rgba(124, 77, 255, 0.3);
+}
+
+.day-summary-icons {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #f1f5f9;
+    justify-content: space-around;
+}
+
+.summary-pill {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    background: #f8fafc;
+    padding: 6px 10px;
+    border-radius: 8px;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.summary-pill:hover {
+    background: #eef2ff;
+    color: var(--primary);
+}
+
+.summary-pill svg {
+    width: 14px;
+    height: 14px;
+}
+
+.dash-events-list {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
 .action-wrapper {
     position: relative;
     display: inline-block;

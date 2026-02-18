@@ -1796,6 +1796,15 @@ function changeMiniCalMonth(delta) {
     lucide.createIcons();
 }
 
+// --- DASHBOARD LOGIC ---
+let selectedDashboardDate = new Date();
+
+function selectDashboardDate(y, m, d) {
+    selectedDashboardDate = new Date(y, m, d);
+    renderMiniCalendar();
+    renderDashboardSummary();
+}
+
 function renderMiniCalendar() {
     const grid = document.getElementById('mini-cal-grid');
     const monthLabel = document.getElementById('mini-cal-month');
@@ -1806,6 +1815,7 @@ function renderMiniCalendar() {
     const month = miniCalDate.getMonth();
 
     const now = new Date();
+    // highlight today if current month view matches real current month
     const isCurrentMonth = now.getFullYear() === year && now.getMonth() === month;
     const today = now.getDate();
 
@@ -1830,7 +1840,15 @@ function renderMiniCalendar() {
     for (let d = 1; d <= lastDate; d++) {
         const span = document.createElement('span');
         span.className = 'mini-cal-day';
-        if (isCurrentMonth && d === today) span.classList.add('today');
+
+        // Check if selected
+        const isSelected = selectedDashboardDate.getFullYear() === year && selectedDashboardDate.getMonth() === month && selectedDashboardDate.getDate() === d;
+
+        if (isSelected) {
+            span.classList.add('selected');
+        } else if (isCurrentMonth && d === today) {
+            span.classList.add('today');
+        }
 
         // Check if this day has any events
         const dStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
@@ -1838,8 +1856,100 @@ function renderMiniCalendar() {
         if (hasEvent) span.classList.add('has-event');
 
         span.textContent = d;
+        span.onclick = () => selectDashboardDate(year, month, d);
         grid.appendChild(span);
     }
+}
+
+// Replaces old renderDashEvents
+function renderDashEvents() {
+    renderDashboardSummary();
+}
+
+function renderDashboardSummary() {
+    const list = document.getElementById('dash-today-events');
+    const header = document.getElementById('quick-stats-header');
+    if (!list || !header) return;
+
+    list.innerHTML = '';
+
+    // Format Date Header
+    const dateStr = selectedDashboardDate.toLocaleDateString('uz-UZ', { day: 'numeric', month: 'long' });
+    header.textContent = `${dateStr}dagi ko'rsatkichlar`;
+
+    // 1. Filter Data
+    const year = selectedDashboardDate.getFullYear();
+    const month = selectedDashboardDate.getMonth();
+    const date = selectedDashboardDate.getDate();
+
+    // Events (String match YYYY-MM-DD)
+    const dateYMD = `${year}-${String(month + 1).padStart(2, '0')}-${String(date).padStart(2, '0')}`;
+    const dayEvents = events.filter(e => e.date === dateYMD);
+
+    // Notes (Date object match Y,M,D)
+    const dayNotes = notes.filter(n => {
+        const nd = new Date(n.date);
+        return nd.getFullYear() === year && nd.getMonth() === month && nd.getDate() === date;
+    });
+
+    // Transactions (Date object match Y,M,D)
+    let inc = 0, exp = 0;
+    const dayTrans = transactions.filter(t => {
+        const td = new Date(t.date);
+        const match = td.getFullYear() === year && td.getMonth() === month && td.getDate() === date;
+        if (match) {
+            if (t.type === 'income') inc += t.amount;
+            else exp += t.amount;
+        }
+        return match;
+    });
+
+    // 2. Render Summary Rows
+    const summaryDiv = document.createElement('div');
+    summaryDiv.className = 'day-summary-icons';
+    summaryDiv.innerHTML = `
+        <div class="summary-pill" onclick="switchTab('tasks', document.querySelector('[onclick*=\\'tasks\\']'))" title="Rejalar">
+            <i data-lucide="check-square"></i> ${dayEvents.length}
+        </div>
+        <div class="summary-pill" onclick="switchTab('notes', document.querySelector('[onclick*=\\'notes\\']'))" title="Qaydlar">
+            <i data-lucide="edit-3"></i> ${dayNotes.length}
+        </div>
+        <div class="summary-pill" onclick="switchTab('finance', document.querySelector('[onclick*=\\'finance\\']'))" title="Moliya (+${formatMoney(inc)} / -${formatMoney(exp)})">
+            <i data-lucide="dollar-sign"></i> ${dayTrans.length}
+        </div>
+    `;
+    list.appendChild(summaryDiv);
+
+    // 3. Render Events List
+    if (dayEvents.length === 0) {
+        const empty = document.createElement('p');
+        empty.style.color = '#999';
+        empty.style.fontSize = '0.85rem';
+        empty.style.textAlign = 'center';
+        empty.style.marginTop = '10px';
+        empty.textContent = 'Bu kunga rejalar yo\'q.';
+        list.appendChild(empty);
+    } else {
+        dayEvents.forEach(ev => {
+            const item = document.createElement('div');
+            item.className = 'dash-event-item';
+
+            let icon = 'calendar';
+            if (ev.type === 'personal') icon = 'user';
+            else if (ev.type === 'work') icon = 'briefcase';
+
+            item.innerHTML = `
+                <div class="dash-event-time">${ev.time}</div>
+                <div class="dash-event-info">
+                    <div class="dash-event-title">${ev.title}</div>
+                    <div class="dash-event-type"><i data-lucide="${icon}" style="width:12px"></i> ${ev.type}</div>
+                </div>
+            `;
+            list.appendChild(item);
+        });
+    }
+
+    if (window.lucide) window.lucide.createIcons();
 }
 
 // --- NOTES LOGIC ---
