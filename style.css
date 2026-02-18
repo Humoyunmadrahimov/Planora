@@ -4570,22 +4570,22 @@ textarea.modal-input {
     display: flex;
     align-items: center;
     gap: 1.5rem;
-    /* Gradient Border Maintained */
-    border: double 2px transparent;
-    background-image: linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.85)),
+    /* Gradient Border Maintained but Thinner via transparent border and background clip */
+    border: 1px solid transparent;
+    background-image: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)),
         linear-gradient(135deg, var(--primary), var(--secondary));
     background-origin: border-box;
-    background-clip: content-box, border-box;
-    /* Glass Effect */
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    box-shadow: 0 4px 15px rgba(124, 77, 255, 0.08);
+    background-clip: padding-box, border-box;
+    /* Soft Glass Effect */
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 8px 30px rgba(107, 78, 255, 0.08);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .focus-card:hover {
-    transform: scale(1.01);
-    box-shadow: 0 10px 25px rgba(124, 77, 255, 0.15);
+    transform: scale(1.005);
+    box-shadow: 0 12px 35px rgba(107, 78, 255, 0.12);
 }
 
 .focus-icon-box {
@@ -4593,9 +4593,9 @@ textarea.modal-input {
     height: 52px;
     border-radius: 50%;
     /* Glassy Icon Background */
-    background: rgba(255, 255, 255, 0.6);
-    border: 1px solid rgba(255, 255, 255, 0.8);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    background: rgba(255, 255, 255, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow: 0 4px 12px rgba(124, 77, 255, 0.08);
     color: var(--primary);
     display: flex;
     align-items: center;
@@ -4608,15 +4608,17 @@ textarea.modal-input {
 .focus-icon-box i {
     width: 26px;
     height: 26px;
-    filter: drop-shadow(0 2px 4px rgba(124, 77, 255, 0.2));
+    filter: drop-shadow(0 2px 4px rgba(124, 77, 255, 0.15));
 }
 
 .focus-content {
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    /* Spacing between title and badges */
+    justify-content: center;
+    /* Vertical Balance */
+    gap: 10px;
+    /* Increased vertical spacing */
 }
 
 .focus-title {
@@ -4628,13 +4630,15 @@ textarea.modal-input {
     align-items: center;
     gap: 8px;
     margin: 0;
+    line-height: 1.2;
 }
 
 .focus-details {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 12px;
+    /* Increased spacing between chips */
 }
 
 /* Badge / Chip Styles */
