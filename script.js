@@ -133,11 +133,7 @@ async function waitForFirebaseAndInit() {
     try {
         await initializeSession();
         console.log("System: Session initialized.");
-    } catch (e) {
-        console.error("System Error: Session Initialization failed:", e);
-    }
 
-    try {
         if (window.lucide) window.lucide.createIcons();
         initCalendar();
         initFinance();
@@ -150,7 +146,7 @@ async function waitForFirebaseAndInit() {
         startHeartbeat();
         console.log("System: All components rendered.");
     } catch (e) {
-        console.error('System Error: Component rendering failed:', e);
+        console.error("System Error: Initialization failed:", e);
     }
 }
 
@@ -230,7 +226,7 @@ async function initializeSession() {
             // Use onlyOnce for initial load
             await new Promise((resolve) => {
                 window.firebaseGet(userRef).then((snapshot) => {
-                    const data = snapshot.val();
+                    const data = snapshot.val() || {}; // Handle null data
                     if (data) {
                         tasks = data.tasks || [];
                         events = data.events || [];
@@ -241,9 +237,9 @@ async function initializeSession() {
                             data: h.data.map(t => ({ ...t, date: new Date(t.date) }))
                         }));
                     }
-                    resolve();
                 }).catch((e) => {
                     console.error('Firebase Get Error:', e);
+                }).finally(() => {
                     resolve();
                 });
             });
