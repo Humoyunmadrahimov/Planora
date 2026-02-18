@@ -1800,13 +1800,15 @@ function changeMiniCalMonth(delta) {
 let selectedDashboardDate = new Date();
 
 function selectDashboardDate(y, m, d) {
+    console.log('Selecting Dashboard Date:', y, m, d);
     selectedDashboardDate = new Date(y, m, d);
     renderMiniCalendar();
     renderDashboardSummary();
 }
 
 function openFinanceForDate() {
-    const financeBtn = document.querySelector('[onclick*="finance"]');
+    console.log('Opening Finance for:', selectedDashboardDate);
+    const financeBtn = document.getElementById('nav-finance');
     if (financeBtn) switchTab('finance', financeBtn);
     setFinanceView('daily');
     currentFinanceDate = new Date(selectedDashboardDate);
@@ -1814,18 +1816,17 @@ function openFinanceForDate() {
 }
 
 function openCalendarForDate() {
-    const calendarBtn = document.querySelector('[onclick*="calendar"]');
+    console.log('Opening Calendar for:', selectedDashboardDate);
+    const calendarBtn = document.getElementById('nav-calendar');
     if (calendarBtn) switchTab('calendar', calendarBtn);
-    // Assuming calendar has a currentDate variable
     currentDate = new Date(selectedDashboardDate);
     renderCalendar();
 }
 
 function openNotesForDate() {
-    const notesBtn = document.querySelector('[onclick*="notes"]');
+    console.log('Opening Notes');
+    const notesBtn = document.getElementById('nav-notes');
     if (notesBtn) switchTab('notes', notesBtn);
-    // Optional: could filter notes by date if renderNotesList supported it
-    // But user just said open notes
 }
 
 function renderMiniCalendar() {
