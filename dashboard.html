@@ -43,12 +43,6 @@
 <body>
     <div class="sidebar-overlay" onclick="safeToggleSidebar()"></div>
 
-    <!-- FIX: Move Hamburger Button to Root for guarantee -->
-    <button id="mobile-menu-toggle" class="mobile-menu-btn fixed-menu-btn" onclick="safeToggleSidebar()"
-        style="z-index: 10001 !important; left: 15px !important;">
-        <i data-lucide="menu"></i>
-    </button>
-
     <div class="dashboard-container">
         <!-- Sidebar -->
         <aside class="sidebar">
@@ -92,6 +86,9 @@
         <main class="main-content">
             <!-- Header -->
             <header class="top-bar">
+                <button id="mobile-menu-toggle" class="mobile-menu-btn" onclick="safeToggleSidebar()">
+                    <i data-lucide="menu"></i>
+                </button>
                 <div class="page-title">
                     <div class="title-group">
                         <h1 id="page-heading">Bosh sahifa</h1>
