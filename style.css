@@ -2105,15 +2105,25 @@ textarea.modal-input {
 }
 
 .quick-stats-card {
-    background: var(--white);
-    padding: 1.5rem;
+    background: transparent;
+    padding: 0.5rem 1rem 1.5rem 1rem;
     border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-sm);
-    transition: box-shadow 0.25s ease;
+    border: none;
+    box-shadow: none;
 }
 
 .quick-stats-card h4 {
-    margin-bottom: 1rem;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.day-highlight {
+    color: var(--dark-purple);
 }
 
 @media (max-width: 1100px) {
@@ -2632,36 +2642,169 @@ textarea.modal-input {
     box-shadow: 0 2px 5px rgba(124, 77, 255, 0.3);
 }
 
-.day-summary-icons {
-    display: flex;
+/* PREMIUM SELECTED DAY PANEL */
+.day-mini-kpi-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
     gap: 8px;
-    margin-bottom: 12px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid #f1f5f9;
-    justify-content: space-around;
+    margin-bottom: 2rem;
 }
 
-.summary-pill {
+.mini-kpi-badge {
+    background: var(--white);
+    padding: 12px 8px;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.25s ease;
+    cursor: pointer;
+    border: 1px solid rgba(0, 0, 0, 0.03);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+}
+
+.mini-kpi-badge:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+    background: #fff;
+    border-color: rgba(124, 77, 255, 0.1);
+}
+
+.mini-kpi-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
     display: flex;
     align-items: center;
-    gap: 5px;
-    font-size: 0.8rem;
-    color: var(--text-muted);
-    background: #f8fafc;
-    padding: 6px 10px;
-    border-radius: 8px;
-    transition: all 0.2s;
-    cursor: pointer;
+    justify-content: center;
 }
 
-.summary-pill:hover {
-    background: #eef2ff;
+.mini-kpi-icon svg {
+    width: 16px;
+    height: 16px;
+}
+
+.mini-kpi-icon.plans {
+    background: rgba(124, 77, 255, 0.1);
     color: var(--primary);
 }
 
-.summary-pill svg {
-    width: 14px;
-    height: 14px;
+.mini-kpi-icon.notes {
+    background: rgba(239, 92, 145, 0.1);
+    color: var(--secondary);
+}
+
+.mini-kpi-icon.finance {
+    background: rgba(244, 184, 70, 0.1);
+    color: var(--accent);
+}
+
+.mini-kpi-info {
+    text-align: center;
+}
+
+.mini-kpi-info .count {
+    display: block;
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--dark-purple);
+    line-height: 1.2;
+}
+
+.mini-kpi-info .label {
+    display: block;
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* TIMELINE STYLE */
+.day-timeline {
+    position: relative;
+    padding-left: 20px;
+}
+
+.day-timeline::before {
+    content: '';
+    position: absolute;
+    left: 4px;
+    top: 5px;
+    bottom: 5px;
+    width: 2px;
+    background: linear-gradient(to bottom, #f1f5f9, #e2e8f0, #f1f5f9);
+    border-radius: 2px;
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 16px;
+    padding: 12px 14px;
+    background: var(--white);
+    border-radius: 14px;
+    border: 1px solid rgba(0, 0, 0, 0.02);
+    transition: all 0.25s ease;
+    cursor: default;
+}
+
+.timeline-item:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
+    border-color: rgba(124, 77, 255, 0.1);
+}
+
+.timeline-dot {
+    position: absolute;
+    left: -21px;
+    top: 18px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--white);
+    border: 2px solid var(--primary);
+    z-index: 10;
+    box-shadow: 0 0 0 3px var(--white);
+}
+
+.timeline-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.timeline-title {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--dark-purple);
+}
+
+.timeline-meta {
+    font-size: 0.75rem;
+    font-weight: 600;
+    width: fit-content;
+    padding: 2px 8px;
+    border-radius: 6px;
+}
+
+.timeline-meta.event-tag {
+    background: #f0f7ff;
+    color: #0070f3;
+}
+
+.timeline-meta.task-tag {
+    background: #fef2f2;
+    color: #ef4444;
+}
+
+.timeline-empty-state {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    text-align: center;
+    font-style: italic;
+    margin-top: 1rem;
+    opacity: 0.6;
 }
 
 .dash-events-list {

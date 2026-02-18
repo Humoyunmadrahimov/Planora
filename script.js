@@ -1985,31 +1985,25 @@ function renderDashboardSummary() {
 
     list.innerHTML = '';
 
-    // Format Date Header manually
+    // Format Date Header: e.g. "18 Fevral — Tanlangan kun"
     const monthIndex = selectedDashboardDate.getMonth();
     const day = selectedDashboardDate.getDate();
     const uzbekMonths = ["Yanvar", "Fevral", "Mart", "Aprel", "May", "Iyun", "Iyul", "Avgust", "Sentabr", "Oktabr", "Noyabr", "Dekabr"];
-    // e.g. "11-Fevral"
-    const dateStr = `${day}-${uzbekMonths[monthIndex]}`;
-
-    header.textContent = `${dateStr}dagi ko'rsatkichlar`;
+    const dateStr = `${day} ${uzbekMonths[monthIndex]}`;
+    header.innerHTML = `<span class="day-highlight">${dateStr}</span> — Tanlangan kun`;
 
     // 1. Filter Data
     const year = selectedDashboardDate.getFullYear();
     const month = selectedDashboardDate.getMonth();
     const date = selectedDashboardDate.getDate();
 
-    // Events (String match YYYY-MM-DD)
     const dateYMD = `${year}-${String(month + 1).padStart(2, '0')}-${String(date).padStart(2, '0')}`;
     const dayEvents = events.filter(e => e.date === dateYMD);
-
-    // Notes (Date object match Y,M,D)
     const dayNotes = notes.filter(n => {
         const nd = new Date(n.date);
         return nd.getFullYear() === year && nd.getMonth() === month && nd.getDate() === date;
     });
 
-    // Transactions (Date object match Y,M,D)
     let inc = 0, exp = 0;
     const dayTrans = transactions.filter(t => {
         const td = new Date(t.date);
@@ -2021,29 +2015,39 @@ function renderDashboardSummary() {
         return match;
     });
 
-    // 2. Render Summary Rows
-    // 2. Render Summary Rows
+    // 2. Render Mini KPI Badges
     const summaryDiv = document.createElement('div');
-    summaryDiv.className = 'day-summary-icons';
+    summaryDiv.className = 'day-mini-kpi-container';
 
-    // Filter tasks
     const dayTasks = tasks.filter(t => t.deadline === dateYMD && t.status !== 'done' && t.status !== 'archived');
     const totalPlans = dayEvents.length + dayTasks.length;
 
     summaryDiv.innerHTML = `
-        <div class="summary-pill" onclick="openCalendarForDate()" title="Rejalar">
-            <i data-lucide="calendar"></i> ${totalPlans}
+        <div class="mini-kpi-badge" onclick="openCalendarForDate()" title="Rejalar">
+            <div class="mini-kpi-icon plans"><i data-lucide="calendar"></i></div>
+            <div class="mini-kpi-info">
+                <span class="count">${totalPlans}</span>
+                <span class="label">Reja</span>
+            </div>
         </div>
-        <div class="summary-pill" onclick="openNotesForDate()" title="Qaydlar">
-            <i data-lucide="edit-3"></i> ${dayNotes.length}
+        <div class="mini-kpi-badge" onclick="openNotesForDate()" title="Qaydlar">
+            <div class="mini-kpi-icon notes"><i data-lucide="edit-3"></i></div>
+            <div class="mini-kpi-info">
+                <span class="count">${dayNotes.length}</span>
+                <span class="label">Qayd</span>
+            </div>
         </div>
-        <div class="summary-pill" onclick="openFinanceForDate()" title="Moliya (+${formatMoney(inc)} / -${formatMoney(exp)})">
-            <i data-lucide="dollar-sign"></i> ${dayTrans.length}
+        <div class="mini-kpi-badge" onclick="openFinanceForDate()" title="Moliya">
+            <div class="mini-kpi-icon finance"><i data-lucide="dollar-sign"></i></div>
+            <div class="mini-kpi-info">
+                <span class="count">${dayTrans.length}</span>
+                <span class="label">Moliya</span>
+            </div>
         </div>
     `;
     list.appendChild(summaryDiv);
 
-    // 3. Render Combined List
+    // 3. Render Timeline List
     const allItems = [
         ...dayEvents.map(e => ({ ...e, _type: 'event' })),
         ...dayTasks.map(t => ({ ...t, _type: 'task' }))
@@ -2051,26 +2055,31 @@ function renderDashboardSummary() {
 
     if (allItems.length === 0) {
         const empty = document.createElement('p');
-        empty.style.color = '#999';
-        empty.style.fontSize = '0.85rem';
-        empty.style.textAlign = 'center';
-        empty.style.marginTop = '10px';
+        empty.className = 'timeline-empty-state';
         empty.textContent = 'Bu kunga rejalar yo\'q.';
         list.appendChild(empty);
     } else {
+        const timeline = document.createElement('div');
+        timeline.className = 'day-timeline';
+
         allItems.forEach(item => {
             const el = document.createElement('div');
-            el.className = 'dash-event-item';
+            el.className = 'timeline-item';
 
             let title = item.title;
             let meta = item._type === 'event' ? item.time : 'Vazifa';
+            let statusClass = item._type === 'task' ? 'task-tag' : 'event-tag';
 
             el.innerHTML = `
-                <div class="dash-event-title">${title}</div>
-                <div class="dash-event-time">${meta}</div>
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <div class="timeline-title">${title}</div>
+                    <div class="timeline-meta ${statusClass}">${meta}</div>
+                </div>
             `;
-            list.appendChild(el);
+            timeline.appendChild(el);
         });
+        list.appendChild(timeline);
     }
     if (window.lucide) window.lucide.createIcons();
 }
