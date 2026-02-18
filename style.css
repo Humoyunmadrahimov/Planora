@@ -3685,6 +3685,10 @@ textarea.modal-input {
     overflow-y: auto;
 }
 
+.calendar-grid-v3.week-view {
+    grid-template-rows: auto 1fr;
+}
+
 .v3-header {
     padding: 10px;
     text-align: center;

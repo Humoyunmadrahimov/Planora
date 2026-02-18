@@ -593,7 +593,7 @@ function deleteTask(id) {
 
 // --- CALENDAR LOGIC ---
 let currentDate = new Date();
-let calendarView = 'week'; // 'week' or 'month'
+let calendarView = 'month'; // 'week' or 'month'
 
 // Initialize Calendar
 function initCalendar() {
@@ -666,90 +666,58 @@ function getStartOfWeek(date) {
     return new Date(d.setDate(diff));
 }
 
-// Render Week View
+// Render Week View (Simplified: Only 7 days, no hours)
 function renderWeekView(container) {
     container.innerHTML = '';
 
-    // 1. Create Headers (Empty corner + 7 days)
-    const corner = document.createElement('div');
-    corner.className = 'week-header';
-    container.appendChild(corner); // Top-left empty slot
+    const uzbekDaysShort = ['Du', 'Se', 'Ch', 'Pa', 'Ju', 'Sha', 'Ya'];
+    uzbekDaysShort.forEach((day, index) => {
+        const header = document.createElement('div');
+        header.className = 'v3-header';
+        if (index === 6) header.style.color = '#EF5C91';
+        header.textContent = day;
+        container.appendChild(header);
+    });
 
     const startOfWeek = getStartOfWeek(currentDate);
-    const uzbekDays = ['Dushanba', 'Seshanba', 'Chorshanba', 'Payshanba', 'Juma', 'Shanba', 'Yakshanba'];
 
     for (let i = 0; i < 7; i++) {
-        const dayDate = new Date(startOfWeek);
-        dayDate.setDate(startOfWeek.getDate() + i);
+        const cellDate = new Date(startOfWeek);
+        cellDate.setDate(startOfWeek.getDate() + i);
+        const dateStr = cellDate.toISOString().split('T')[0];
 
-        const header = document.createElement('div');
-        header.className = 'week-header';
+        const cell = document.createElement('div');
+        cell.className = 'v3-cell';
+        cell.style.minHeight = '200px'; // Make it taller for single row
 
-        // Check if today
         const today = new Date();
-        if (dayDate.toDateString() === today.toDateString()) {
-            header.classList.add('today');
-        }
+        if (dateStr === today.toISOString().split('T')[0]) cell.classList.add('today');
 
-        // Highlight Sunday
-        if (dayDate.getDay() === 0) {
-            header.classList.add('sunday');
-        }
+        cell.innerHTML = `<div class="v3-day-num">${cellDate.getDate()}</div>`;
 
-        header.innerHTML = `
-            <span>${uzbekDays[i]}</span>
-            <div class="day-num">${dayDate.getDate()}</div>
-        `;
-        container.appendChild(header);
-    }
+        const dayEvents = events.filter(e => e.date === dateStr);
+        dayEvents.forEach(ev => {
+            const evDiv = document.createElement('div');
+            evDiv.className = 'v3-event';
+            evDiv.style.backgroundColor = ev.color;
+            evDiv.textContent = ev.title;
 
-    // 2. Create Time Slots (from 07:00 to 24:00)
-    for (let hour = 7; hour < 24; hour++) {
-        // Time Label
-        const timeLabel = document.createElement('div');
-        timeLabel.className = 'time-slot-label';
-        timeLabel.textContent = `${hour.toString().padStart(2, '0')}:00`;
-        container.appendChild(timeLabel);
-
-        // 7 Days Columns for this hour
-        for (let day = 0; day < 7; day++) {
-            const cellDate = new Date(startOfWeek);
-            cellDate.setDate(startOfWeek.getDate() + day);
-            const dateStr = cellDate.toISOString().split('T')[0];
-            const timeStr = `${hour.toString().padStart(2, '0')}:00`;
-
-            const cell = document.createElement('div');
-            cell.className = 'calendar-cell';
-            if (cellDate.getDay() === 0) cell.classList.add('sunday');
-            cell.dataset.date = dateStr;
-            cell.dataset.time = timeStr;
-            cell.onclick = (e) => {
-                if (e.target === cell) {
-                    editingEventId = null;
-                    openEventModalWithDate(dateStr, timeStr);
-                }
+            evDiv.onclick = (e) => {
+                e.stopPropagation();
+                showEventDetails(ev.id);
             };
 
-            // Find and Place Events
-            const cellEvents = events.filter(e => e.date === dateStr && e.time.startsWith(hour.toString().padStart(2, '0')));
+            cell.appendChild(evDiv);
+        });
 
-            cellEvents.forEach(ev => {
-                const eventDiv = document.createElement('div');
-                eventDiv.className = 'calendar-event';
-                eventDiv.style.backgroundColor = ev.color;
-                eventDiv.innerHTML = `<span class="event-time">${ev.time}</span> ${ev.title}`;
-                eventDiv.title = "Taxrirlash uchun bosing";
+        cell.onclick = (e) => {
+            if (e.target === cell || e.target.classList.contains('v3-day-num')) {
+                editingEventId = null;
+                openEventModalWithDate(dateStr, '09:00');
+            }
+        };
 
-                eventDiv.onclick = (e) => {
-                    e.stopPropagation();
-                    openEditEventModal(ev.id);
-                };
-
-                cell.appendChild(eventDiv);
-            });
-
-            container.appendChild(cell);
-        }
+        container.appendChild(cell);
     }
 }
 
