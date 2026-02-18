@@ -4158,7 +4158,7 @@ textarea.modal-input {
     }
 
     .header-v3-left h2 {
-        font-size: 1.25rem;
+        font-size: 1.1rem;
     }
 
     .header-v3-right {
@@ -4175,7 +4175,7 @@ textarea.modal-input {
     .cal-toggle-btn {
         flex: 1;
         text-align: center;
-        padding: 8px 2px !important;
+        padding: 5px 2px !important;
         font-size: 0.65rem !important;
     }
 
