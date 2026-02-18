@@ -4946,12 +4946,12 @@ textarea.modal-input {
     display: flex;
     align-items: center;
     gap: 1.75rem;
-    background: linear-gradient(135deg, rgba(124, 58, 237, 0.05), rgba(255, 122, 24, 0.04));
-    border: 1px solid rgba(124, 58, 237, 0.08);
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.06), rgba(255, 122, 24, 0.03)), rgba(255, 255, 255, 0.55);
+    border: 1px solid rgba(124, 58, 237, 0.12);
 
-    /* Premium Depth & Soft Glow */
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    /* Premium Soft Glass Effect */
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
     box-shadow: 0 10px 30px rgba(124, 58, 237, 0.08);
 
     transition: all 180ms cubic-bezier(0.4, 0, 0.2, 1);
@@ -4994,9 +4994,7 @@ textarea.modal-input {
 
 .focus-card:hover {
     transform: translateY(-2px);
-    box-shadow:
-        var(--shadow-hover),
-        inset 0 0 0 1px rgba(124, 58, 237, 0.12);
+    box-shadow: 0 12px 32px rgba(124, 58, 237, 0.12);
 }
 
 .focus-icon-box {
