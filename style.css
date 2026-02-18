@@ -3613,7 +3613,15 @@ textarea.modal-input {
 .header-v3-left {
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 30px;
+    /* Increased for better separation */
+}
+
+.header-v3-label-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    /* Pull arrows closer to text */
 }
 
 .header-v3-left h2 {
@@ -3621,7 +3629,6 @@ textarea.modal-input {
     font-weight: 700;
     color: #1e293b;
     margin: 0;
-    min-width: 180px;
 }
 
 .cal-nav-arrows {
@@ -3673,7 +3680,8 @@ textarea.modal-input {
 .header-v3-right {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 20px;
+    /* Increased from 16px */
 }
 
 .cal-view-toggle {
