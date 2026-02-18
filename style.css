@@ -226,9 +226,11 @@ body {
 
 .top-bar.scrolled::before {
     background: rgba(247, 248, 250, 0.85);
-    backdrop-filter: blur(16px) saturate(180%);
-    -webkit-backdrop-filter: blur(16px) saturate(180%);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    /* Ultra-premium 1px light edge at the bottom for glass effect */
+    box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.6);
 }
 
 .page-title h1 {
@@ -428,11 +430,13 @@ body {
 }
 
 .stat-card {
-    background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.4) 0%, transparent 60%), var(--white);
+    background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.5) 0%, transparent 60%), var(--white);
     padding: 1.5rem 1.25rem;
     border-radius: var(--radius-lg);
-    box-shadow: 2px 8px 24px rgba(149, 157, 165, 0.06);
-    /* Shadow to bottom-right */
+    /* Premium dual shadow + inset highlight for depth */
+    box-shadow:
+        2px 8px 24px rgba(149, 157, 165, 0.06),
+        inset 1px 1px 0 rgba(255, 255, 255, 0.9);
     display: flex;
     align-items: center;
     gap: 1.25rem;
@@ -448,10 +452,11 @@ body {
 
 .stat-card.dark {
     /* Vibrant Premium Gradient matching PlanPro PRO box + Light Top-Left */
-    background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.15) 0%, transparent 50%), linear-gradient(135deg, #7C4DFF 0%, #6039cc 100%);
+    background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.2) 0%, transparent 50%), linear-gradient(135deg, #7C4DFF 0%, #6039cc 100%);
     color: white;
     border: none;
     transition: all 0.25s ease-out;
+    box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.25);
 }
 
 .stat-card.dark .stat-value {
