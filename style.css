@@ -407,16 +407,19 @@ body {
     display: flex;
     align-items: center;
     gap: 1.25rem;
-    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: all 0.25s ease-out;
+    /* Apple-style motion */
     min-height: 110px;
     border: 1px solid rgba(0, 0, 0, 0.02);
     position: relative;
     overflow: hidden;
+    animation: apple-enter 0.25s ease-out forwards;
+    opacity: 0;
 }
 
 .stat-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 30px rgba(149, 157, 165, 0.1);
+    transform: scale(1.01) translateY(-1px);
+    box-shadow: 0 12px 30px rgba(149, 157, 165, 0.08);
 }
 
 .stat-card.dark {
@@ -504,6 +507,7 @@ body {
 }
 
 .project-item:hover {
+    transform: scale(1.01);
     box-shadow: var(--shadow-md);
 }
 
@@ -1902,6 +1906,12 @@ textarea.modal-input {
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-sm);
     border: 1px solid rgba(0, 0, 0, 0.02);
+    transition: all 0.25s ease-out;
+}
+
+.mini-calendar-card:hover {
+    transform: scale(1.01);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
 }
 
 .mini-cal-header {
@@ -2019,9 +2029,10 @@ textarea.modal-input {
 }
 
 .dash-task-item:hover {
-    transform: translateX(4px);
-    background: #f8faff;
+    transform: scale(1.01);
+    background: var(--white);
     border-color: var(--primary-light);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
 }
 
 .dash-task-title {
@@ -2058,7 +2069,8 @@ textarea.modal-input {
 
 .dash-event-item:hover {
     background: #f1f5f9;
-    transform: translateX(2px);
+    transform: scale(1.01);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.02);
 }
 
 .dash-event-title {
@@ -2080,6 +2092,12 @@ textarea.modal-input {
     padding: 1.5rem;
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-sm);
+    transition: all 0.25s ease-out;
+}
+
+.quick-stats-card:hover {
+    transform: scale(1.01);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
 }
 
 .quick-stats-card h4 {
@@ -4575,13 +4593,13 @@ textarea.modal-input {
 /* Focus Block - High-End SaaS Smart Card */
 .focus-section {
     margin-bottom: 2rem;
-    animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    animation: apple-enter 0.25s ease-out 80ms forwards;
+    opacity: 0;
 }
 
 .focus-card {
     position: relative;
     padding: 1.5rem 1.75rem;
-    border-radius: 24px;
     border-radius: 24px;
     display: flex;
     align-items: center;
@@ -4597,7 +4615,7 @@ textarea.modal-input {
         0 0 0 1px rgba(255, 255, 255, 0.5),
         inset 0 0 30px rgba(255, 255, 255, 0.4);
 
-    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: all 0.25s ease-out;
     overflow: hidden;
 }
 
@@ -4635,8 +4653,8 @@ textarea.modal-input {
 }
 
 .focus-card:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 20px 50px rgba(107, 78, 255, 0.08);
+    transform: scale(1.005) translateY(-1px);
+    box-shadow: 0 20px 50px rgba(107, 78, 255, 0.06);
 }
 
 .focus-icon-box {
@@ -4691,6 +4709,7 @@ textarea.modal-input {
     /* Subtle Gradient Tint */
     background: linear-gradient(135deg, var(--dark-purple) 0%, #632ea5 100%);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
     display: flex;
     align-items: center;
@@ -4749,16 +4768,23 @@ textarea.modal-input {
     height: 15px;
 }
 
-@keyframes fadeIn {
+@keyframes apple-enter {
     from {
         opacity: 0;
-        transform: translateY(15px);
+        transform: translateY(8px);
     }
 
     to {
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+.dashboard-tasks,
+.mini-calendar-card,
+.quick-stats-card {
+    animation: apple-enter 0.25s ease-out 160ms forwards;
+    opacity: 0;
 }
 
 @media (max-width: 768px) {
