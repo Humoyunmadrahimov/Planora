@@ -645,6 +645,7 @@ function addKanbanTask() {
 
     saveToCloud();
     renderKanbanTasks();
+    renderDashboardSummary();
     closeTaskModal();
 
     // Reset inputs
@@ -659,6 +660,7 @@ function deleteTask(id) {
         tasks = tasks.filter(t => Number(t.id) !== taskId);
         saveToCloud();
         renderKanbanTasks();
+        renderDashboardSummary();
     });
 }
 
@@ -1181,6 +1183,7 @@ function addEvent() {
 
     saveToCloud();
     renderCalendar();
+    renderDashboardSummary();
     closeEventModal();
 }
 
@@ -1197,6 +1200,7 @@ function deleteEvent(id) {
         events = events.filter(e => Number(e.id) !== eventId);
         saveToCloud();
         renderCalendar();
+        renderDashboardSummary();
 
         // Reset details panel
         document.getElementById('event-details-panel').innerHTML = `
@@ -1345,6 +1349,7 @@ function addTransaction(type) {
 
     saveToCloud();
     renderFinance();
+    renderDashboardSummary();
 }
 
 function deleteTransaction(id) {
@@ -1356,6 +1361,7 @@ function deleteTransaction(id) {
             transactions = transactions.filter(t => Number(t.id) !== transId);
             saveToCloud();
             renderFinance();
+            renderDashboardSummary();
         }
     });
 }
@@ -1763,30 +1769,7 @@ function renderDashTasks() {
     });
 }
 
-function renderDashEvents() {
-    const list = document.getElementById('dash-today-events');
-    if (!list) return;
 
-    list.innerHTML = '';
-    const todayStr = new Date().toISOString().split('T')[0];
-    const todays = events.filter(e => e.date === todayStr);
-
-    if (todays.length === 0) {
-        list.innerHTML = '<p style="color:#999;font-size:0.85rem;">Bugunga rejalar yo\'q.</p>';
-        return;
-    }
-
-    todays.forEach(ev => {
-        const item = document.createElement('div');
-        item.className = 'dash-event-item';
-        item.style.borderLeftColor = ev.color;
-        item.innerHTML = `
-            <strong>${ev.title}</strong>
-            <span class="dash-event-time">${ev.time}</span>
-        `;
-        list.appendChild(item);
-    });
-}
 
 let miniCalDate = new Date();
 
@@ -2064,6 +2047,7 @@ function createNewNote() {
 
     saveToCloud();
     renderNotesList();
+    renderDashboardSummary();
 
     // Mobile: Show editor
     const container = document.querySelector('.notes-container');
@@ -2109,6 +2093,7 @@ async function saveCurrentNote() {
 
     saveToCloud();
     renderNotesList();
+    renderDashboardSummary();
 }
 
 // --- Note Helper Tools ---
@@ -2129,6 +2114,7 @@ function deleteCurrentNote() {
         document.getElementById('note-content').value = '';
         saveToCloud();
         renderNotesList();
+        renderDashboardSummary();
         showNotesList(); // Close editor on mobile
     });
 }
