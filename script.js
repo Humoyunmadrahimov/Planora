@@ -603,7 +603,7 @@ function initCalendar() {
 // Switch View
 function setCalendarView(view, btn) {
     calendarView = view;
-    document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.cal-toggle-btn').forEach(b => b.classList.remove('active'));
     if (btn) btn.classList.add('active');
     renderCalendar();
 }
@@ -627,21 +627,19 @@ function goToToday() {
 
 // Render Calendar Dispatcher
 function renderCalendar() {
-    const grid = document.getElementById('calendar-grid');
+    const grid = document.getElementById('calendar-grid-v3');
     const label = document.getElementById('current-period-label');
     if (!grid || !label) return;
 
-    // Uzbek Month Names
     const monthNames = [
         "Yanvar", "Fevral", "Mart", "Aprel", "May", "Iyun",
         "Iyul", "Avgust", "Sentabr", "Oktabr", "Noyabr", "Dekabr"
     ];
 
     if (calendarView === 'week') {
-        grid.className = 'calendar-grid week-view';
+        grid.className = 'calendar-grid-v3 week-view';
         renderWeekView(grid);
 
-        // Label Logic for Week
         const startOfWeek = getStartOfWeek(currentDate);
         const endOfWeek = new Date(startOfWeek);
         endOfWeek.setDate(endOfWeek.getDate() + 6);
@@ -650,21 +648,14 @@ function renderCalendar() {
         const endMonth = monthNames[endOfWeek.getMonth()];
         const year = startOfWeek.getFullYear();
 
-        if (startMonth === endMonth) {
-            label.textContent = `${startMonth} ${year}`;
-        } else {
-            label.textContent = `${startMonth} - ${endMonth} ${year}`;
-        }
-
-    } else if (calendarView === 'month') {
-        grid.className = 'calendar-grid month-view';
+        label.textContent = startMonth === endMonth ? `${startMonth} ${year}` : `${startMonth} - ${endMonth} ${year}`;
+    } else {
+        grid.className = 'calendar-grid-v3 month-view';
         renderMonthView(grid);
         label.textContent = `${monthNames[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
-    } else {
-        grid.className = 'calendar-grid year-view';
-        renderYearView(grid);
-        label.textContent = `${currentDate.getFullYear()}-yil`;
     }
+
+    if (window.lucide) window.lucide.createIcons();
 }
 
 // Helper: Get Monday of the current week
@@ -766,12 +757,11 @@ function renderWeekView(container) {
 function renderMonthView(container) {
     container.innerHTML = '';
 
-    // Headers
     const uzbekDaysShort = ['Du', 'Se', 'Ch', 'Pa', 'Ju', 'Sha', 'Ya'];
     uzbekDaysShort.forEach((day, index) => {
         const header = document.createElement('div');
-        header.className = 'week-header';
-        if (index === 6) header.classList.add('sunday'); // 'Ya' is always index 6
+        header.className = 'v3-header';
+        if (index === 6) header.style.color = '#EF5C91';
         header.textContent = day;
         container.appendChild(header);
     });
@@ -779,59 +769,44 @@ function renderMonthView(container) {
     const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
     const lastDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
 
-    // Adjust for Monday start (0=Sun, 1=Mon... in JS getDay())
-    // We want Mon=0, Sun=6
     let startDayIndex = firstDayOfMonth.getDay() - 1;
     if (startDayIndex === -1) startDayIndex = 6;
 
-    // Empty cells before first day
     for (let i = 0; i < startDayIndex; i++) {
         const empty = document.createElement('div');
-        empty.className = 'month-cell empty';
+        empty.className = 'v3-cell empty';
         container.appendChild(empty);
     }
 
-    // Days
     for (let i = 1; i <= lastDayOfMonth.getDate(); i++) {
         const cellDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), i);
         const dateStr = cellDate.toISOString().split('T')[0];
 
         const cell = document.createElement('div');
-        cell.className = 'month-cell';
+        cell.className = 'v3-cell';
 
         const today = new Date();
-        if (dateStr === today.toISOString().split('T')[0]) {
-            cell.classList.add('today');
-        }
+        if (dateStr === today.toISOString().split('T')[0]) cell.classList.add('today');
 
-        if (cellDate.getDay() === 0) {
-            cell.classList.add('sunday');
-        }
+        cell.innerHTML = `<div class="v3-day-num">${i}</div>`;
 
-        // Header
-        const headerDiv = document.createElement('div');
-        headerDiv.className = 'month-cell-header';
-        headerDiv.innerHTML = `<div class="month-day-num">${i}</div>`;
-        cell.appendChild(headerDiv);
-
-        // Events
         const dayEvents = events.filter(e => e.date === dateStr);
         dayEvents.forEach(ev => {
             const evDiv = document.createElement('div');
-            evDiv.className = 'month-event';
+            evDiv.className = 'v3-event';
             evDiv.style.backgroundColor = ev.color;
-            evDiv.textContent = ev.time + ' ' + ev.title;
+            evDiv.textContent = ev.title;
 
             evDiv.onclick = (e) => {
                 e.stopPropagation();
-                openEditEventModal(ev.id);
+                showEventDetails(ev.id);
             };
 
             cell.appendChild(evDiv);
         });
 
         cell.onclick = (e) => {
-            if (e.target === cell || e.target === headerDiv) {
+            if (e.target === cell || e.target.classList.contains('v3-day-num')) {
                 editingEventId = null;
                 openEventModalWithDate(dateStr, '09:00');
             }
@@ -931,25 +906,10 @@ function openEditEventModal(id) {
     document.getElementById('delete-event-btn').style.display = 'block';
 
     document.getElementById('e-title').value = ev.title;
+    document.getElementById('e-desc').value = ev.desc || '';
     document.getElementById('e-date').value = ev.date;
     document.getElementById('e-time').value = ev.time;
     document.getElementById('e-color').value = ev.color;
-
-    // Select current color visually
-    const options = document.querySelectorAll('.color-option');
-    options.forEach(el => {
-        el.classList.remove('selected');
-        // Convert both to lowercase for comparison if needed
-        const bg = el.style.backgroundColor; // Note: browsers might return rgb()
-        // Simple way: check if this option was clicked with this color
-        // But we just updated the hidden input, so let's match by style color
-    });
-
-    // Better way to find the color option:
-    options.forEach(el => {
-        // We set styles directly in HTML like style="background:#6B4EFF"
-        // Let's just match the hex if possible or just unselect all
-    });
 
     document.getElementById('event-modal').style.display = 'flex';
     if (window.lucide) window.lucide.createIcons();
@@ -969,6 +929,7 @@ function selectColor(element, color) {
 
 function addEvent() {
     const title = document.getElementById('e-title').value.trim();
+    const desc = document.getElementById('e-desc').value.trim();
     const dateVal = document.getElementById('e-date').value;
     const time = document.getElementById('e-time').value;
     const color = document.getElementById('e-color').value;
@@ -984,6 +945,7 @@ function addEvent() {
             events[index] = {
                 ...events[index],
                 title,
+                desc,
                 date: dateVal,
                 time,
                 color
@@ -994,6 +956,7 @@ function addEvent() {
             id: Date.now(),
             groupId: null,
             title,
+            desc,
             date: dateVal,
             time,
             color
@@ -1018,7 +981,87 @@ function deleteEvent(id) {
         events = events.filter(e => Number(e.id) !== eventId);
         saveToCloud();
         renderCalendar();
+
+        // Reset details panel
+        document.getElementById('event-details-panel').innerHTML = `
+            <div class="no-selection-state">
+                <div class="illus-circle">
+                    <i data-lucide="calendar-days"></i>
+                </div>
+                <h3>Reja tanlanmagan</h3>
+                <p>Tafsilotlarni ko'rish uchun kalendardagi rejalardan birini tanlang yoki yangi reja qo'shing.</p>
+            </div>
+        `;
+        if (window.lucide) window.lucide.createIcons();
     });
+}
+
+function showEventDetails(id) {
+    const ev = events.find(e => Number(e.id) === Number(id));
+    if (!ev) return;
+
+    const panel = document.getElementById('event-details-panel');
+    const monthNames = ["Yanvar", "Fevral", "Mart", "Aprel", "May", "Iyun", "Iyul", "Avgust", "Sentabr", "Oktabr", "Noyabr", "Dekabr"];
+
+    // Parse Date
+    const d = new Date(ev.date);
+    const dateStr = `${d.getDate()} ${monthNames[d.getMonth()]}, ${d.getFullYear()}`;
+
+    // Creator Info (Fallback to current user)
+    const creatorName = currentUser ? (currentUser.name || currentUser.login) : "Foydalanuvchi";
+    const avatarContent = currentUser && currentUser.avatar
+        ? `<img src="${currentUser.avatar}" class="creator-avatar">`
+        : `<div class="creator-avatar" style="background:var(--primary-light); color:var(--primary); display:flex; align-items:center; justify-content:center; font-weight:700;">${creatorName.substring(0, 2).toUpperCase()}</div>`;
+
+    panel.innerHTML = `
+        <div class="detail-header">
+            <div class="detail-header-top">
+                <h2>${ev.title}</h2>
+                <div class="detail-actions">
+                    <button class="icon-btn edit-event" onclick="openEditEventModal(${ev.id})" title="Taxrirlash">
+                        <i data-lucide="edit"></i>
+                    </button>
+                    <button class="icon-btn delete-event" onclick="deleteEvent(${ev.id})" title="O'chirish" style="color:#EF5C91;">
+                        <i data-lucide="trash-2"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="detail-desc">
+                ${ev.desc || "Ushbu reja uchun qo'shimcha tafsilotlar kiritilmagan."}
+            </div>
+        </div>
+
+        <div class="detail-meta-list">
+            <div class="meta-item">
+                <div class="meta-icon-box">
+                    <i data-lucide="calendar"></i>
+                </div>
+                <div class="meta-text">
+                    <span class="meta-val">${dateStr}</span>
+                    <span class="meta-lab">Sana</span>
+                </div>
+            </div>
+            <div class="meta-item">
+                <div class="meta-icon-box">
+                    <i data-lucide="clock"></i>
+                </div>
+                <div class="meta-text">
+                    <span class="meta-val">${ev.time}</span>
+                    <span class="meta-lab">Boshlanish vaqti</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="creator-info">
+            ${avatarContent}
+            <div class="creator-bio">
+                <div class="creator-name">${creatorName}</div>
+                <div class="creator-role">Reja egasi</div>
+            </div>
+        </div>
+    `;
+
+    if (window.lucide) window.lucide.createIcons();
 }
 
 
