@@ -417,19 +417,24 @@ body {
     opacity: 0;
 }
 
-.stat-card:hover {
-    transform: scale(1.01) translateY(-1px);
-    box-shadow: 0 12px 30px rgba(149, 157, 165, 0.08);
-}
-
 .stat-card.dark {
     background: linear-gradient(135deg, #451C6C 0%, #351455 100%);
     color: white;
     border: none;
+    transition: all 0.25s ease-out;
 }
 
 .stat-card.dark .stat-label {
     color: rgba(255, 255, 255, 0.7);
+}
+
+.stat-card:hover {
+    transform: scale(1.01) translateY(-2px);
+    box-shadow: 0 15px 35px rgba(149, 157, 165, 0.12);
+}
+
+.stat-card.dark:hover {
+    box-shadow: 0 15px 45px rgba(69, 28, 108, 0.4);
 }
 
 .stat-icon-wrapper {
@@ -1910,8 +1915,8 @@ textarea.modal-input {
 }
 
 .mini-calendar-card:hover {
-    transform: scale(1.01);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+    transform: scale(1.005) translateY(-2px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.05);
 }
 
 .mini-cal-header {
@@ -2096,8 +2101,8 @@ textarea.modal-input {
 }
 
 .quick-stats-card:hover {
-    transform: scale(1.01);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+    transform: scale(1.005) translateY(-2px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.05);
 }
 
 .quick-stats-card h4 {
@@ -4653,7 +4658,7 @@ textarea.modal-input {
 }
 
 .focus-card:hover {
-    transform: scale(1.005) translateY(-1px);
+    transform: scale(1.005) translateY(-2px);
     box-shadow: 0 20px 50px rgba(107, 78, 255, 0.06);
 }
 
