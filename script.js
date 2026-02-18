@@ -224,18 +224,40 @@ async function initializeSession() {
         try {
             const userRef = window.firebaseRef(window.firebaseDB, 'users/' + currentUser.login);
             // Use onlyOnce for initial load
+            // Helper to safely convert Firebase response (Object or Array) to Array
+            const safeArray = (data) => {
+                if (!data) return [];
+                return Array.isArray(data) ? data : Object.values(data);
+            };
+
             await new Promise((resolve) => {
                 window.firebaseGet(userRef).then((snapshot) => {
                     const data = snapshot.val() || {}; // Handle null data
                     if (data) {
-                        tasks = data.tasks || [];
-                        events = data.events || [];
-                        transactions = (data.transactions || []).map(t => ({ ...t, date: new Date(t.date) }));
-                        notes = (data.notes || []).map(n => ({ ...n, date: new Date(n.date) }));
-                        financeTrashHistory = (data.financeTrashHistory || []).map(h => ({
-                            ...h,
-                            data: h.data.map(t => ({ ...t, date: new Date(t.date) }))
-                        }));
+                        try {
+                            tasks = safeArray(data.tasks);
+                            events = safeArray(data.events);
+
+                            const rawTransactions = safeArray(data.transactions);
+                            transactions = rawTransactions.map(t => ({ ...t, date: new Date(t.date) }));
+
+                            const rawNotes = safeArray(data.notes);
+                            notes = rawNotes.map(n => ({ ...n, date: new Date(n.date) }));
+
+                            const rawHistory = safeArray(data.financeTrashHistory);
+                            financeTrashHistory = rawHistory.map(h => ({
+                                ...h,
+                                data: (Array.isArray(h.data) ? h.data : Object.values(h.data || {})).map(t => ({ ...t, date: new Date(t.date) }))
+                            }));
+
+                            // Filter out any potential nulls if array was sparse
+                            tasks = tasks.filter(x => x);
+                            events = events.filter(x => x);
+                            transactions = transactions.filter(x => x);
+                            notes = notes.filter(x => x);
+                        } catch (parseError) {
+                            console.error("Data parsing error:", parseError);
+                        }
                     }
                 }).catch((e) => {
                     console.error('Firebase Get Error:', e);
@@ -1964,8 +1986,7 @@ function renderDashboardSummary() {
     if (window.lucide) window.lucide.createIcons();
 }
 
-if (window.lucide) window.lucide.createIcons();
-}
+
 
 // --- NOTES LOGIC ---
 function renderNotesList() {
