@@ -730,8 +730,12 @@ function renderWeekView(container) {
         const today = new Date();
         if (dateStr === today.toISOString().split('T')[0]) cell.classList.add('today');
 
+        const uzbekDaysFull = ['Dushanba', 'Seshanba', 'Chorshanba', 'Payshanba', 'Juma', 'Shanba', 'Yakshanba'];
+        const dayName = uzbekDaysFull[i];
+
         cell.innerHTML = `
             <div class="v3-cell-top">
+                <span class="v3-day-label-mobile">${dayName}</span>
                 <div class="v3-day-num">${cellDate.getDate()}</div>
             </div>
         `;
