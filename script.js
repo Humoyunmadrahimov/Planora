@@ -1805,6 +1805,29 @@ function selectDashboardDate(y, m, d) {
     renderDashboardSummary();
 }
 
+function openFinanceForDate() {
+    const financeBtn = document.querySelector('[onclick*="finance"]');
+    if (financeBtn) switchTab('finance', financeBtn);
+    setFinanceView('daily');
+    currentFinanceDate = new Date(selectedDashboardDate);
+    renderFinance();
+}
+
+function openCalendarForDate() {
+    const calendarBtn = document.querySelector('[onclick*="calendar"]');
+    if (calendarBtn) switchTab('calendar', calendarBtn);
+    // Assuming calendar has a currentDate variable
+    currentDate = new Date(selectedDashboardDate);
+    renderCalendar();
+}
+
+function openNotesForDate() {
+    const notesBtn = document.querySelector('[onclick*="notes"]');
+    if (notesBtn) switchTab('notes', notesBtn);
+    // Optional: could filter notes by date if renderNotesList supported it
+    // But user just said open notes
+}
+
 function renderMiniCalendar() {
     const grid = document.getElementById('mini-cal-grid');
     const monthLabel = document.getElementById('mini-cal-month');
@@ -1910,23 +1933,34 @@ function renderDashboardSummary() {
     });
 
     // 2. Render Summary Rows
+    // 2. Render Summary Rows
     const summaryDiv = document.createElement('div');
     summaryDiv.className = 'day-summary-icons';
+
+    // Filter tasks
+    const dayTasks = tasks.filter(t => t.deadline === dateYMD && t.status !== 'done' && t.status !== 'archived');
+    const totalPlans = dayEvents.length + dayTasks.length;
+
     summaryDiv.innerHTML = `
-        <div class="summary-pill" onclick="switchTab('tasks', document.querySelector('[onclick*=\\'tasks\\']'))" title="Rejalar">
-            <i data-lucide="check-square"></i> ${dayEvents.length}
+        <div class="summary-pill" onclick="openCalendarForDate()" title="Rejalar">
+            <i data-lucide="calendar"></i> ${totalPlans}
         </div>
-        <div class="summary-pill" onclick="switchTab('notes', document.querySelector('[onclick*=\\'notes\\']'))" title="Qaydlar">
+        <div class="summary-pill" onclick="openNotesForDate()" title="Qaydlar">
             <i data-lucide="edit-3"></i> ${dayNotes.length}
         </div>
-        <div class="summary-pill" onclick="switchTab('finance', document.querySelector('[onclick*=\\'finance\\']'))" title="Moliya (+${formatMoney(inc)} / -${formatMoney(exp)})">
+        <div class="summary-pill" onclick="openFinanceForDate()" title="Moliya (+${formatMoney(inc)} / -${formatMoney(exp)})">
             <i data-lucide="dollar-sign"></i> ${dayTrans.length}
         </div>
     `;
     list.appendChild(summaryDiv);
 
-    // 3. Render Events List
-    if (dayEvents.length === 0) {
+    // 3. Render Combined List
+    const allItems = [
+        ...dayEvents.map(e => ({ ...e, _type: 'event' })),
+        ...dayTasks.map(t => ({ ...t, _type: 'task' }))
+    ];
+
+    if (allItems.length === 0) {
         const empty = document.createElement('p');
         empty.style.color = '#999';
         empty.style.fontSize = '0.85rem';
@@ -1935,19 +1969,24 @@ function renderDashboardSummary() {
         empty.textContent = 'Bu kunga rejalar yo\'q.';
         list.appendChild(empty);
     } else {
-        dayEvents.forEach(ev => {
-            const item = document.createElement('div');
-            item.className = 'dash-event-item';
+        allItems.forEach(item => {
+            const el = document.createElement('div');
+            el.className = 'dash-event-item';
 
-            item.innerHTML = `
-                <div class="dash-event-title">${ev.title}</div>
-                <div class="dash-event-time">${ev.time}</div>
+            let title = item.title;
+            let meta = item._type === 'event' ? item.time : 'Vazifa';
+
+            el.innerHTML = `
+                <div class="dash-event-title">${title}</div>
+                <div class="dash-event-time">${meta}</div>
             `;
-            list.appendChild(item);
+            list.appendChild(el);
         });
     }
-
     if (window.lucide) window.lucide.createIcons();
+}
+
+if (window.lucide) window.lucide.createIcons();
 }
 
 // --- NOTES LOGIC ---

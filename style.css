@@ -2582,8 +2582,8 @@ textarea.modal-input {
 
 /* Dashboard Summary Card Updates */
 .mini-cal-day.selected {
-    background: var(--primary);
-    color: white;
+    background: var(--primary) !important;
+    color: white !important;
     box-shadow: 0 2px 5px rgba(124, 77, 255, 0.3);
 }
 
