@@ -418,18 +418,21 @@ body {
 }
 
 .stat-card.dark {
-    background: linear-gradient(135deg, #7C4DFF 0%, #451C6C 100%);
+    /* Vibrant Premium Gradient matching PlanPro PRO box */
+    background: linear-gradient(135deg, #7C4DFF 0%, #6039cc 100%);
     color: white;
     border: none;
     transition: all 0.25s ease-out;
 }
 
 .stat-card.dark .stat-value {
-    color: rgba(255, 255, 255, 0.95);
+    color: #FFFFFF;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .stat-card.dark .stat-label {
-    color: rgba(255, 255, 255, 0.75);
+    color: rgba(255, 255, 255, 0.85);
+    /* Soft premium white */
 }
 
 .stat-card:hover {
