@@ -3968,15 +3968,17 @@ textarea.modal-input {
 }
 
 /* --- YEAR VIEW V3 --- */
+/* --- YEAR VIEW V3 --- */
 #calendar-grid-v3.year-view {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: auto;
-    gap: 30px;
-    padding: 20px;
-    background: #FDFBF7;
-    border-radius: 16px;
-    overflow-y: auto;
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    grid-template-rows: auto !important;
+    gap: 25px !important;
+    padding: 25px !important;
+    background: #FDFBF7 !important;
+    border-radius: 16px !important;
+    overflow-y: auto !important;
+    align-content: start;
 }
 
 @media (max-width: 1400px) {
@@ -3998,25 +4000,28 @@ textarea.modal-input {
 }
 
 .year-month-box {
-    background: transparent;
-    border: none;
-    border-radius: 0;
-    padding: 10px;
-    transition: transform 0.2s;
+    background: #ffffff;
+    border: 1px solid #edf2f7;
+    border-radius: 16px;
+    padding: 20px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    display: flex;
+    flex-direction: column;
 }
 
 .year-month-box:hover {
     transform: translateY(-5px);
-    box-shadow: none;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
 }
 
 .year-month-title {
     font-weight: 800;
-    color: #4A76A8;
+    color: #2D3748;
     font-size: 1.1rem;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
     text-align: center;
-    letter-spacing: 1px;
+    letter-spacing: 0.5px;
 }
 
 .year-mini-grid {
@@ -4026,15 +4031,16 @@ textarea.modal-input {
 }
 
 .year-mini-header {
-    font-size: 0.6rem;
-    font-weight: 800;
-    color: #4A76A8;
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: #718096;
     text-align: center;
-    padding-bottom: 8px;
+    padding-bottom: 10px;
 }
 
 .year-mini-header.sun {
-    color: #2F9E44;
+    color: #EF5C91;
+    /* Pink for Sunday */
 }
 
 .year-mini-day {
