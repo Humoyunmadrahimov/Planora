@@ -649,10 +649,14 @@ function renderCalendar() {
         const year = startOfWeek.getFullYear();
 
         label.textContent = startMonth === endMonth ? `${startMonth} ${year}` : `${startMonth} - ${endMonth} ${year}`;
-    } else {
+    } else if (calendarView === 'month') {
         grid.className = 'calendar-grid-v3 month-view';
         renderMonthView(grid);
         label.textContent = `${monthNames[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
+    } else if (calendarView === 'year') {
+        grid.className = 'calendar-grid-v3 year-view';
+        renderYearView(grid);
+        label.textContent = `${currentDate.getFullYear()}-yil`;
     }
 
     if (window.lucide) window.lucide.createIcons();
@@ -836,13 +840,15 @@ function openEventModal() {
     const now = new Date();
     document.getElementById('e-date').valueAsDate = now;
     document.getElementById('e-time').value = '09:00';
-    document.getElementById('e-color').value = '#3B82F6'; // Default color
+    document.getElementById('e-color').value = '#6B4EFF';
     document.getElementById('e-title').value = '';
+    document.getElementById('e-desc').value = '';
 
-    // Select default color visually
     const options = document.querySelectorAll('.color-option');
     options.forEach(el => el.classList.remove('selected'));
-    if (options.length > 0) options[options.length - 1].classList.add('selected');
+    options.forEach(el => {
+        if (el.style.backgroundColor.toLowerCase().includes('6b4eff')) el.classList.add('selected');
+    });
 
     document.getElementById('event-modal').style.display = 'flex';
 }
@@ -860,9 +866,81 @@ function openEventModalWithDate(dateStr, timeStr) {
     // Select default color visually
     const options = document.querySelectorAll('.color-option');
     options.forEach(el => el.classList.remove('selected'));
-    if (options.length > 0) options[options.length - 1].classList.add('selected');
+    // Find option with #3B82F6 and select it
+    options.forEach(el => {
+        if (el.style.backgroundColor.toLowerCase().includes('6b4eff')) el.classList.add('selected');
+    });
 
     document.getElementById('event-modal').style.display = 'flex';
+}
+
+// Render Year View
+function renderYearView(container) {
+    container.innerHTML = '';
+    const monthNames = ["Yanvar", "Fevral", "Mart", "Aprel", "May", "Iyun", "Iyul", "Avgust", "Sentabr", "Oktabr", "Noyabr", "Dekabr"];
+    const daysShort = ['Du', 'Se', 'Ch', 'Pa', 'Ju', 'Sha', 'Ya'];
+
+    for (let m = 0; m < 12; m++) {
+        const monthBox = document.createElement('div');
+        monthBox.className = 'year-month-box';
+
+        const title = document.createElement('div');
+        title.className = 'year-month-title';
+        title.textContent = monthNames[m];
+        monthBox.appendChild(title);
+
+        const miniGrid = document.createElement('div');
+        miniGrid.className = 'year-mini-grid';
+
+        // Headers
+        daysShort.forEach(d => {
+            const h = document.createElement('div');
+            h.className = 'year-mini-header';
+            h.textContent = d;
+            miniGrid.appendChild(h);
+        });
+
+        const firstDay = new Date(currentDate.getFullYear(), m, 1);
+        const lastDay = new Date(currentDate.getFullYear(), m + 1, 0);
+
+        let startIdx = firstDay.getDay() - 1;
+        if (startIdx === -1) startIdx = 6;
+
+        // Empty cells
+        for (let i = 0; i < startIdx; i++) {
+            const empty = document.createElement('div');
+            empty.className = 'year-mini-day empty';
+            miniGrid.appendChild(empty);
+        }
+
+        // Days
+        for (let d = 1; d <= lastDay.getDate(); d++) {
+            const dayDiv = document.createElement('div');
+            dayDiv.className = 'year-mini-day';
+            dayDiv.textContent = d;
+
+            const dateStr = `${currentDate.getFullYear()}-${(m + 1).toString().padStart(2, '0')}-${d.toString().padStart(2, '0')}`;
+
+            // Check if today
+            const today = new Date();
+            if (dateStr === today.toISOString().split('T')[0]) dayDiv.classList.add('today');
+
+            // Check if has events
+            if (events.some(e => e.date === dateStr)) dayDiv.classList.add('has-event');
+
+            dayDiv.onclick = (e) => {
+                e.stopPropagation();
+                currentDate.setMonth(m);
+                currentDate.setDate(d);
+                setCalendarView('month', document.getElementById('cal-view-month'));
+            };
+
+            miniGrid.appendChild(dayDiv);
+        }
+
+        monthBox.appendChild(miniGrid);
+        container.appendChild(monthBox);
+    }
 }
 
 function openEditEventModal(id) {
@@ -878,6 +956,12 @@ function openEditEventModal(id) {
     document.getElementById('e-date').value = ev.date;
     document.getElementById('e-time').value = ev.time;
     document.getElementById('e-color').value = ev.color;
+
+    const options = document.querySelectorAll('.color-option');
+    options.forEach(el => el.classList.remove('selected'));
+    options.forEach(el => {
+        if (el.style.backgroundColor.toLowerCase().includes(ev.color.toLowerCase())) el.classList.add('selected');
+    });
 
     document.getElementById('event-modal').style.display = 'flex';
     if (window.lucide) window.lucide.createIcons();

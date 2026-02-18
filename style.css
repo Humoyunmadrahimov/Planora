@@ -1107,6 +1107,32 @@ textarea.modal-input {
     align-self: flex-end;
 }
 
+.color-options {
+    display: flex;
+    gap: 12px;
+    margin-top: 8px;
+    margin-bottom: 20px;
+}
+
+.color-option {
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: 3px solid transparent;
+}
+
+.color-option:hover {
+    transform: scale(1.1);
+}
+
+.color-option.selected {
+    border-color: #fff;
+    box-shadow: 0 0 0 2px var(--primary);
+}
+
 .empty-state {
     text-align: center;
     padding: 4rem 2rem;
@@ -3639,9 +3665,9 @@ textarea.modal-input {
 .cal-toggle-btn {
     border: none;
     background: transparent;
-    padding: 8px 20px;
-    border-radius: 10px;
-    font-size: 0.9rem;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 0.85rem;
     font-weight: 600;
     color: #64748b;
     cursor: pointer;
@@ -3924,4 +3950,89 @@ textarea.modal-input {
     .calendar-info-right {
         min-width: 0;
     }
+}
+
+/* --- YEAR VIEW V3 --- */
+.calendar-grid-v3.year-view {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+    padding: 10px;
+    align-content: start;
+}
+
+.year-month-box {
+    background: #fff;
+    border: 1px solid #f1f5f9;
+    border-radius: 16px;
+    padding: 15px;
+    transition: all 0.2s;
+}
+
+.year-month-box:hover {
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
+    border-color: var(--primary-light);
+}
+
+.year-month-title {
+    font-weight: 700;
+    color: #1e293b;
+    font-size: 1rem;
+    margin-bottom: 12px;
+    text-align: center;
+}
+
+.year-mini-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+}
+
+.year-mini-header {
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: #94a3b8;
+    text-align: center;
+    padding-bottom: 5px;
+}
+
+.year-mini-day {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #475569;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.year-mini-day:hover {
+    background: var(--primary-light);
+    color: var(--primary);
+}
+
+.year-mini-day.empty {
+    cursor: default;
+}
+
+.year-mini-day.today {
+    background: var(--primary);
+    color: #fff;
+}
+
+.year-mini-day.has-event {
+    position: relative;
+}
+
+.year-mini-day.has-event::after {
+    content: '';
+    position: absolute;
+    bottom: 2px;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: var(--primary);
 }
