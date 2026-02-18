@@ -636,6 +636,16 @@ function changeCalendarDate(delta) {
 
 function goToToday() {
     currentDate = new Date();
+
+    // If in year view, switch to month view to see the actual day
+    if (calendarView === 'year') {
+        calendarView = 'month';
+        // Update toggle buttons UI
+        document.querySelectorAll('.cal-toggle-btn').forEach(b => b.classList.remove('active'));
+        const monthBtn = document.getElementById('cal-view-month');
+        if (monthBtn) monthBtn.classList.add('active');
+    }
+
     renderCalendar();
 }
 
