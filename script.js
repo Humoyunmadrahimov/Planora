@@ -1926,9 +1926,9 @@ function deleteCurrentNote() {
         currentNoteId = null;
         document.getElementById('note-title').value = '';
         document.getElementById('note-content').value = '';
-
         saveToCloud();
         renderNotesList();
+        showNotesList(); // Close editor on mobile
     });
 }
 

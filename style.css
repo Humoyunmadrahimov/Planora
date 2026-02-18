@@ -2210,6 +2210,10 @@ textarea.modal-input {
 }
 
 /* CUSTOM CONFIRM MODAL */
+#confirm-modal {
+    z-index: 20002 !important;
+}
+
 .confirm-content {
     background: white;
     padding: 3rem 2rem;
@@ -2222,11 +2226,12 @@ textarea.modal-input {
     gap: 1.5rem;
     position: relative;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-    z-index: 20002;
-    /* Higher than notes editor */
+    z-index: 20003;
+    /* Content higher than overlay */
 }
 
 .confirm-overlay {
+    /* Kept for reference or other modals, but #confirm-modal ID rule overrides for the specific element */
     position: fixed;
     top: 0;
     left: 0;
@@ -2884,8 +2889,16 @@ textarea.modal-input {
         background: white !important;
     }
 
+    .notes-sidebar {
+        display: flex !important;
+        flex-direction: column !important;
+        width: 100% !important;
+        border: none !important;
+        background: white !important;
+    }
+
     .hide-mobile {
-        display: none;
+        display: none !important;
     }
 
     .editor-toolbar {
