@@ -4946,19 +4946,19 @@ textarea.modal-input {
     display: flex;
     align-items: center;
     gap: 1.75rem;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0.92) 100%);
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.06), rgba(59, 130, 246, 0.04));
+    border: 1px solid rgba(124, 58, 237, 0.1);
 
-    /* Premium Depth & Soft Glow with Light Direction */
+    /* Premium Depth & Soft Glow */
     backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
     box-shadow:
-        4px 10px 40px rgba(107, 78, 255, 0.04),
-        0 0 0 1px rgba(255, 255, 255, 0.5),
-        inset 1px 1px 40px rgba(255, 255, 255, 0.5);
+        var(--shadow-soft),
+        inset 0 0 0 1px rgba(124, 58, 237, 0.08);
 
-    transition: all 0.25s ease-out;
+    transition: all 180ms cubic-bezier(0.4, 0, 0.2, 1);
     overflow: hidden;
+    cursor: default;
 }
 
 /* Radial Light Glow */
@@ -4995,43 +4995,58 @@ textarea.modal-input {
 }
 
 .focus-card:hover {
-    transform: scale(1.005) translateY(-2px);
-    box-shadow: 0 20px 50px rgba(107, 78, 255, 0.06);
+    transform: translateY(-2px);
+    box-shadow:
+        var(--shadow-hover),
+        inset 0 0 0 1px rgba(124, 58, 237, 0.12);
 }
 
 .focus-icon-box {
     width: 56px;
     height: 56px;
     border-radius: 18px;
-    /* Squircle style */
     background: #fff;
-    color: var(--primary);
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
     position: relative;
+    z-index: 1;
 
-    /* Dual Shadow + Inner Highlight */
+    /* Soft Glow background */
     box-shadow:
-        0 8px 16px rgba(124, 77, 255, 0.08),
-        0 2px 4px rgba(0, 0, 0, 0.02),
+        0 8px 16px rgba(255, 122, 24, 0.1),
         inset 0 1px 1px rgba(255, 255, 255, 0.9);
-    border: 1px solid rgba(124, 77, 255, 0.06);
-    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    border: 1px solid rgba(255, 122, 24, 0.1);
+    transition: all 180ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.focus-icon-box::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: #FF7A18;
+    filter: blur(18px);
+    opacity: 0.25;
+    z-index: -1;
+    border-radius: inherit;
 }
 
 .focus-card:hover .focus-icon-box {
-    transform: translateY(-4px) rotate(-5deg);
+    transform: translateY(-2px) rotate(-5deg);
     box-shadow:
-        0 12px 24px rgba(124, 77, 255, 0.15),
+        0 12px 24px rgba(255, 122, 24, 0.2),
         0 4px 8px rgba(0, 0, 0, 0.04);
 }
 
 .focus-icon-box i {
     width: 28px;
     height: 28px;
-    stroke-width: 2.2px;
+    stroke-width: 2.5px;
+    /* Warm Accent Gradient-like coloration */
+    color: #FF7A18;
+    filter: drop-shadow(0 0 2px rgba(255, 179, 71, 0.5));
 }
 
 .focus-content {
@@ -5048,17 +5063,21 @@ textarea.modal-input {
     font-family: var(--font-heading);
     font-size: 1.15rem;
     font-weight: 600;
-    /* Semi-bold for focus */
-    /* Subtle Gradient Tint */
-    background: linear-gradient(135deg, var(--dark-purple) 0%, #632ea5 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: #6D28D9;
+    background: none;
+    -webkit-background-clip: initial;
+    background-clip: initial;
+    -webkit-text-fill-color: initial;
     display: flex;
     align-items: center;
     gap: 8px;
     margin: 0;
     letter-spacing: -0.01em;
+    transition: filter 180ms ease;
+}
+
+.focus-title:hover {
+    filter: brightness(1.03);
 }
 
 .focus-details {
@@ -5077,32 +5096,29 @@ textarea.modal-input {
     border-radius: 12px;
     font-size: 0.875rem;
     font-weight: 600;
-
-    /* Glass Effect for badges */
+    background: rgba(124, 58, 237, 0.08);
+    border: 1px solid rgba(124, 58, 237, 0.12);
+    color: #6D28D9;
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.6);
-    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: all 180ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .focus-badge:hover {
     transform: translateY(-1px);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
-    background: rgba(255, 255, 255, 1);
-}
-
-.focus-badge.default {
-    background: rgba(124, 77, 255, 0.04);
-    color: var(--primary);
+    box-shadow: 0 6px 16px rgba(124, 58, 237, 0.12);
+    background: rgba(124, 58, 237, 0.12);
 }
 
 .focus-badge.warning {
-    background: rgba(239, 92, 145, 0.06);
-    color: var(--secondary);
+    background: rgba(255, 122, 24, 0.08);
+    border: 1px solid rgba(255, 122, 24, 0.15);
+    color: #FF7A18;
 }
 
 .focus-badge.info {
-    background: rgba(59, 130, 246, 0.06);
+    background: rgba(59, 130, 246, 0.08);
+    border: 1px solid rgba(59, 130, 246, 0.15);
     color: #3B82F6;
 }
 
