@@ -2289,19 +2289,45 @@ textarea.modal-input {
 
 .icon-decoration span:nth-child(2) {
     top: -10px;
-    right: 0;
-    font-size: 0.8rem;
+    right: -10px;
+    font-size: 1.2rem;
 }
 
 .icon-decoration span:nth-child(3) {
-    bottom: 10px;
-    right: -30px;
+    bottom: 5px;
+    right: -25px;
+    font-size: 0.8rem;
 }
 
 .icon-decoration span:nth-child(4) {
     bottom: -20px;
-    left: 10px;
-    transform: rotate(-20deg);
+    left: 0;
+    transform: rotate(-15deg);
+}
+
+@keyframes sad-pulse {
+
+    0%,
+    100% {
+        transform: scale(1) rotate(0deg);
+    }
+
+    50% {
+        transform: scale(0.92) rotate(-3deg);
+    }
+}
+
+.sad-icon-animated {
+    animation: sad-pulse 3s infinite ease-in-out;
+    color: #F85F5F;
+}
+
+.sad-decoration span {
+    color: #FF8BA7 !important;
+    /* Lighter pink/red for decorations */
+    font-weight: bold;
+    font-family: monospace;
+    /* For the :( to look right */
 }
 
 .confirm-content h2 {

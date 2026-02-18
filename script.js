@@ -28,9 +28,9 @@ function showLogoutConfirmModal(message, onConfirm, btnText = 'Ha, Chiqish') {
 
     // Set custom icon for logout
     iconWrapper.innerHTML = `
-        <i data-lucide="frown" class="sad-icon"></i>
-        <div class="icon-decoration">
-            <span>:(</span><span>•</span><span>.</span><span>:(</span>
+        <i data-lucide="frown" class="sad-icon sad-icon-animated" width="60" height="60"></i>
+        <div class="icon-decoration sad-decoration">
+            <span>:(</span><span style="font-size: 2rem;">.</span><span style="font-size: 2rem;">.</span><span>:(</span>
         </div>
     `;
     if (window.lucide) window.lucide.createIcons();
