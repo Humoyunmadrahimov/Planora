@@ -1795,45 +1795,43 @@ function renderFocusBlock() {
 
     if (countEl) {
         if (todayTasksCount === 0) {
-            countEl.textContent = "Bugun uchun vazifalar rejalashtirilmagan";
+            countEl.innerHTML = `<span class="focus-badge default"><i data-lucide="check-circle"></i> Bugun vazifalar yo'q</span>`;
         } else {
-            countEl.textContent = `Bugun ${todayTasksCount} ta vazifa rejalangan`;
+            countEl.innerHTML = `<span class="focus-badge default"><i data-lucide="list"></i> Bugun ${todayTasksCount} ta vazifa</span>`;
         }
     }
 
     if (overdueEl) {
-        // Handle Previous Sibling (Dot) visibility
+        // Handle Previous Sibling (Dot) visibility - No longer valid as we removed dots, but logic kept safe
         const prevDot = overdueEl.previousElementSibling;
+        if (prevDot && prevDot.classList.contains('focus-dot')) prevDot.style.display = 'none';
 
         if (overdueCount > 0) {
-            overdueEl.textContent = `${overdueCount} tasi kechikkan`;
+            overdueEl.innerHTML = `<span class="focus-badge warning"><i data-lucide="alert-circle"></i> ${overdueCount} tasi kechikkan</span>`;
             overdueEl.style.display = 'inline';
-            if (prevDot) prevDot.style.display = 'inline';
         } else {
             overdueEl.style.display = 'none';
-            if (prevDot) prevDot.style.display = 'none';
         }
     }
 
     if (nextEl) {
-        // Handle Previous Sibling (Dot) visibility for nextEl
+        // Handle Previous Sibling (Dot) - remove if present
         const prevDot = nextEl.previousElementSibling;
+        if (prevDot && prevDot.classList.contains('focus-dot')) prevDot.style.display = 'none';
 
         if (nextEvent) {
-            nextEl.textContent = `Keyingi reja: ${nextEvent.time} (${nextEvent.title})`;
-            nextEl.className = 'focus-dim'; // Normal style
+            nextEl.innerHTML = `<span class="focus-badge info"><i data-lucide="clock"></i> ${nextEvent.time} ${nextEvent.title}</span>`;
+            nextEl.className = '';
         } else if (todayTasksCount > 0) {
-            nextEl.textContent = "Vazifalarni bajarish vaqti!";
-            nextEl.className = 'focus-highlight'; // Highlight action
+            nextEl.innerHTML = `<span class="focus-badge info"><i data-lucide="zap"></i> Vazifalarni bajaring!</span>`;
+            nextEl.className = '';
         } else {
-            nextEl.textContent = "Barchasi bajarildi ✅";
-            nextEl.className = 'focus-highlight'; // Success style
+            nextEl.innerHTML = `<span class="focus-badge default"><i data-lucide="check-check"></i> Barchasi bajarildi</span>`;
+            nextEl.className = '';
         }
     }
 
     if (window.lucide) window.lucide.createIcons();
-
-
 }
 
 function renderDashBalance() {

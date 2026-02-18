@@ -4557,66 +4557,77 @@ textarea.modal-input {
     }
 }
 
-/* Focus Block */
+/* Focus Block - Premium Smart Card */
 .focus-section {
     margin-bottom: 2rem;
     animation: fadeIn 0.5s ease-out;
 }
 
 .focus-card {
-    background: var(--white);
+    position: relative;
     padding: 1.25rem 1.5rem;
     border-radius: var(--radius-lg);
     display: flex;
     align-items: center;
     gap: 1.5rem;
-    position: relative;
-    /* Gradient Border Trick for Rounded Corners */
+    /* Gradient Border Maintained */
     border: double 2px transparent;
-    border-radius: var(--radius-lg);
-    background-image: linear-gradient(white, white),
+    background-image: linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.85)),
         linear-gradient(135deg, var(--primary), var(--secondary));
     background-origin: border-box;
     background-clip: content-box, border-box;
-    box-shadow: var(--shadow-sm);
-    transition: all 0.3s ease;
+    /* Glass Effect */
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 4px 15px rgba(124, 77, 255, 0.08);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .focus-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(124, 77, 255, 0.15);
+    transform: scale(1.01);
+    box-shadow: 0 10px 25px rgba(124, 77, 255, 0.15);
 }
 
 .focus-icon-box {
-    width: 48px;
-    height: 48px;
+    width: 52px;
+    height: 52px;
     border-radius: 50%;
-    background: linear-gradient(135deg, rgba(124, 77, 255, 0.1), rgba(239, 92, 145, 0.1));
+    /* Glassy Icon Background */
+    background: rgba(255, 255, 255, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
     color: var(--primary);
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 1.5rem;
     flex-shrink: 0;
+    backdrop-filter: blur(4px);
 }
 
 .focus-icon-box i {
-    width: 24px;
-    height: 24px;
+    width: 26px;
+    height: 26px;
+    filter: drop-shadow(0 2px 4px rgba(124, 77, 255, 0.2));
 }
 
 .focus-content {
     flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    /* Spacing between title and badges */
 }
 
 .focus-title {
-    font-size: 1.1rem;
+    font-family: var(--font-heading);
+    font-size: 1.15rem;
     font-weight: 700;
-    margin-bottom: 6px;
     color: var(--dark);
     display: flex;
     align-items: center;
     gap: 8px;
+    margin: 0;
 }
 
 .focus-details {
@@ -4624,22 +4635,54 @@ textarea.modal-input {
     align-items: center;
     flex-wrap: wrap;
     gap: 10px;
-    font-size: 0.95rem;
-    color: var(--text-muted);
 }
 
-.focus-dot {
-    color: var(--gray-medium);
+/* Badge / Chip Styles */
+.focus-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
 }
 
-.focus-highlight {
+.focus-badge.default {
+    background: rgba(124, 77, 255, 0.08);
+    /* Primary Light */
+    color: var(--primary);
+}
+
+.focus-badge.warning {
+    background: rgba(239, 92, 145, 0.1);
+    /* Secondary Light */
     color: var(--secondary);
     font-weight: 600;
 }
 
+.focus-badge.info {
+    background: rgba(59, 130, 246, 0.08);
+    color: #3B82F6;
+}
+
+.focus-badge i {
+    width: 14px;
+    height: 14px;
+}
+
+.focus-dot {
+    display: none;
+    /* Removed in favor of badges */
+}
+
+.focus-highlight {
+    /* Inherited by badge warning/info */
+}
+
 .focus-dim {
-    color: var(--text-muted);
-    opacity: 0.9;
+    /* Inherited by badge */
 }
 
 @keyframes fadeIn {
@@ -4662,13 +4705,12 @@ textarea.modal-input {
         gap: 1rem;
     }
 
-    .focus-details {
-        justify-content: center;
-        flex-direction: column;
-        gap: 6px;
+    .focus-content {
+        align-items: center;
     }
 
-    .focus-dot {
-        display: none;
+    .focus-details {
+        justify-content: center;
+        gap: 8px;
     }
 }
