@@ -1939,17 +1939,9 @@ function renderDashboardSummary() {
             const item = document.createElement('div');
             item.className = 'dash-event-item';
 
-            let icon = 'calendar';
-            const typeLabel = ev.type || 'Umumiy';
-            if (ev.type === 'personal') icon = 'user';
-            else if (ev.type === 'work') icon = 'briefcase';
-
             item.innerHTML = `
+                <div class="dash-event-title">${ev.title}</div>
                 <div class="dash-event-time">${ev.time}</div>
-                <div class="dash-event-info">
-                    <div class="dash-event-title">${ev.title}</div>
-                    <div class="dash-event-type"><i data-lucide="${icon}" style="width:12px"></i> ${typeLabel}</div>
-                </div>
             `;
             list.appendChild(item);
         });
