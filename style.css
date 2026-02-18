@@ -4186,27 +4186,19 @@ textarea.modal-input {
         font-size: 0.85rem;
     }
 
-    #calendar-grid-v3.month-view {
-        grid-template-columns: repeat(7, 1fr);
-        gap: 1px;
-        padding: 0;
-        width: 100%;
-    }
-
-    #calendar-grid-v3.month-view .v3-header {
-        font-size: 0.6rem;
-        padding: 4px 1px;
-    }
-
+    #calendar-grid-v3.month-view,
     #calendar-grid-v3.week-view {
-        grid-template-columns: 1fr;
-        gap: 10px;
-        padding: 5px;
-        width: 100%;
+        grid-template-columns: repeat(7, 1fr) !important;
+        gap: 2px !important;
+        padding: 0 !important;
+        width: 100% !important;
     }
 
+    #calendar-grid-v3.month-view .v3-header,
     #calendar-grid-v3.week-view .v3-header {
-        display: none;
+        font-size: 0.55rem;
+        padding: 4px 1px;
+        display: block !important;
     }
 
     #calendar-grid-v3.year-view {

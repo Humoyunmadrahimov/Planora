@@ -727,16 +727,11 @@ function renderWeekView(container) {
 
         const cell = document.createElement('div');
         cell.className = 'v3-cell';
-        cell.style.minHeight = '200px'; // Make it taller for single row
-
         const today = new Date();
         if (dateStr === today.toISOString().split('T')[0]) cell.classList.add('today');
 
-        // Mobile: Show day name inside cell if vertical
-        const dayName = uzbekDaysShort[i];
         cell.innerHTML = `
             <div class="v3-cell-top">
-                <span class="v3-day-label-mobile">${dayName}</span>
                 <div class="v3-day-num">${cellDate.getDate()}</div>
             </div>
         `;
