@@ -3567,9 +3567,25 @@ textarea.modal-input {
     height: calc(100vh - 120px);
     background: #f8fafc;
     border-radius: 20px;
-    margin: -10px;
     padding: 24px;
     overflow: hidden;
+    position: relative;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+@media (max-width: 768px) {
+    .calendar-page-layout {
+        flex-direction: column;
+        height: auto;
+        padding: 5px;
+        /* Minimal padding */
+        gap: 15px;
+        overflow-x: hidden;
+        border-radius: 0;
+        margin: 0;
+        width: 100vw;
+    }
 }
 
 .calendar-content-left {
@@ -3595,12 +3611,14 @@ textarea.modal-input {
 
 @media (max-width: 768px) {
     .calendar-content-left {
-        overflow-x: auto;
+        width: 100%;
+        padding: 15px;
+        box-sizing: border-box;
     }
 
     #calendar-grid-v3 {
-        min-width: 600px;
-        /* Prevent shrinking too much */
+        width: 100%;
+        min-width: 0 !important;
     }
 }
 
@@ -3722,7 +3740,31 @@ textarea.modal-input {
     cursor: pointer;
     transition: all 0.3s;
     box-shadow: 0 4px 15px rgba(107, 78, 255, 0.2);
+    white-space: nowrap;
 }
+
+.v3-cell-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 5px;
+}
+
+.v3-day-label-mobile {
+    display: none;
+    /* Hidden by default */
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #94a3b8;
+}
+
+@media (max-width: 768px) {
+    .v3-day-label-mobile {
+        display: block;
+    }
+}
+
 
 .primary-btn-modern:hover {
     background: #5636cc;
@@ -4014,7 +4056,7 @@ textarea.modal-input {
 
 @media (max-width: 600px) {
     #calendar-grid-v3.year-view {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr !important;
     }
 }
 
@@ -4096,19 +4138,33 @@ textarea.modal-input {
 @media (max-width: 768px) {
     .calendar-header-v3 {
         flex-direction: column;
-        gap: 15px;
-        align-items: flex-start;
+        gap: 12px;
+        align-items: stretch;
+        padding: 5px;
     }
 
     .header-v3-left {
         width: 100%;
+        gap: 10px;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .header-v3-label-group {
+        width: 100%;
+        display: flex;
         justify-content: space-between;
+        align-items: center;
+    }
+
+    .header-v3-left h2 {
+        font-size: 1.25rem;
     }
 
     .header-v3-right {
         width: 100%;
-        flex-wrap: wrap;
-        gap: 10px;
+        flex-direction: column;
+        gap: 8px;
     }
 
     .cal-view-toggle {
@@ -4119,34 +4175,75 @@ textarea.modal-input {
     .cal-toggle-btn {
         flex: 1;
         text-align: center;
-        padding: 8px 5px !important;
-        font-size: 0.75rem !important;
+        padding: 8px 2px !important;
+        font-size: 0.65rem !important;
     }
 
     .primary-btn-modern {
         width: 100%;
         justify-content: center;
+        padding: 10px !important;
+        font-size: 0.85rem;
     }
 
-    #calendar-grid-v3.month-view,
-    #calendar-grid-v3.week-view {
+    #calendar-grid-v3.month-view {
         grid-template-columns: repeat(7, 1fr);
+        gap: 1px;
+        padding: 0;
+        width: 100%;
+    }
+
+    #calendar-grid-v3.month-view .v3-header {
+        font-size: 0.6rem;
+        padding: 4px 1px;
+    }
+
+    #calendar-grid-v3.week-view {
+        grid-template-columns: 1fr;
+        gap: 10px;
+        padding: 5px;
+        width: 100%;
+    }
+
+    #calendar-grid-v3.week-view .v3-header {
+        display: none;
+    }
+
+    #calendar-grid-v3.year-view {
+        grid-template-columns: 1fr !important;
+        gap: 15px !important;
+        padding: 5px !important;
+        width: 100%;
     }
 
     .v3-cell {
+        min-height: auto;
+        padding: 6px;
+        border-radius: 8px;
+    }
+
+    #calendar-grid-v3.month-view .v3-cell {
+        min-height: 55px;
+    }
+
+    #calendar-grid-v3.week-view .v3-cell {
         min-height: 80px;
-        padding: 5px;
+        border-left: 3px solid #e2e8f0;
+    }
+
+    #calendar-grid-v3.week-view .v3-cell.today {
+        border-left-color: var(--primary);
+        background: #f0f7ff;
     }
 
     .v3-event {
-        font-size: 0.65rem;
-        padding: 3px 5px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        font-size: 0.55rem;
+        padding: 1px 3px;
+        margin-bottom: 1px;
+        border-radius: 3px;
     }
 
     .v3-day-num {
-        font-size: 0.8rem;
+        font-size: 0.7rem;
     }
 }

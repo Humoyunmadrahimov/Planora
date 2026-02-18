@@ -732,7 +732,14 @@ function renderWeekView(container) {
         const today = new Date();
         if (dateStr === today.toISOString().split('T')[0]) cell.classList.add('today');
 
-        cell.innerHTML = `<div class="v3-day-num">${cellDate.getDate()}</div>`;
+        // Mobile: Show day name inside cell if vertical
+        const dayName = uzbekDaysShort[i];
+        cell.innerHTML = `
+            <div class="v3-cell-top">
+                <span class="v3-day-label-mobile">${dayName}</span>
+                <div class="v3-day-num">${cellDate.getDate()}</div>
+            </div>
+        `;
 
         const dayEvents = events.filter(e => e.date === dateStr);
         dayEvents.forEach(ev => {
@@ -880,7 +887,7 @@ function renderYearView(container) {
         "IYUL", "AVGUST", "SENTABR", "OKTABR", "NOYABR", "DEKABR"
     ];
     // Monday first
-    const daysShort = ['DU', 'SE', 'CH', 'PA', 'JU', 'SH', 'YA'];
+    const daysShort = ['D', 'S', 'CH', 'P', 'J', 'SH', 'Y'];
 
     for (let m = 0; m < 12; m++) {
         const monthBox = document.createElement('div');
