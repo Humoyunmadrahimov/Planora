@@ -14,6 +14,59 @@ function showConfirmModal(message, onConfirm, btnText = 'Ha, O\'chirish') {
     modal.style.display = 'flex';
 }
 
+function showLogoutConfirmModal(message, onConfirm, btnText = 'Ha, Chiqish') {
+    const modal = document.getElementById('confirm-modal');
+    const msgEle = document.getElementById('confirm-message');
+    const yesBtn = document.getElementById('confirm-yes-btn');
+    const iconWrapper = document.querySelector('.confirm-icon-wrapper');
+
+    if (!modal || !msgEle || !yesBtn) return;
+
+    // Save original icon html to restore later if needed, 
+    // but easier to just swap content since trash is default
+    const originalIconHTML = iconWrapper.innerHTML;
+
+    // Set custom icon for logout
+    iconWrapper.innerHTML = `
+        <i data-lucide="frown" class="sad-icon"></i>
+        <div class="icon-decoration">
+            <span>:(</span><span>•</span><span>.</span><span>:(</span>
+        </div>
+    `;
+    if (window.lucide) window.lucide.createIcons();
+
+    msgEle.textContent = message;
+    yesBtn.textContent = btnText;
+
+    // Override the close logic to also restore icon
+    const noBtn = document.getElementById('confirm-no-btn');
+    const originalNoClick = noBtn.onclick;
+
+    const restoreDefault = () => {
+        iconWrapper.innerHTML = `
+            <i data-lucide="trash-2" class="trash-icon"></i>
+            <div class="icon-decoration">
+                <span>×</span><span>+</span><span>•</span><span>×</span>
+            </div>
+        `;
+        if (window.lucide) window.lucide.createIcons();
+        noBtn.onclick = originalNoClick;
+    };
+
+    confirmCallback = () => {
+        if (onConfirm) onConfirm();
+        restoreDefault();
+    };
+
+    noBtn.onclick = () => {
+        modal.style.display = 'none';
+        confirmCallback = null;
+        restoreDefault();
+    };
+
+    modal.style.display = 'flex';
+}
+
 // Attach listeners once at initialization or globally
 document.addEventListener('DOMContentLoaded', () => {
     const yesBtn = document.getElementById('confirm-yes-btn');
@@ -1610,7 +1663,7 @@ function toggleProfileMenu() {
 }
 
 function logout() {
-    showConfirmModal('Tizimdan chiqmoqchimisiz?', () => {
+    showLogoutConfirmModal('Tizimdan chiqmoqchimisiz?', () => {
         localStorage.removeItem('dashboard_current_user');
         window.location.href = 'index.html';
     }, 'Ha, Chiqish');
