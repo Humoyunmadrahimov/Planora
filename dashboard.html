@@ -421,434 +421,433 @@
                     </div>
                 </div>
             </div>
-    </div>
 
 
-    <div id="view-finance" class="content-view" style="display: none;">
-        <!-- Finance Summary Header -->
-        <div class="finance-summary">
-            <div class="summary-card income">
-                <div class="card-icon"><i data-lucide="arrow-down-circle"></i></div>
-                <div class="card-info">
-                    <span class="label">Jami Kirim</span>
-                    <h3 id="total-income">0 so'm</h3>
-                </div>
-            </div>
-            <div class="summary-card expense">
-                <div class="card-icon"><i data-lucide="arrow-up-circle"></i></div>
-                <div class="card-info">
-                    <span class="label">Jami Chiqim</span>
-                    <h3 id="total-expense">0 so'm</h3>
-                </div>
-            </div>
-            <div class="summary-card balance">
-                <div class="card-icon"><i data-lucide="wallet"></i></div>
-                <div class="card-info">
-                    <span class="label">Joriy Qoldiq</span>
-                    <h3 id="total-balance">0 so'm</h3>
-                </div>
-            </div>
-        </div>
-
-        <!-- Finance Inputs -->
-        <div class="finance-actions">
-            <!-- Income Form -->
-            <div class="finance-form-box">
-                <h4>Kirim Qo'shish</h4>
-                <div class="form-group">
-                    <label>Summa</label>
-                    <input type="number" id="income-amount" placeholder="0" class="modal-input">
-                </div>
-                <div class="form-group">
-                    <label>Turi</label>
-                    <select id="income-type" class="modal-select">
-                        <option value="salary">Oylik</option>
-                        <option value="extra">Qo'shimcha</option>
-                    </select>
-                </div>
-                <button class="primary-btn full-width" onclick="addTransaction('income')">Qo'shish</button>
-            </div>
-
-            <!-- Expense Form -->
-            <div class="finance-form-box">
-                <h4>Chiqim Qo'shish</h4>
-                <div class="form-group">
-                    <label>Summa</label>
-                    <input type="number" id="expense-amount" placeholder="0" class="modal-input">
-                </div>
-                <div class="form-group">
-                    <label>Izoh</label>
-                    <input type="text" id="expense-desc" placeholder="Nima uchun?" class="modal-input">
-                </div>
-                <button class="danger-btn full-width" onclick="addTransaction('expense')">Chiqarish</button>
-            </div>
-        </div>
-
-        <!-- Transaction History -->
-        <!-- Transaction History -->
-        <div class="transaction-history" id="finance-history-section">
-            <div class="history-header">
-                <h3>Tarix</h3>
-                <div class="history-controls">
-                    <div class="view-toggle">
-                        <button class="toggle-btn" id="view-daily" onclick="setFinanceView('daily')">Kunlik</button>
-                        <button class="toggle-btn" id="view-weekly" onclick="setFinanceView('weekly')">Haftalik</button>
-                        <button class="toggle-btn active" id="view-monthly"
-                            onclick="setFinanceView('monthly')">Oylik</button>
+            <div id="view-finance" class="content-view" style="display: none;">
+                <!-- Finance Summary Header -->
+                <div class="finance-summary">
+                    <div class="summary-card income">
+                        <div class="card-icon"><i data-lucide="arrow-down-circle"></i></div>
+                        <div class="card-info">
+                            <span class="label">Jami Kirim</span>
+                            <h3 id="total-income">0 so'm</h3>
+                        </div>
                     </div>
-                    <button class="icon-btn download-btn" onclick="downloadFinancePDF()" title="PDF Yuklab olish">
-                        <i data-lucide="download"></i>
-                    </button>
-                    <button class="icon-btn delete-all-btn" onclick="clearCurrentPeriodFinance()"
-                        title="Ushbu davrni tozalash" style="color: var(--text-muted); margin-left: 5px;">
-                        <i data-lucide="trash-2"></i>
-                    </button>
-                    <!-- Restore (Undo) History -->
-                    <div class="action-wrapper" style="margin-left: 5px;">
-                        <button class="icon-btn restore-history-btn" onclick="toggleRestoreDropdown()"
-                            title="O'chirilganlarni tiklash">
-                            <i data-lucide="rotate-ccw"></i>
-                            <span id="restore-badge" class="badge-count" style="display: none;">0</span>
-                        </button>
-                        <div id="restore-dropdown" class="action-dropdown restore-dropdown">
-                            <div class="dropdown-header">
-                                <span>O'chirilganlar (Oxirgi 3 ta)</span>
-                            </div>
-                            <div id="restore-history-list" class="dropdown-list">
-                                <!-- Trash operations injected here -->
-                            </div>
+                    <div class="summary-card expense">
+                        <div class="card-icon"><i data-lucide="arrow-up-circle"></i></div>
+                        <div class="card-info">
+                            <span class="label">Jami Chiqim</span>
+                            <h3 id="total-expense">0 so'm</h3>
+                        </div>
+                    </div>
+                    <div class="summary-card balance">
+                        <div class="card-icon"><i data-lucide="wallet"></i></div>
+                        <div class="card-info">
+                            <span class="label">Joriy Qoldiq</span>
+                            <h3 id="total-balance">0 so'm</h3>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="finance-date-nav">
-                <button class="icon-btn" onclick="changeFinanceDate(-1)"><i data-lucide="chevron-left"></i></button>
-                <span id="finance-date-label" class="date-label">Bugun</span>
-                <button class="icon-btn" onclick="changeFinanceDate(1)"><i data-lucide="chevron-right"></i></button>
-            </div>
+                <!-- Finance Inputs -->
+                <div class="finance-actions">
+                    <!-- Income Form -->
+                    <div class="finance-form-box">
+                        <h4>Kirim Qo'shish</h4>
+                        <div class="form-group">
+                            <label>Summa</label>
+                            <input type="number" id="income-amount" placeholder="0" class="modal-input">
+                        </div>
+                        <div class="form-group">
+                            <label>Turi</label>
+                            <select id="income-type" class="modal-select">
+                                <option value="salary">Oylik</option>
+                                <option value="extra">Qo'shimcha</option>
+                            </select>
+                        </div>
+                        <button class="primary-btn full-width" onclick="addTransaction('income')">Qo'shish</button>
+                    </div>
 
-            <div class="history-list" id="transaction-list">
-                <!-- Items will be here -->
-            </div>
-        </div>
-    </div>
-
-    <!-- NOTES VIEW -->
-    <div id="view-notes" class="content-view" style="display: none;">
-        <div class="notes-container">
-            <div class="notes-sidebar">
-                <div class="notes-sidebar-header">
-                    <h3>Mening Qaydlarim</h3>
-                    <button class="icon-btn" onclick="createNewNote()" title="Yangi qayd">
-                        <i data-lucide="plus-circle"></i>
-                    </button>
+                    <!-- Expense Form -->
+                    <div class="finance-form-box">
+                        <h4>Chiqim Qo'shish</h4>
+                        <div class="form-group">
+                            <label>Summa</label>
+                            <input type="number" id="expense-amount" placeholder="0" class="modal-input">
+                        </div>
+                        <div class="form-group">
+                            <label>Izoh</label>
+                            <input type="text" id="expense-desc" placeholder="Nima uchun?" class="modal-input">
+                        </div>
+                        <button class="danger-btn full-width" onclick="addTransaction('expense')">Chiqarish</button>
+                    </div>
                 </div>
-                <div id="notes-list" class="notes-list">
-                    <!-- Saved notes will appear here -->
-                </div>
-            </div>
-            <div class="notes-editor" id="note-editor-container">
-                <div class="editor-header">
-                    <button class="mobile-back-btn" onclick="showNotesList()">
-                        <i data-lucide="arrow-left"></i> Orqaga
-                    </button>
-                    <div class="editor-actions">
-                        <button class="secondary-btn" onclick="saveCurrentNote()">
-                            <i data-lucide="save"></i> Saqlash
-                        </button>
-                        <div class="dropdown">
-                            <button class="secondary-btn dropdown-toggle">
-                                <i data-lucide="download"></i> Yuklab olish
+
+                <!-- Transaction History -->
+                <!-- Transaction History -->
+                <div class="transaction-history" id="finance-history-section">
+                    <div class="history-header">
+                        <h3>Tarix</h3>
+                        <div class="history-controls">
+                            <div class="view-toggle">
+                                <button class="toggle-btn" id="view-daily"
+                                    onclick="setFinanceView('daily')">Kunlik</button>
+                                <button class="toggle-btn" id="view-weekly"
+                                    onclick="setFinanceView('weekly')">Haftalik</button>
+                                <button class="toggle-btn active" id="view-monthly"
+                                    onclick="setFinanceView('monthly')">Oylik</button>
+                            </div>
+                            <button class="icon-btn download-btn" onclick="downloadFinancePDF()"
+                                title="PDF Yuklab olish">
+                                <i data-lucide="download"></i>
                             </button>
-                            <div class="dropdown-menu">
-                                <a href="#" onclick="downloadNotePDF()">PDF formatida</a>
-                                <a href="#" onclick="downloadNoteWord()">Word formatida</a>
-                            </div>
-                        </div>
-                        <button class="danger-btn icon-only" onclick="deleteCurrentNote()" title="O'chirish">
-                            <i data-lucide="trash-2"></i>
-                        </button>
-                    </div>
-                </div>
-                <input type="text" id="note-title" class="note-title-input" placeholder="Sarlavha yozing...">
-                <textarea id="note-content" class="note-content-area"
-                    placeholder="Matnni shu yerga yozing..."></textarea>
-            </div>
-        </div>
-    </div>
-
-    <!-- SETTINGS VIEW -->
-    <div id="view-settings" class="content-view" style="display: none;">
-        <div class="settings-container">
-            <!-- Settings Sidebar -->
-            <div class="settings-sidebar">
-                <div class="settings-user-info">
-                    <div class="settings-avatar-wrapper">
-                        <img id="settings-avatar-img" src="assets/default-avatar.png" alt="Avatar"
-                            class="settings-avatar">
-                        <label for="avatar-upload" class="avatar-edit-icon" title="Rasm yuklash">
-                            <i data-lucide="camera"></i>
-                        </label>
-                        <input type="file" id="avatar-upload" accept="image/*" style="display: none;"
-                            onchange="handleAvatarUpload(event)">
-                    </div>
-                    <h3 id="settings-user-fullname">Ism Familiya</h3>
-                    <p id="settings-user-role">Foydalanuvchi</p>
-                </div>
-                <nav class="settings-nav">
-                    <a href="#" id="set-nav-personal" class="settings-nav-item active"
-                        onclick="showSettingsTab('personal')">
-                        <i data-lucide="user"></i>
-                        <span>Shaxsiy ma'lumotlar</span>
-                    </a>
-                    <a href="#" id="set-nav-security" class="settings-nav-item" onclick="showSettingsTab('security')">
-                        <i data-lucide="lock"></i>
-                        <span>Xavfsizlik</span>
-                    </a>
-                    <a href="#" class="settings-nav-item danger" onclick="logout()">
-                        <i data-lucide="log-out"></i>
-                        <span>Chiqish</span>
-                    </a>
-                </nav>
-            </div>
-
-            <!-- Settings Content -->
-            <div class="settings-content-card">
-                <!-- Personal Info Tab -->
-                <div id="settings-tab-personal" class="settings-tab-content">
-                    <div class="settings-header">
-                        <h2>Shaxsiy ma'lumotlar</h2>
-                        <p>Ma'lumotlaringizni shu yerda boshqarishingiz mumkin.</p>
-                    </div>
-                    <div class="settings-form">
-                        <div class="form-row">
-                            <div class="form-group-settings">
-                                <label>Ism Familiya</label>
-                                <input type="text" id="s-fullname" class="settings-input"
-                                    placeholder="Ismingizni kiriting">
-                            </div>
-                            <div class="form-group-settings">
-                                <label>Login (Username)</label>
-                                <input type="text" id="s-login" class="settings-input" disabled
-                                    title="Loginni o'zgartirib bo'lmaydi">
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group-settings" style="flex: 1;">
-                                <label>Gmail manzilingiz</label>
-                                <div class="input-with-icon-wrapper">
-                                    <input type="email" id="s-email" class="settings-input"
-                                        placeholder="example@gmail.com">
-                                    <span class="verified-badge"><i data-lucide="check-circle"></i>
-                                        Tasdiqlangan</span>
+                            <button class="icon-btn delete-all-btn" onclick="clearCurrentPeriodFinance()"
+                                title="Ushbu davrni tozalash" style="color: var(--text-muted); margin-left: 5px;">
+                                <i data-lucide="trash-2"></i>
+                            </button>
+                            <!-- Restore (Undo) History -->
+                            <div class="action-wrapper" style="margin-left: 5px;">
+                                <button class="icon-btn restore-history-btn" onclick="toggleRestoreDropdown()"
+                                    title="O'chirilganlarni tiklash">
+                                    <i data-lucide="rotate-ccw"></i>
+                                    <span id="restore-badge" class="badge-count" style="display: none;">0</span>
+                                </button>
+                                <div id="restore-dropdown" class="action-dropdown restore-dropdown">
+                                    <div class="dropdown-header">
+                                        <span>O'chirilganlar (Oxirgi 3 ta)</span>
+                                    </div>
+                                    <div id="restore-history-list" class="dropdown-list">
+                                        <!-- Trash operations injected here -->
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="form-row">
-                            <div class="form-group-settings">
-                                <label>Telefon raqam</label>
-                                <input type="tel" id="s-phone" class="settings-input" placeholder="+998 90 123 45 67">
-                            </div>
-                            <div class="form-group-settings">
-                                <label>Manzil (Ixtiyoriy)</label>
-                                <input type="text" id="s-location" class="settings-input"
-                                    placeholder="Toshkent, O'zbekiston">
-                            </div>
-                        </div>
-                        <div class="settings-footer">
-                            <button class="secondary-btn"
-                                onclick="switchTab('dashboard', document.querySelector('.nav-item'))">Bekor
-                                qilish</button>
-                            <button class="primary-btn" onclick="saveUserSettings()">O'zgarishlarni
-                                saqlash</button>
-                        </div>
                     </div>
-                </div>
 
-                <!-- Security Tab -->
-                <div id="settings-tab-security" class="settings-tab-content" style="display: none;">
-                    <div class="settings-header">
-                        <h2>Xavfsizlik</h2>
-                        <p>Akkountingiz xavfsizligini ta'minlash uchun parolni yangilang.</p>
+                    <div class="finance-date-nav">
+                        <button class="icon-btn" onclick="changeFinanceDate(-1)"><i
+                                data-lucide="chevron-left"></i></button>
+                        <span id="finance-date-label" class="date-label">Bugun</span>
+                        <button class="icon-btn" onclick="changeFinanceDate(1)"><i
+                                data-lucide="chevron-right"></i></button>
                     </div>
-                    <div class="settings-form">
-                        <div class="form-group-settings">
-                            <label>Joriy parol</label>
-                            <input type="password" id="s-current-password" class="settings-input"
-                                placeholder="Amaldagi parolni kiriting">
-                        </div>
-                        <div class="form-group-settings">
-                            <label>Yangi parol</label>
-                            <input type="password" id="s-new-password" class="settings-input"
-                                placeholder="Yangi parol o'ylab toping">
-                        </div>
-                        <div class="form-group-settings">
-                            <label>Yangi parolni tasdiqlang</label>
-                            <input type="password" id="s-confirm-password" class="settings-input"
-                                placeholder="Yangi parolni qayta kiriting">
-                        </div>
-                        <div class="settings-footer">
-                            <button class="primary-btn" onclick="updatePassword()">Parolni yangilash</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <!-- Admin View -->
-    <div id="view-admin" class="content-view" style="display: none;">
-        <div class="admin-card">
-            <div class="admin-header-flex">
-                <h2>Foydalanuvchilar Boshqaruvi</h2>
-                <div style="display: flex; gap: 10px; margin: 0 20px;">
-                    <button class="primary-btn" onclick="openMessageModal()">
-                        <i data-lucide="send"></i> Xabar Yuborish
-                    </button>
-                    <button class="secondary-btn" onclick="openBroadcastHistoryModal()"
-                        style="border: 1px solid var(--primary); color: var(--primary);">
-                        <i data-lucide="history"></i> Tarix
-                    </button>
-                </div>
-                <div class="stats-group">
-                    <div class="stat-badge">
-                        <span style="color: var(--text-muted); font-size: 0.9rem;">Jami:</span>
-                        <strong id="admin-total-users"
-                            style="font-size: 1.2rem; color: var(--primary); margin-left: 5px;">0</strong>
-                    </div>
-                    <div class="stat-badge">
-                        <span style="color: var(--text-muted); font-size: 0.9rem;">Onlayn:</span>
-                        <strong id="admin-online-users"
-                            style="font-size: 1.2rem; color: #4CAF50; margin-left: 5px;">0</strong>
+                    <div class="history-list" id="transaction-list">
+                        <!-- Items will be here -->
                     </div>
                 </div>
             </div>
 
-            <!-- Message Modal -->
-            <div id="message-modal" class="modal-overlay" style="display: none;">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h3>Barchaga Xabar Yuborish</h3>
-                        <button class="close-btn" onclick="closeMessageModal()"><i data-lucide="x"></i></button>
-                    </div>
-                    <div class="modal-body">
-                        <label>Mavzu (Sarlavha)</label>
-                        <input type="text" id="msg-title" placeholder="Masalan: Saytda texnik ishlar..."
-                            class="modal-input">
-
-                        <label>Xabar matni</label>
-                        <textarea id="msg-body" placeholder="Hurmatli foydalanuvchilar..." class="modal-input"
-                            style="height: 100px;"></textarea>
-
-                        <label>Xabar turi</label>
-                        <select id="msg-type" class="modal-select">
-                            <option value="info">Oddiy Xabar (Ko'k)</option>
-                            <option value="warning">Ogohlantirish (Sariq)</option>
-                            <option value="success">Tabriklash (Yashil)</option>
-                        </select>
-
-                        <button onclick="sendGlobalMessage()" class="modal-submit-btn">Yuborish 🚀</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Broadcast History Modal -->
-            <div id="broadcast-history-modal" class="modal-overlay" style="display: none;">
-                <div class="modal-content" style="max-width: 600px;">
-                    <div class="modal-header">
-                        <h3>Yuborilgan Xabarlar Tarixi</h3>
-                        <button class="close-btn" onclick="closeBroadcastHistoryModal()"><i
-                                data-lucide="x"></i></button>
-                    </div>
-                    <div class="modal-body">
-                        <div style="display: flex; justify-content: flex-end; margin-bottom: 15px;">
-                            <button onclick="deleteAllBroadcastMessages()"
-                                style="font-size: 0.8rem; color: #E53E3E; background: #FFF5F5; border: 1px solid #FED7D7; padding: 6px 12px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 5px;">
-                                <i data-lucide="trash-2" style="width: 14px;"></i> Barchasini o'chirish
+            <!-- NOTES VIEW -->
+            <div id="view-notes" class="content-view" style="display: none;">
+                <div class="notes-container">
+                    <div class="notes-sidebar">
+                        <div class="notes-sidebar-header">
+                            <h3>Mening Qaydlarim</h3>
+                            <button class="icon-btn" onclick="createNewNote()" title="Yangi qayd">
+                                <i data-lucide="plus-circle"></i>
                             </button>
                         </div>
-
-                        <div id="broadcast-history-list" class="admin-broadcasts-list" style="min-height: 300px;">
-                            <!-- History items -->
-                        </div>
-
-                        <div class="pagination-container" id="history-pagination"
-                            style="display: flex; justify-content: center; gap: 10px; margin-top: 20px; padding-top: 15px; border-top: 1px solid #eee;">
-                            <!-- Pagination buttons -->
+                        <div id="notes-list" class="notes-list">
+                            <!-- Saved notes will appear here -->
                         </div>
                     </div>
-                </div>
-            </div>
-
-            <!-- Users List Grid -->
-            <div class="admin-users-grid-container" style="margin-top: 25px;">
-                <div id="admin-users-list" class="admin-users-grid">
-                    <!-- User cards will be injected here -->
-                </div>
-            </div>
-        </div>
-    </div>
-    </div>
-
-    <!-- User Details Modal -->
-    <div id="user-details-modal" class="modal-overlay" style="display: none;">
-        <div class="modal-content profile-detail-modal">
-            <div class="modal-header">
-                <h3 id="det-name">Foydalanuvchi Profili</h3>
-                <button class="close-btn" onclick="closeUserDetailsModal()"><i data-lucide="x"></i></button>
-            </div>
-            <div class="modal-body">
-                <div class="profile-header-main">
-                    <div class="det-avatar" id="det-avatar">??</div>
-                    <div class="det-main-info">
-                        <h2 id="det-full-name">Noma'lum</h2>
-                        <p id="det-status-badge" class="badge">Foydalanuvchi</p>
+                    <div class="notes-editor" id="note-editor-container">
+                        <div class="editor-header">
+                            <button class="mobile-back-btn" onclick="showNotesList()">
+                                <i data-lucide="arrow-left"></i> Orqaga
+                            </button>
+                            <div class="editor-actions">
+                                <button class="secondary-btn" onclick="saveCurrentNote()">
+                                    <i data-lucide="save"></i> Saqlash
+                                </button>
+                                <div class="dropdown">
+                                    <button class="secondary-btn dropdown-toggle">
+                                        <i data-lucide="download"></i> Yuklab olish
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        <a href="#" onclick="downloadNotePDF()">PDF formatida</a>
+                                        <a href="#" onclick="downloadNoteWord()">Word formatida</a>
+                                    </div>
+                                </div>
+                                <button class="danger-btn icon-only" onclick="deleteCurrentNote()" title="O'chirish">
+                                    <i data-lucide="trash-2"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <input type="text" id="note-title" class="note-title-input" placeholder="Sarlavha yozing...">
+                        <textarea id="note-content" class="note-content-area"
+                            placeholder="Matnni shu yerga yozing..."></textarea>
                     </div>
                 </div>
+            </div>
 
-                <div class="profile-info-grid">
-                    <div class="info-group">
-                        <label>Login</label>
-                        <div class="info-value" id="det-login">-</div>
+            <!-- SETTINGS VIEW -->
+            <div id="view-settings" class="content-view" style="display: none;">
+                <div class="settings-container">
+                    <!-- Settings Sidebar -->
+                    <div class="settings-sidebar">
+                        <div class="settings-user-info">
+                            <div class="settings-avatar-wrapper">
+                                <img id="settings-avatar-img" src="assets/default-avatar.png" alt="Avatar"
+                                    class="settings-avatar">
+                                <label for="avatar-upload" class="avatar-edit-icon" title="Rasm yuklash">
+                                    <i data-lucide="camera"></i>
+                                </label>
+                                <input type="file" id="avatar-upload" accept="image/*" style="display: none;"
+                                    onchange="handleAvatarUpload(event)">
+                            </div>
+                            <h3 id="settings-user-fullname">Ism Familiya</h3>
+                            <p id="settings-user-role">Foydalanuvchi</p>
+                        </div>
+                        <nav class="settings-nav">
+                            <a href="#" id="set-nav-personal" class="settings-nav-item active"
+                                onclick="showSettingsTab('personal')">
+                                <i data-lucide="user"></i>
+                                <span>Shaxsiy ma'lumotlar</span>
+                            </a>
+                            <a href="#" id="set-nav-security" class="settings-nav-item"
+                                onclick="showSettingsTab('security')">
+                                <i data-lucide="lock"></i>
+                                <span>Xavfsizlik</span>
+                            </a>
+                            <a href="#" class="settings-nav-item danger" onclick="logout()">
+                                <i data-lucide="log-out"></i>
+                                <span>Chiqish</span>
+                            </a>
+                        </nav>
                     </div>
-                    <div class="info-group">
-                        <label>Parol</label>
-                        <div class="info-value password-field" onclick="togglePasswordVisibility(this)">
-                            <span class="pass-stars">••••••••</span>
-                            <span class="pass-text" style="display: none;" id="det-pass">-</span>
-                            <i data-lucide="eye" class="eye-icon"></i>
+
+                    <!-- Settings Content -->
+                    <div class="settings-content-card">
+                        <!-- Personal Info Tab -->
+                        <div id="settings-tab-personal" class="settings-tab-content">
+                            <div class="settings-header">
+                                <h2>Shaxsiy ma'lumotlar</h2>
+                                <p>Ma'lumotlaringizni shu yerda boshqarishingiz mumkin.</p>
+                            </div>
+                            <div class="settings-form">
+                                <div class="form-row">
+                                    <div class="form-group-settings">
+                                        <label>Ism Familiya</label>
+                                        <input type="text" id="s-fullname" class="settings-input"
+                                            placeholder="Ismingizni kiriting">
+                                    </div>
+                                    <div class="form-group-settings">
+                                        <label>Login (Username)</label>
+                                        <input type="text" id="s-login" class="settings-input" disabled
+                                            title="Loginni o'zgartirib bo'lmaydi">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group-settings" style="flex: 1;">
+                                        <label>Gmail manzilingiz</label>
+                                        <div class="input-with-icon-wrapper">
+                                            <input type="email" id="s-email" class="settings-input"
+                                                placeholder="example@gmail.com">
+                                            <span class="verified-badge"><i data-lucide="check-circle"></i>
+                                                Tasdiqlangan</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group-settings">
+                                        <label>Telefon raqam</label>
+                                        <input type="tel" id="s-phone" class="settings-input"
+                                            placeholder="+998 90 123 45 67">
+                                    </div>
+                                    <div class="form-group-settings">
+                                        <label>Manzil (Ixtiyoriy)</label>
+                                        <input type="text" id="s-location" class="settings-input"
+                                            placeholder="Toshkent, O'zbekiston">
+                                    </div>
+                                </div>
+                                <div class="settings-footer">
+                                    <button class="secondary-btn"
+                                        onclick="switchTab('dashboard', document.querySelector('.nav-item'))">Bekor
+                                        qilish</button>
+                                    <button class="primary-btn" onclick="saveUserSettings()">O'zgarishlarni
+                                        saqlash</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Security Tab -->
+                        <div id="settings-tab-security" class="settings-tab-content" style="display: none;">
+                            <div class="settings-header">
+                                <h2>Xavfsizlik</h2>
+                                <p>Akkountingiz xavfsizligini ta'minlash uchun parolni yangilang.</p>
+                            </div>
+                            <div class="settings-form">
+                                <div class="form-group-settings">
+                                    <label>Joriy parol</label>
+                                    <input type="password" id="s-current-password" class="settings-input"
+                                        placeholder="Amaldagi parolni kiriting">
+                                </div>
+                                <div class="form-group-settings">
+                                    <label>Yangi parol</label>
+                                    <input type="password" id="s-new-password" class="settings-input"
+                                        placeholder="Yangi parol o'ylab toping">
+                                </div>
+                                <div class="form-group-settings">
+                                    <label>Yangi parolni tasdiqlang</label>
+                                    <input type="password" id="s-confirm-password" class="settings-input"
+                                        placeholder="Yangi parolni qayta kiriting">
+                                </div>
+                                <div class="settings-footer">
+                                    <button class="primary-btn" onclick="updatePassword()">Parolni yangilash</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="info-group">
-                        <label>Gmail</label>
-                        <div class="info-value" id="det-email">-</div>
+                </div>
+            </div>
+
+            <!-- Admin View -->
+            <div id="view-admin" class="content-view" style="display: none;">
+                <div class="admin-card">
+                    <div class="admin-header-flex">
+                        <h2>Foydalanuvchilar Boshqaruvi</h2>
+                        <div style="display: flex; gap: 10px; margin: 0 20px;">
+                            <button class="primary-btn" onclick="openMessageModal()">
+                                <i data-lucide="send"></i> Xabar Yuborish
+                            </button>
+                            <button class="secondary-btn" onclick="openBroadcastHistoryModal()"
+                                style="border: 1px solid var(--primary); color: var(--primary);">
+                                <i data-lucide="history"></i> Tarix
+                            </button>
+                        </div>
+                        <div class="stats-group">
+                            <div class="stat-badge">
+                                <span style="color: var(--text-muted); font-size: 0.9rem;">Jami:</span>
+                                <strong id="admin-total-users"
+                                    style="font-size: 1.2rem; color: var(--primary); margin-left: 5px;">0</strong>
+                            </div>
+                            <div class="stat-badge">
+                                <span style="color: var(--text-muted); font-size: 0.9rem;">Onlayn:</span>
+                                <strong id="admin-online-users"
+                                    style="font-size: 1.2rem; color: #4CAF50; margin-left: 5px;">0</strong>
+                            </div>
+                        </div>
                     </div>
-                    <div class="info-group">
-                        <label>Telefon</label>
-                        <div class="info-value" id="det-phone">-</div>
+
+                    <!-- Message Modal -->
+                    <div id="message-modal" class="modal-overlay" style="display: none;">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h3>Barchaga Xabar Yuborish</h3>
+                                <button class="close-btn" onclick="closeMessageModal()"><i data-lucide="x"></i></button>
+                            </div>
+                            <div class="modal-body">
+                                <label>Mavzu (Sarlavha)</label>
+                                <input type="text" id="msg-title" placeholder="Masalan: Saytda texnik ishlar..."
+                                    class="modal-input">
+
+                                <label>Xabar matni</label>
+                                <textarea id="msg-body" placeholder="Hurmatli foydalanuvchilar..." class="modal-input"
+                                    style="height: 100px;"></textarea>
+
+                                <label>Xabar turi</label>
+                                <select id="msg-type" class="modal-select">
+                                    <option value="info">Oddiy Xabar (Ko'k)</option>
+                                    <option value="warning">Ogohlantirish (Sariq)</option>
+                                    <option value="success">Tabriklash (Yashil)</option>
+                                </select>
+
+                                <button onclick="sendGlobalMessage()" class="modal-submit-btn">Yuborish 🚀</button>
+                            </div>
+                        </div>
                     </div>
-                    <div class="info-group" style="grid-column: span 2;">
-                        <label>Lokatsiya</label>
-                        <div class="info-value" id="det-location">-</div>
+
+                    <!-- Broadcast History Modal -->
+                    <div id="broadcast-history-modal" class="modal-overlay" style="display: none;">
+                        <div class="modal-content" style="max-width: 600px;">
+                            <div class="modal-header">
+                                <h3>Yuborilgan Xabarlar Tarixi</h3>
+                                <button class="close-btn" onclick="closeBroadcastHistoryModal()"><i
+                                        data-lucide="x"></i></button>
+                            </div>
+                            <div class="modal-body">
+                                <div style="display: flex; justify-content: flex-end; margin-bottom: 15px;">
+                                    <button onclick="deleteAllBroadcastMessages()"
+                                        style="font-size: 0.8rem; color: #E53E3E; background: #FFF5F5; border: 1px solid #FED7D7; padding: 6px 12px; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 5px;">
+                                        <i data-lucide="trash-2" style="width: 14px;"></i> Barchasini o'chirish
+                                    </button>
+                                </div>
+
+                                <div id="broadcast-history-list" class="admin-broadcasts-list"
+                                    style="min-height: 300px;">
+                                    <!-- History items -->
+                                </div>
+
+                                <div class="pagination-container" id="history-pagination"
+                                    style="display: flex; justify-content: center; gap: 10px; margin-top: 20px; padding-top: 15px; border-top: 1px solid #eee;">
+                                    <!-- Pagination buttons -->
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="info-group" style="grid-column: span 2;">
-                        <label>Oxirgi faollik</label>
-                        <div class="info-value" id="det-last-seen">-</div>
+
+                    <!-- Users List Grid -->
+                    <div class="admin-users-grid-container" style="margin-top: 25px;">
+                        <div id="admin-users-list" class="admin-users-grid">
+                            <!-- User cards will be injected here -->
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
 
-    <div class="admin-users-grid-container">
-        <div id="admin-users-list" class="admin-users-grid">
-            <!-- User cards will be injected here -->
-        </div>
-    </div>
-    </div>
-    </div>
-    </main>
+            <!-- User Details Modal -->
+            <div id="user-details-modal" class="modal-overlay" style="display: none;">
+                <div class="modal-content profile-detail-modal">
+                    <div class="modal-header">
+                        <h3 id="det-name">Foydalanuvchi Profili</h3>
+                        <button class="close-btn" onclick="closeUserDetailsModal()"><i data-lucide="x"></i></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="profile-header-main">
+                            <div class="det-avatar" id="det-avatar">??</div>
+                            <div class="det-main-info">
+                                <h2 id="det-full-name">Noma'lum</h2>
+                                <p id="det-status-badge" class="badge">Foydalanuvchi</p>
+                            </div>
+                        </div>
+
+                        <div class="profile-info-grid">
+                            <div class="info-group">
+                                <label>Login</label>
+                                <div class="info-value" id="det-login">-</div>
+                            </div>
+                            <div class="info-group">
+                                <label>Parol</label>
+                                <div class="info-value password-field" onclick="togglePasswordVisibility(this)">
+                                    <span class="pass-stars">••••••••</span>
+                                    <span class="pass-text" style="display: none;" id="det-pass">-</span>
+                                    <i data-lucide="eye" class="eye-icon"></i>
+                                </div>
+                            </div>
+                            <div class="info-group">
+                                <label>Gmail</label>
+                                <div class="info-value" id="det-email">-</div>
+                            </div>
+                            <div class="info-group">
+                                <label>Telefon</label>
+                                <div class="info-value" id="det-phone">-</div>
+                            </div>
+                            <div class="info-group" style="grid-column: span 2;">
+                                <label>Lokatsiya</label>
+                                <div class="info-value" id="det-location">-</div>
+                            </div>
+                            <div class="info-group" style="grid-column: span 2;">
+                                <label>Oxirgi faollik</label>
+                                <div class="info-value" id="det-last-seen">-</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
     </div>
 
     <!-- CUSTOM CONFIRM MODAL -->
