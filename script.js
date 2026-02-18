@@ -1746,7 +1746,7 @@ function renderNotesList() {
         try {
             const d = note.date instanceof Date ? note.date : new Date(note.date);
             if (!isNaN(d.getTime())) {
-                dateDisplay = d.toLocaleDateString('uz-UZ', { day: 'numeric', month: 'short' });
+                dateDisplay = d.toLocaleDateString('uz-UZ', { day: 'numeric', month: 'long' });
             }
         } catch (e) { }
 
