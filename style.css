@@ -145,10 +145,12 @@ body {
 }
 
 .upgrade-card {
-    background: var(--primary-light);
+    background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.6) 0%, transparent 70%), var(--primary-light);
     padding: 1.5rem;
     border-radius: var(--radius-md);
     text-align: center;
+    box-shadow: 1px 2px 10px rgba(124, 77, 255, 0.05);
+    /* Soft themed shadow */
 }
 
 .upgrade-card p {
@@ -399,11 +401,11 @@ body {
 }
 
 .stat-card {
-    background: var(--white);
+    background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.4) 0%, transparent 60%), var(--white);
     padding: 1.5rem 1.25rem;
     border-radius: var(--radius-lg);
-    box-shadow: 0 8px 24px rgba(149, 157, 165, 0.06);
-    /* Soft Apple-style shadow */
+    box-shadow: 2px 8px 24px rgba(149, 157, 165, 0.06);
+    /* Shadow to bottom-right */
     display: flex;
     align-items: center;
     gap: 1.25rem;
@@ -418,8 +420,8 @@ body {
 }
 
 .stat-card.dark {
-    /* Vibrant Premium Gradient matching PlanPro PRO box */
-    background: linear-gradient(135deg, #7C4DFF 0%, #6039cc 100%);
+    /* Vibrant Premium Gradient matching PlanPro PRO box + Light Top-Left */
+    background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.15) 0%, transparent 50%), linear-gradient(135deg, #7C4DFF 0%, #6039cc 100%);
     color: white;
     border: none;
     transition: all 0.25s ease-out;
@@ -437,11 +439,11 @@ body {
 
 .stat-card:hover {
     transform: scale(1.01) translateY(-2px);
-    box-shadow: 0 15px 35px rgba(149, 157, 165, 0.1);
+    box-shadow: 4px 15px 35px rgba(149, 157, 165, 0.1);
 }
 
 .stat-card.dark:hover {
-    box-shadow: 0 15px 45px rgba(124, 77, 255, 0.25);
+    box-shadow: 4px 15px 45px rgba(124, 77, 255, 0.25);
 }
 
 .stat-icon-wrapper {
@@ -454,8 +456,9 @@ body {
     align-items: center;
     justify-content: center;
     font-size: 1.25rem;
-    /* Dual soft shadow for floating effect */
+    /* Dual soft shadow + Top-Left Insight */
     box-shadow:
+        inset 1px 1px 2px rgba(255, 255, 255, 0.8),
         0 4px 10px rgba(0, 0, 0, 0.04),
         0 1px 2px rgba(0, 0, 0, 0.02);
     transition: all 0.3s ease;
@@ -472,7 +475,7 @@ body {
     -webkit-backdrop-filter: blur(8px);
     border: 1px solid rgba(255, 255, 255, 0.2);
     color: white;
-    box-shadow: none;
+    box-shadow: inset 1px 1px 2px rgba(255, 255, 255, 0.3);
 }
 
 .stat-info {
@@ -500,7 +503,7 @@ body {
     justify-content: center;
     padding: 3rem 1rem;
     text-align: center;
-    background: var(--white);
+    background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.4) 0%, transparent 60%), var(--white);
     border-radius: var(--radius-lg);
     border: 2px dashed var(--gray-medium);
     color: var(--text-muted);
@@ -512,19 +515,19 @@ body {
 }
 
 .project-item {
-    background: var(--white);
+    background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.4) 0%, transparent 60%), var(--white);
     padding: 1rem;
     border-radius: var(--radius-md);
     display: flex;
     align-items: center;
     gap: 1.5rem;
-    box-shadow: var(--shadow-sm);
-    transition: box-shadow 0.2s;
+    box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.02);
+    transition: all 0.2s;
 }
 
 .project-item:hover {
     transform: scale(1.01);
-    box-shadow: var(--shadow-md);
+    box-shadow: 2px 4px 20px rgba(0, 0, 0, 0.05);
 }
 
 .project-thumb {
@@ -1917,10 +1920,10 @@ textarea.modal-input {
 
 /* MINI CALENDAR */
 .mini-calendar-card {
-    background: var(--white);
+    background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.4) 0%, transparent 60%), var(--white);
     padding: 1.5rem;
     border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-sm);
+    box-shadow: 2px 4px 20px rgba(0, 0, 0, 0.04);
     border: 1px solid rgba(0, 0, 0, 0.02);
     /* Entrance animation kept, transition refined */
     transition: box-shadow 0.25s ease;
@@ -2005,10 +2008,10 @@ textarea.modal-input {
 
 /* DASHBOARD TASKS & EVENTS */
 .dashboard-tasks {
-    background: var(--white);
+    background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.4) 0%, transparent 60%), var(--white);
     padding: 1.5rem;
     border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-sm);
+    box-shadow: 2px 4px 20px rgba(0, 0, 0, 0.04);
 }
 
 .section-header {
@@ -2037,17 +2040,18 @@ textarea.modal-input {
     align-items: center;
     gap: 12px;
     padding: 10px 14px;
-    background: #fcfcfc;
+    background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.4) 0%, transparent 60%), #fcfcfc;
     border: 1px solid #f0f0f0;
     border-radius: 12px;
     transition: all 0.2s;
+    box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.01);
 }
 
 .dash-task-item:hover {
     transform: scale(1.01);
     background: var(--white);
     border-color: var(--primary-light);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    box-shadow: 2px 4px 12px rgba(0, 0, 0, 0.03);
 }
 
 .dash-task-title {
@@ -2086,7 +2090,7 @@ textarea.modal-input {
 .dash-event-item:hover {
     background: #fff;
     transform: translateY(-1px);
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.03);
+    box-shadow: 2px 6px 15px rgba(0, 0, 0, 0.03);
     border-left-width: 5px;
     /* Subtle brighten effect via width increase */
     border-color: #9D50FF;
@@ -2654,7 +2658,7 @@ textarea.modal-input {
 }
 
 .mini-kpi-badge {
-    background: var(--white);
+    background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.4) 0%, transparent 60%), var(--white);
     padding: 12px 8px;
     border-radius: 16px;
     display: flex;
@@ -2664,12 +2668,12 @@ textarea.modal-input {
     transition: all 0.25s ease;
     cursor: pointer;
     border: 1px solid rgba(0, 0, 0, 0.03);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+    box-shadow: 1px 2px 8px rgba(0, 0, 0, 0.02);
 }
 
 .mini-kpi-badge:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+    box-shadow: 2px 8px 20px rgba(0, 0, 0, 0.06);
     background: #fff;
     border-color: rgba(124, 77, 255, 0.1);
 }
@@ -2681,6 +2685,7 @@ textarea.modal-input {
     display: flex;
     align-items: center;
     justify-content: center;
+    box-shadow: inset 1px 1px 2px rgba(255, 255, 255, 0.3);
 }
 
 .mini-kpi-icon svg {
@@ -2745,16 +2750,17 @@ textarea.modal-input {
     position: relative;
     margin-bottom: 16px;
     padding: 12px 14px;
-    background: var(--white);
+    background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.4) 0%, transparent 60%), var(--white);
     border-radius: 14px;
     border: 1px solid rgba(0, 0, 0, 0.02);
     transition: all 0.25s ease;
     cursor: default;
+    box-shadow: 1px 2px 6px rgba(0, 0, 0, 0.01);
 }
 
 .timeline-item:hover {
     transform: translateY(-1px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
+    box-shadow: 2px 8px 20px rgba(0, 0, 0, 0.04);
     border-color: rgba(124, 77, 255, 0.1);
 }
 
@@ -4765,13 +4771,13 @@ textarea.modal-input {
     border: 1px solid rgba(255, 255, 255, 0.3);
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0.92) 100%);
 
-    /* Premium Depth & Soft Glow */
+    /* Premium Depth & Soft Glow with Light Direction */
     backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
     box-shadow:
-        0 10px 40px rgba(107, 78, 255, 0.04),
+        4px 10px 40px rgba(107, 78, 255, 0.04),
         0 0 0 1px rgba(255, 255, 255, 0.5),
-        inset 0 0 30px rgba(255, 255, 255, 0.4);
+        inset 1px 1px 40px rgba(255, 255, 255, 0.5);
 
     transition: all 0.25s ease-out;
     overflow: hidden;
