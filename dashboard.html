@@ -9,7 +9,7 @@
     <meta name="theme-color" content="#6B4EFF">
     <link rel="apple-touch-icon" href="assets/icon-192.png">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=1.3">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <!-- Lucide Icons (Since we don't have npm/bundler, using CDN) -->
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -339,11 +339,11 @@
                             <div class="header-v3-right">
                                 <div class="cal-view-toggle">
                                     <button id="cal-view-week" class="cal-toggle-btn"
-                                        onclick="setCalendarView('week', this)">Hafta</button>
+                                        onclick="setCalendarView('week', this)">Haftalik</button>
                                     <button id="cal-view-month" class="cal-toggle-btn active"
-                                        onclick="setCalendarView('month', this)">Oy</button>
+                                        onclick="setCalendarView('month', this)">Oylik</button>
                                     <button id="cal-view-year" class="cal-toggle-btn"
-                                        onclick="setCalendarView('year', this)">Yil</button>
+                                        onclick="setCalendarView('year', this)">Yillik</button>
                                 </div>
                                 <button class="primary-btn-modern" onclick="openEventModal()">
                                     <i data-lucide="plus"></i> Reja qo'shish
@@ -898,7 +898,7 @@
         window.firebaseServerTimestamp = serverTimestamp;
         window.firebaseUpdate = update;
     </script>
-    <script src="script.js?v=1.2"></script>
+    <script src="script.js?v=1.3"></script>
     <script>
         lucide.createIcons();
     </script>

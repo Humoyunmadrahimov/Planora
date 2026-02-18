@@ -597,12 +597,26 @@ let calendarView = 'month'; // 'week' or 'month'
 
 // Initialize Calendar
 function initCalendar() {
+    // Mobile UX: Default to week view on small screens
+    if (window.innerWidth < 768 && !calendarViewSetManually) {
+        calendarView = 'week';
+        const weekBtn = document.getElementById('cal-view-week');
+        const monthBtn = document.getElementById('cal-view-month');
+        if (weekBtn && monthBtn) {
+            monthBtn.classList.remove('active');
+            weekBtn.classList.add('active');
+        }
+    }
     renderCalendar();
 }
+
+let calendarViewSetManually = false;
+
 
 // Switch View
 function setCalendarView(view, btn) {
     calendarView = view;
+    calendarViewSetManually = true;
     document.querySelectorAll('.cal-toggle-btn').forEach(b => b.classList.remove('active'));
     if (btn) btn.classList.add('active');
     renderCalendar();
@@ -627,6 +641,7 @@ function goToToday() {
 
 // Render Calendar Dispatcher
 function renderCalendar() {
+    console.log('Rendering Calendar View:', calendarView);
     const grid = document.getElementById('calendar-grid-v3');
     const label = document.getElementById('current-period-label');
     if (!grid || !label) return;
@@ -672,9 +687,10 @@ function getStartOfWeek(date) {
 
 // Render Week View (Simplified: Only 7 days, no hours)
 function renderWeekView(container) {
+    if (!Array.isArray(events)) events = [];
     container.innerHTML = '';
 
-    const uzbekDaysShort = ['Du', 'Se', 'Ch', 'Pa', 'Ju', 'Sha', 'Ya'];
+    const uzbekDaysShort = ['DU', 'SE', 'CH', 'PA', 'JU', 'SH', 'YA'];
     uzbekDaysShort.forEach((day, index) => {
         const header = document.createElement('div');
         header.className = 'v3-header';
@@ -727,9 +743,10 @@ function renderWeekView(container) {
 
 // Render Month View
 function renderMonthView(container) {
+    if (!Array.isArray(events)) events = [];
     container.innerHTML = '';
 
-    const uzbekDaysShort = ['Du', 'Se', 'Ch', 'Pa', 'Ju', 'Sha', 'Ya'];
+    const uzbekDaysShort = ['DU', 'SE', 'CH', 'PA', 'JU', 'SH', 'YA'];
     uzbekDaysShort.forEach((day, index) => {
         const header = document.createElement('div');
         header.className = 'v3-header';
@@ -788,47 +805,7 @@ function renderMonthView(container) {
     }
 }
 
-function renderYearView(container) {
-    container.innerHTML = '';
-    const monthNames = [
-        "Yanvar", "Fevral", "Mart", "Aprel", "May", "Iyun",
-        "Iyul", "Avgust", "Sentabr", "Oktabr", "Noyabr", "Dekabr"
-    ];
 
-    const yearGrid = document.createElement('div');
-    yearGrid.className = 'year-grid-internal';
-
-    for (let i = 0; i < 12; i++) {
-        const monthCard = document.createElement('div');
-        monthCard.className = 'year-month-card';
-
-        // Highlight current month if it's current year
-        const today = new Date();
-        if (today.getFullYear() === currentDate.getFullYear() && today.getMonth() === i) {
-            monthCard.classList.add('current-month');
-        }
-
-        monthCard.innerHTML = `
-            <div class="month-name">${monthNames[i]}</div>
-            <div class="month-preview">Ko'rish uchun bosing</div>
-        `;
-
-        monthCard.onclick = () => selectMonthInYear(i);
-        yearGrid.appendChild(monthCard);
-    }
-    container.appendChild(yearGrid);
-}
-
-function selectMonthInYear(monthIndex) {
-    currentDate.setMonth(monthIndex);
-    calendarView = 'month';
-    // Update UI buttons
-    document.querySelectorAll('.view-btn').forEach(btn => {
-        btn.classList.remove('active');
-        if (btn.getAttribute('onclick').includes("'month'")) btn.classList.add('active');
-    });
-    renderCalendar();
-}
 
 // --- Event Modal Functions ---
 function openEventModal() {
@@ -875,10 +852,16 @@ function openEventModalWithDate(dateStr, timeStr) {
 }
 
 // Render Year View
+// Render Year View
 function renderYearView(container) {
+    if (!Array.isArray(events)) events = [];
     container.innerHTML = '';
-    const monthNames = ["Yanvar", "Fevral", "Mart", "Aprel", "May", "Iyun", "Iyul", "Avgust", "Sentabr", "Oktabr", "Noyabr", "Dekabr"];
-    const daysShort = ['Du', 'Se', 'Ch', 'Pa', 'Ju', 'Sha', 'Ya'];
+    const monthNames = [
+        "YANVAR", "FEVRAL", "MART", "APREL", "MAY", "IYUN",
+        "IYUL", "AVGUST", "SENTABR", "OKTABR", "NOYABR", "DEKABR"
+    ];
+    // Monday first
+    const daysShort = ['DU', 'SE', 'CH', 'PA', 'JU', 'SH', 'YA'];
 
     for (let m = 0; m < 12; m++) {
         const monthBox = document.createElement('div');
@@ -893,9 +876,10 @@ function renderYearView(container) {
         miniGrid.className = 'year-mini-grid';
 
         // Headers
-        daysShort.forEach(d => {
+        daysShort.forEach((d, idx) => {
             const h = document.createElement('div');
             h.className = 'year-mini-header';
+            if (idx === 6) h.classList.add('sun'); // YA is Sunday
             h.textContent = d;
             miniGrid.appendChild(h);
         });
@@ -903,8 +887,8 @@ function renderYearView(container) {
         const firstDay = new Date(currentDate.getFullYear(), m, 1);
         const lastDay = new Date(currentDate.getFullYear(), m + 1, 0);
 
-        let startIdx = firstDay.getDay() - 1;
-        if (startIdx === -1) startIdx = 6;
+        // Monday start logic: (day + 6) % 7
+        let startIdx = (firstDay.getDay() + 6) % 7;
 
         // Empty cells
         for (let i = 0; i < startIdx; i++) {
@@ -925,9 +909,7 @@ function renderYearView(container) {
             const today = new Date();
             if (dateStr === today.toISOString().split('T')[0]) dayDiv.classList.add('today');
 
-            // Check if has events
-            if (events.some(e => e.date === dateStr)) dayDiv.classList.add('has-event');
-
+            // Click navigates to month view
             dayDiv.onclick = (e) => {
                 e.stopPropagation();
                 currentDate.setMonth(m);
