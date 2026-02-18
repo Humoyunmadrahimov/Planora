@@ -41,6 +41,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 2. Wait for Firebase and then initialize data
     waitForFirebaseAndInit();
+
+    // Auto-save logic for notes
+    const noteTitleInput = document.getElementById('note-title');
+    const noteContentInput = document.getElementById('note-content');
+
+    let autoSaveTimeout;
+    function triggerAutoSave() {
+        const noteStatus = document.getElementById('note-status');
+        if (noteStatus) noteStatus.textContent = 'Saqlanmoqda...';
+        clearTimeout(autoSaveTimeout);
+        autoSaveTimeout = setTimeout(() => {
+            saveCurrentNote().then(() => {
+                if (noteStatus) noteStatus.textContent = 'Saqlandi';
+                setTimeout(() => { if (noteStatus) noteStatus.textContent = ''; }, 2000);
+            });
+        }, 1000);
+    }
+
+    if (noteTitleInput) noteTitleInput.addEventListener('input', triggerAutoSave);
+    if (noteContentInput) noteContentInput.addEventListener('input', triggerAutoSave);
 });
 
 async function waitForFirebaseAndInit() {
@@ -1862,7 +1882,7 @@ function loadNote(id) {
     renderNotesList();
 }
 
-function saveCurrentNote() {
+async function saveCurrentNote() {
     if (!currentNoteId) {
         // If no note selected, create a new one
         const title = document.getElementById('note-title').value.trim();
@@ -1888,6 +1908,43 @@ function saveCurrentNote() {
 
     saveToCloud();
     renderNotesList();
+}
+
+// --- Note Helper Tools ---
+function insertHorizontalLine() {
+    const textarea = document.getElementById('note-content');
+    if (!textarea) return;
+    textarea.value += "\n────────────────────────────────────────\n";
+    saveCurrentNote();
+}
+
+function insertTable() {
+    const textarea = document.getElementById('note-content');
+    if (!textarea) return;
+
+    // Simple prompt-based table generator
+    const r = prompt("Qatorlar soni (Rows):", "3");
+    const c = prompt("Ustunlar soni (Cols):", "3");
+    const rows = parseInt(r);
+    const cols = parseInt(c);
+
+    if (rows > 0 && cols > 0) {
+        let table = "\n";
+        // Header
+        for (let j = 0; j < cols; j++) { table += "|       "; }
+        table += "|\n";
+        // Separator
+        for (let j = 0; j < cols; j++) { table += "|-------"; }
+        table += "|\n";
+        // Body
+        for (let i = 0; i < rows; i++) {
+            for (let j = 0; j < cols; j++) { table += "|       "; }
+            table += "|\n";
+        }
+        table += "\n";
+        textarea.value += table;
+        saveCurrentNote();
+    }
 }
 
 function deleteCurrentNote() {

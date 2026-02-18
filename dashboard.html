@@ -560,12 +560,11 @@
                                 <i data-lucide="arrow-left"></i> Orqaga
                             </button>
                             <div class="editor-actions">
-                                <button class="secondary-btn" onclick="saveCurrentNote()">
-                                    <i data-lucide="save"></i> Saqlash
-                                </button>
+                                <span id="note-status"
+                                    style="font-size: 0.8rem; color: #888; margin-right: 10px;"></span>
                                 <div class="dropdown">
                                     <button class="secondary-btn dropdown-toggle">
-                                        <i data-lucide="download"></i> Yuklab olish
+                                        <i data-lucide="download"></i> <span class="hide-mobile">Yuklab olish</span>
                                     </button>
                                     <div class="dropdown-menu">
                                         <a href="#" onclick="downloadNotePDF()">PDF formatida</a>
@@ -576,6 +575,12 @@
                                     <i data-lucide="trash-2"></i>
                                 </button>
                             </div>
+                        </div>
+                        <div class="editor-toolbar">
+                            <button type="button" onclick="insertHorizontalLine()" title="Chiziq qo'shish"><i
+                                    data-lucide="minus"></i></button>
+                            <button type="button" onclick="insertTable()" title="Jadval qo'shish"><i
+                                    data-lucide="table"></i></button>
                         </div>
                         <input type="text" id="note-title" class="note-title-input" placeholder="Sarlavha yozing...">
                         <textarea id="note-content" class="note-content-area"

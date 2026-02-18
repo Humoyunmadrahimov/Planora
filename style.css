@@ -2222,6 +2222,23 @@ textarea.modal-input {
     gap: 1.5rem;
     position: relative;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    z-index: 20002;
+    /* Higher than notes editor */
+}
+
+.confirm-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 20000;
+    /* Higher than notes editor */
+    backdrop-filter: blur(5px);
 }
 
 .confirm-icon-wrapper {
@@ -2865,6 +2882,36 @@ textarea.modal-input {
         width: 100% !important;
         border: none !important;
         background: white !important;
+    }
+
+    .hide-mobile {
+        display: none;
+    }
+
+    .editor-toolbar {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 10px;
+        padding-bottom: 5px;
+        border-bottom: 1px solid #f1f5f9;
+        margin-top: -10px;
+    }
+
+    .editor-toolbar button {
+        background: transparent;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        padding: 6px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #64748b;
+    }
+
+    .editor-toolbar button:hover {
+        background: #f1f5f9;
+        color: var(--primary);
     }
 
     .notes-editor {
