@@ -537,9 +537,12 @@ body {
     font-size: 1.6rem;
     font-weight: 700;
     /* Strong but clean */
-    line-height: 1.1;
+    line-height: 1.2;
+    /* Stable line height to prevent jumps */
     color: var(--dark-purple);
     transition: opacity 0.12s ease-in-out;
+    white-space: nowrap;
+    /* Keep on one line */
 }
 
 .privacy-toggle {
@@ -547,17 +550,20 @@ body {
     border: none;
     padding: 4px;
     cursor: pointer;
-    color: rgba(0, 0, 0, 0.3);
+    color: var(--primary);
+    opacity: 0.25;
+    /* Subtle default state */
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.2s ease;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     border-radius: 6px;
 }
 
 .privacy-toggle:hover {
-    color: var(--primary);
-    background: rgba(124, 77, 255, 0.05);
+    opacity: 1;
+    /* Stronger on hover */
+    background: rgba(124, 77, 255, 0.1);
 }
 
 .privacy-toggle i {
