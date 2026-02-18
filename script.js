@@ -2237,7 +2237,7 @@ async function renderAdminPanel() {
 
     try {
         const usersRef = window.firebaseRef(window.firebaseDB, 'users');
-        window.firebaseOnValue(usersRef, (snapshot) => {
+        window.firebaseGet(usersRef).then((snapshot) => {
             const registeredUsersMap = snapshot.val() || {};
             const registeredUsers = Object.values(registeredUsersMap);
             const onlineData = window.globalOnlineUsers || {};
@@ -2305,9 +2305,11 @@ async function renderAdminPanel() {
 
             if (onlineUsersEle) onlineUsersEle.textContent = onlineCount;
             if (window.lucide) window.lucide.createIcons();
-        }, { onlyOnce: true });
+        }).catch((err) => {
+            console.error('Admin panelni yuklashda xatolik:', err);
+        });
     } catch (err) {
-        console.error('Admin panelni yuklashda xatolik:', err);
+        console.error('Admin panelni yuklashda xatolik (tashqi):', err);
     }
 }
 
