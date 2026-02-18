@@ -651,6 +651,15 @@ function renderCalendar() {
         "Iyul", "Avgust", "Sentabr", "Oktabr", "Noyabr", "Dekabr"
     ];
 
+    const layout = document.querySelector('.calendar-page-layout');
+    if (layout) {
+        if (calendarView === 'year') {
+            layout.classList.add('year-view-active');
+        } else {
+            layout.classList.remove('year-view-active');
+        }
+    }
+
     if (calendarView === 'week') {
         grid.className = 'calendar-grid-v3 week-view';
         renderWeekView(grid);
@@ -912,9 +921,23 @@ function renderYearView(container) {
             // Click navigates to month view
             dayDiv.onclick = (e) => {
                 e.stopPropagation();
+                currentDate.setFullYear(currentDate.getFullYear());
                 currentDate.setMonth(m);
                 currentDate.setDate(d);
-                setCalendarView('month', document.getElementById('cal-view-month'));
+
+                // Switch view
+                calendarView = 'month';
+                calendarViewSetManually = true;
+
+                // Update active buttons
+                document.querySelectorAll('.cal-toggle-btn').forEach(b => b.classList.remove('active'));
+                const monthBtn = document.getElementById('cal-view-month');
+                if (monthBtn) monthBtn.classList.add('active');
+
+                renderCalendar();
+
+                // Proactively show details for this date if it's selected
+                // (Month view logic usually handles highlighting)
             };
 
             miniGrid.appendChild(dayDiv);
