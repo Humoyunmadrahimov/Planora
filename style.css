@@ -4946,15 +4946,13 @@ textarea.modal-input {
     display: flex;
     align-items: center;
     gap: 1.75rem;
-    background: linear-gradient(135deg, rgba(124, 58, 237, 0.06), rgba(59, 130, 246, 0.04));
-    border: 1px solid rgba(124, 58, 237, 0.1);
+    background: linear-gradient(135deg, rgba(124, 58, 237, 0.05), rgba(255, 122, 24, 0.04));
+    border: 1px solid rgba(124, 58, 237, 0.08);
 
     /* Premium Depth & Soft Glow */
     backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
-    box-shadow:
-        var(--shadow-soft),
-        inset 0 0 0 1px rgba(124, 58, 237, 0.08);
+    box-shadow: 0 10px 30px rgba(124, 58, 237, 0.08);
 
     transition: all 180ms cubic-bezier(0.4, 0, 0.2, 1);
     overflow: hidden;
@@ -5013,10 +5011,8 @@ textarea.modal-input {
     position: relative;
     z-index: 1;
 
-    /* Soft Glow background */
-    box-shadow:
-        0 8px 16px rgba(255, 122, 24, 0.1),
-        inset 0 1px 1px rgba(255, 255, 255, 0.9);
+    /* Apple-style diffused glow */
+    box-shadow: 0 8px 22px rgba(255, 122, 24, 0.18);
     border: 1px solid rgba(255, 122, 24, 0.1);
     transition: all 180ms cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -5096,12 +5092,12 @@ textarea.modal-input {
     border-radius: 12px;
     font-size: 0.875rem;
     font-weight: 600;
-    background: rgba(124, 58, 237, 0.08);
-    border: 1px solid rgba(124, 58, 237, 0.12);
+    background: rgba(124, 58, 237, 0.06);
+    border: 1px solid rgba(124, 58, 237, 0.10);
     color: #6D28D9;
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
-    transition: all 180ms cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 150ms ease;
 }
 
 .focus-badge:hover {
@@ -5111,9 +5107,15 @@ textarea.modal-input {
 }
 
 .focus-badge.warning {
-    background: rgba(255, 122, 24, 0.08);
-    border: 1px solid rgba(255, 122, 24, 0.15);
-    color: #FF7A18;
+    background: rgba(251, 191, 36, 0.12);
+    border: 1px solid rgba(251, 191, 36, 0.25);
+    color: #B45309;
+}
+
+.focus-badge.success {
+    background: rgba(34, 197, 94, 0.12);
+    border: 1px solid rgba(34, 197, 94, 0.25);
+    color: #15803D;
 }
 
 .focus-badge.info {

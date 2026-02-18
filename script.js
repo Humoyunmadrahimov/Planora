@@ -1795,9 +1795,15 @@ function renderFocusBlock() {
 
     if (countEl) {
         if (todayTasksCount === 0) {
-            countEl.innerHTML = `<span class="focus-badge default"><i data-lucide="check-circle"></i> Bugun vazifalar yo'q</span>`;
+            // Check if there were any tasks for today that are now 'done'
+            const finishedToday = tasks.filter(t => t.deadline === todayStr && t.status === 'done').length;
+            if (finishedToday > 0) {
+                countEl.innerHTML = `<span class="focus-badge success"><i data-lucide="check-circle"></i> Barcha vazifalar bajarildi</span>`;
+            } else {
+                countEl.innerHTML = `<span class="focus-badge default"><i data-lucide="coffee"></i> Bugun vazifalar yo'q</span>`;
+            }
         } else {
-            countEl.innerHTML = `<span class="focus-badge default"><i data-lucide="list"></i> Bugun ${todayTasksCount} ta vazifa</span>`;
+            countEl.innerHTML = `<span class="focus-badge warning"><i data-lucide="list"></i> Bugun ${todayTasksCount} ta vazifa</span>`;
         }
     }
 
