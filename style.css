@@ -197,11 +197,16 @@ body {
 }
 
 .top-bar.scrolled {
-    background: rgba(247, 248, 250, 0.9);
-    backdrop-filter: blur(10px);
+    background: rgba(247, 248, 250, 0.85);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
     padding: 15px 20px;
     margin: -2rem -2.5rem 2rem -2.5rem;
-    border-bottom: 1px solid var(--gray-medium);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+    /* Dual-layer Apple-style shadow following top-left light source */
+    box-shadow:
+        2px 8px 24px rgba(0, 0, 0, 0.02),
+        1px 2px 4px rgba(0, 0, 0, 0.01);
 }
 
 .page-title h1 {
