@@ -229,7 +229,7 @@ async function initializeSession() {
             const userRef = window.firebaseRef(window.firebaseDB, 'users/' + currentUser.login);
             // Use onlyOnce for initial load
             await new Promise((resolve) => {
-                window.firebaseOnValue(userRef, (snapshot) => {
+                window.firebaseGet(userRef).then((snapshot) => {
                     const data = snapshot.val();
                     if (data) {
                         tasks = data.tasks || [];
@@ -242,20 +242,18 @@ async function initializeSession() {
                         }));
                     }
                     resolve();
-                }, { onlyOnce: true });
+                }).catch((e) => {
+                    console.error('Firebase Get Error:', e);
+                    resolve();
+                });
             });
         } catch (e) {
             console.error('Cloud Load xatosi:', e);
         }
     }
 
-    // Initialize Messages Listener (Calls for everyone)
-    initializeMessagesListener();
-
-    // Admin: Initialize Broadcasts Listener
-    if (currentUser.login === 'admin') {
-        initializeBroadcastsListener();
-    }
+    // Listeners are initialized in waitForFirebaseAndInit or manually if needed
+    // initializeMessagesListener(); // Moved to be called only if not already active
 
     updateUserUI();
 }
