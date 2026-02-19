@@ -69,10 +69,8 @@ body {
 .plan-pro-logo {
     display: block;
     width: 200px;
-    /* Increased from 140px */
     height: 60px;
-    /* Increased from 40px */
-    background-image: url('assets/logo.png');
+    background-image: url('assets/Frame1.png');
     background-size: contain;
     background-repeat: no-repeat;
     background-position: left center;
