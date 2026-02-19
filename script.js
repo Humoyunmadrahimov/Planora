@@ -3267,15 +3267,8 @@ function resetSettingsForm() {
     showSettingsTab('personal');
 }
 
-/* --- Missing UI Functions (Restored) --- */
 
-
-window.onclick = function (event) {
-    if (!event.target.closest('.user-profile') &&
-        !event.target.closest('.action-wrapper')) {
-        closeAllDropdowns();
-    }
-}
+// --- Refined Toggle System for Mobile & Desktop ---
 
 function closeAllDropdowns() {
     document.querySelectorAll('.action-dropdown, .profile-dropdown').forEach(el => {
@@ -3284,17 +3277,28 @@ function closeAllDropdowns() {
     });
 }
 
+// Global click/touch listener to close dropdowns when clicking outside
+function handleGlobalClick(e) {
+    if (!e.target.closest('.user-profile') && !e.target.closest('.action-wrapper')) {
+        closeAllDropdowns();
+    }
+}
+
+document.addEventListener('click', handleGlobalClick);
+document.addEventListener('touchstart', handleGlobalClick, { passive: true });
 
 // Toggle Messages
 function toggleMessages(e) {
-    if (e) e.stopPropagation();
+    if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
     const dropdown = document.getElementById('messages-dropdown');
     if (!dropdown) return;
 
     const isActive = dropdown.classList.contains('active');
     closeAllDropdowns();
 
-    // Toggle
     if (!isActive) {
         dropdown.classList.add('active');
         dropdown.style.display = 'flex';
@@ -3303,7 +3307,10 @@ function toggleMessages(e) {
 
 // Toggle Notifications
 function toggleNotifications(e) {
-    if (e) e.stopPropagation();
+    if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
     const dropdown = document.getElementById('notifications-dropdown');
     if (!dropdown) return;
 
@@ -3318,7 +3325,10 @@ function toggleNotifications(e) {
 
 // Toggle Profile
 function toggleProfileMenu(e) {
-    if (e) e.stopPropagation();
+    if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
     const dropdown = document.getElementById('profile-menu');
     if (!dropdown) return;
 
@@ -3331,12 +3341,6 @@ function toggleProfileMenu(e) {
     }
 }
 
-// Click Outside to Close
-document.addEventListener('click', (e) => {
-    if (!e.target.closest('.action-wrapper') && !e.target.closest('.user-profile')) {
-        closeAllDropdowns();
-    }
-});
 
 // Mock Data Generators for UI
 function generateNotifications() {
