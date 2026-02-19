@@ -3014,16 +3014,7 @@ function clearNotifications() {
     if (badge) badge.style.display = 'none';
 }
 
-window.onclick = function (event) {
-    if (!event.target.closest('.user-profile') &&
-        !event.target.closest('.action-wrapper')) {
 
-        const dropdowns = document.querySelectorAll('.profile-dropdown, .action-dropdown');
-        dropdowns.forEach(d => {
-            if (d) d.style.display = 'none';
-        });
-    }
-}
 
 // --- Mobile Sidebar Toggle ---
 // --- Mobile Notes Helpers ---
@@ -3278,12 +3269,21 @@ function resetSettingsForm() {
 
 /* --- Missing UI Functions (Restored) --- */
 
+
+window.onclick = function (event) {
+    if (!event.target.closest('.user-profile') &&
+        !event.target.closest('.action-wrapper')) {
+        closeAllDropdowns();
+    }
+}
+
 function closeAllDropdowns() {
     document.querySelectorAll('.action-dropdown, .profile-dropdown').forEach(el => {
         el.classList.remove('active');
         el.style.display = 'none';
     });
 }
+
 
 // Toggle Messages
 function toggleMessages(e) {
