@@ -2820,38 +2820,7 @@ async function sendGlobalMessage() {
     }
 }
 
-function toggleMessages() {
-    const dropdown = document.getElementById('messages-dropdown');
-    const notifDropdown = document.getElementById('notifications-dropdown');
 
-    if (notifDropdown) notifDropdown.style.display = 'none';
-    const profileDropdown = document.querySelector('.profile-dropdown');
-    if (profileDropdown) profileDropdown.style.display = 'none';
-
-    if (dropdown.style.display === 'flex') {
-        dropdown.style.display = 'none';
-    } else {
-        dropdown.style.display = 'flex';
-        renderMessages();
-    }
-}
-
-function toggleNotifications() {
-    const dropdown = document.getElementById('notifications-dropdown');
-    const msgDropdown = document.getElementById('messages-dropdown');
-
-    if (msgDropdown) msgDropdown.style.display = 'none';
-    const profileDropdown = document.querySelector('.profile-dropdown');
-    if (profileDropdown) profileDropdown.style.display = 'none';
-
-    if (dropdown.style.display === 'flex') {
-        dropdown.style.display = 'none';
-    } else {
-        dropdown.style.display = 'flex';
-        generateNotifications();
-        renderNotifications();
-    }
-}
 
 function renderMessages() {
     const list = document.getElementById('messages-list');
@@ -3280,12 +3249,17 @@ function closeAllDropdowns() {
 
 // Global click listener to close dropdowns when clicking outside
 function handleGlobalClick(e) {
-    if (!e.target.closest('.user-profile') && !e.target.closest('.action-wrapper')) {
+    const isProfile = e.target.closest('.user-profile');
+    const isAction = e.target.closest('.action-wrapper');
+
+    // If not clicking a toggle button or dropdown itself, close all
+    if (!isProfile && !isAction) {
         closeAllDropdowns();
     }
 }
 
-document.addEventListener('click', handleGlobalClick);
+document.addEventListener('click', handleGlobalClick, true); // Use capture phase to catch it early
+
 
 // Toggle Messages
 function toggleMessages(e) {
@@ -3299,6 +3273,7 @@ function toggleMessages(e) {
     if (!isActive) {
         dropdown.classList.add('active');
         dropdown.style.display = 'flex';
+        if (typeof renderMessages === 'function') renderMessages();
     }
 }
 
@@ -3314,6 +3289,8 @@ function toggleNotifications(e) {
     if (!isActive) {
         dropdown.classList.add('active');
         dropdown.style.display = 'flex';
+        if (typeof generateNotifications === 'function') generateNotifications();
+        if (typeof renderNotifications === 'function') renderNotifications();
     }
 }
 
