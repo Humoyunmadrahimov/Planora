@@ -3200,23 +3200,42 @@ function closeAllDropdowns() {
     });
 }
 
-// Global click listener to close dropdowns when clicking outside
+
+// --- Robust Toggle System for Mobile ---
+
+function closeAllDropdowns() {
+    document.querySelectorAll('.action-dropdown, .profile-dropdown').forEach(el => {
+        el.classList.remove('active');
+        el.style.setProperty('display', 'none', 'important');
+    });
+}
+
+/**
+ * Handle global clicks to close dropdowns.
+ * Uses event.target.closest to identify if a click is INSIDE an interactive area.
+ */
 function handleGlobalClick(e) {
     const isProfile = e.target.closest('.user-profile');
     const isAction = e.target.closest('.action-wrapper');
+    const isDropdownToggle = e.target.closest('.icon-btn') || e.target.closest('.user-profile');
 
-    // If not clicking a toggle button or dropdown itself, close all
+    // If clicking on a toggle, we let the specific toggle function handle it.
+    // Otherwise, if we aren't clicking inside any toggle or active dropdown, close everything.
     if (!isProfile && !isAction) {
         closeAllDropdowns();
+        // Also handling legacy dropdowns (e.g. in Notes)
+        document.querySelectorAll('.dropdown.open').forEach(dd => dd.classList.remove('open'));
     }
 }
 
+// Attach listener to document
 document.addEventListener('click', handleGlobalClick);
 
-
-// Toggle Messages
-function toggleMessages(e) {
-    if (e) e.stopPropagation();
+// Exposed global toggle functions
+window.toggleMessages = function (e) {
+    if (e) {
+        if (typeof e.stopPropagation === 'function') e.stopPropagation();
+    }
     const dropdown = document.getElementById('messages-dropdown');
     if (!dropdown) return;
 
@@ -3227,12 +3246,14 @@ function toggleMessages(e) {
         dropdown.classList.add('active');
         dropdown.style.setProperty('display', 'flex', 'important');
         if (typeof renderMessages === 'function') renderMessages();
+        if (window.lucide) window.lucide.createIcons();
     }
-}
+};
 
-// Toggle Notifications
-function toggleNotifications(e) {
-    if (e) e.stopPropagation();
+window.toggleNotifications = function (e) {
+    if (e) {
+        if (typeof e.stopPropagation === 'function') e.stopPropagation();
+    }
     const dropdown = document.getElementById('notifications-dropdown');
     if (!dropdown) return;
 
@@ -3244,12 +3265,14 @@ function toggleNotifications(e) {
         dropdown.style.setProperty('display', 'flex', 'important');
         if (typeof generateNotifications === 'function') generateNotifications();
         if (typeof renderNotifications === 'function') renderNotifications();
+        if (window.lucide) window.lucide.createIcons();
     }
-}
+};
 
-// Toggle Profile
-function toggleProfileMenu(e) {
-    if (e) e.stopPropagation();
+window.toggleProfileMenu = function (e) {
+    if (e) {
+        if (typeof e.stopPropagation === 'function') e.stopPropagation();
+    }
     const dropdown = document.getElementById('profile-menu');
     if (!dropdown) return;
 
@@ -3259,14 +3282,12 @@ function toggleProfileMenu(e) {
     if (!isActive) {
         dropdown.classList.add('active');
         dropdown.style.setProperty('display', 'flex', 'important');
+        if (window.lucide) window.lucide.createIcons();
     }
-}
+};
 
-// Ensure they are global
-window.toggleMessages = toggleMessages;
-window.toggleNotifications = toggleNotifications;
-window.toggleProfileMenu = toggleProfileMenu;
-window.closeAllDropdowns = closeAllDropdowns;
+
+
 
 
 

@@ -1,71 +1,37 @@
-const CACHE_NAME = 'pitch-io-v7'; // Bump version
+const CACHE_NAME = 'pitch-io-v9-no-cache';
 const ASSETS_TO_CACHE = [
-    '/',
-    '/index.html',
-    '/dashboard.html',
-    '/style.css',
-    '/script.js',
     '/assets/Frame1.png',
     'https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap',
     'https://unpkg.com/lucide@latest'
 ];
 
-// Install: Cache essential assets
 self.addEventListener('install', (event) => {
-    self.skipWaiting(); // Force the waiting service worker to become the active service worker
-    event.waitUntil(
-        caches.open(CACHE_NAME).then((cache) => {
-            console.log('SW: Caching assets');
-            return cache.addAll(ASSETS_TO_CACHE);
-        })
-    );
+    self.skipWaiting();
 });
 
-// Activate: Clean up old caches
 self.addEventListener('activate', (event) => {
     event.waitUntil(
         caches.keys().then((cacheNames) => {
             return Promise.all(
-                cacheNames.map((cacheName) => {
-                    if (cacheName !== CACHE_NAME) {
-                        console.log('SW: Clearing old cache', cacheName);
-                        return caches.delete(cacheName);
-                    }
-                })
-            ).then(() => self.clients.claim()); // Take control of all open clients
-        })
+                cacheNames.map((cacheName) => caches.delete(cacheName))
+            );
+        }).then(() => self.clients.claim())
     );
 });
 
-// Fetch: Network-first approach for HTML/JS/CSS to ensure latest version
+// Network-only for main files, Cache-first for others
 self.addEventListener('fetch', (event) => {
-    // For HTML and scripts, try network first
-    if (event.request.mode === 'navigate' ||
-        event.request.url.includes('script.js') ||
-        event.request.url.includes('style.css')) {
-        event.respondWith(
-            fetch(event.request)
-                .then((response) => {
-                    // Update cache as we go
-                    const responseClone = response.clone();
-                    caches.open(CACHE_NAME).then((cache) => {
-                        cache.put(event.request, responseClone);
-                    });
-                    return response;
-                })
-                .catch(() => caches.match(event.request)) // Fallback to cache if offline
-        );
-    } else {
-        // For images and fonts, cache-first is fine
-        event.respondWith(
-            caches.match(event.request).then((response) => {
-                return response || fetch(event.request).then((networkResponse) => {
-                    return caches.open(CACHE_NAME).then((cache) => {
-                        cache.put(event.request, networkResponse.clone());
-                        return networkResponse;
-                    });
-                });
-            })
-        );
+    const url = new URL(event.request.url);
+
+    // IF it is a local file that is likely to change (HTML, JS, CSS)
+    if (url.pathname.endsWith('.html') || url.pathname.endsWith('.js') || url.pathname.endsWith('.css') || url.pathname === '/') {
+        event.respondWith(fetch(event.request)); // Always network
+        return;
     }
+
+    event.respondWith(
+        caches.match(event.request).then((response) => {
+            return response || fetch(event.request);
+        })
+    );
 });

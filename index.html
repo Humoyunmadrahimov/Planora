@@ -10,8 +10,21 @@
     <link rel="icon" type="image/png" href="assets/Frame1.png">
     <link rel="apple-touch-icon" href="assets/Frame1.png">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=1.4">
+    <link rel="stylesheet" href="style.css?v=2.0_debug">
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        // Force version update
+        (function () {
+            const VERSION = '2.0.1';
+            if (localStorage.getItem('app_v') !== VERSION) {
+                localStorage.setItem('app_v', VERSION);
+                if ('caches' in window) {
+                    caches.keys().then(names => names.forEach(n => caches.delete(n)));
+                }
+                window.location.reload(true);
+            }
+        })();
+    </script>
     <style>
         body,
         html {
