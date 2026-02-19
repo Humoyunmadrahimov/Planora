@@ -1675,54 +1675,7 @@ function formatMoney(amount) {
     return amount.toLocaleString('uz-UZ') + " so'm";
 }
 
-// Profile Menu Logic
-function toggleProfileMenu() {
-    const menu = document.getElementById('profile-menu');
-    menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
 
-    // Stop propagation so the window click listener doesn't immediately close it
-    event.stopPropagation();
-}
-
-function logout() {
-    showLogoutConfirmModal('Tizimdan chiqmoqchimisiz?', () => {
-        localStorage.removeItem('dashboard_current_user');
-        window.location.href = 'index.html';
-    }, 'Ha, Chiqish');
-}
-
-// Update global click listener to include profile menu
-window.addEventListener('click', function (event) {
-    const profileMenu = document.getElementById('profile-menu');
-    if (profileMenu && !event.target.closest('.user-profile')) {
-        profileMenu.style.display = 'none';
-    }
-
-    const restoreDropdown = document.getElementById('restore-dropdown');
-    if (restoreDropdown && !event.target.closest('.action-wrapper')) {
-        restoreDropdown.style.display = 'none';
-    }
-
-    // Toggle dropdowns (like the one in Notes)
-    const allDropdowns = document.querySelectorAll('.dropdown');
-    allDropdowns.forEach(dd => {
-        if (event.target.closest('.dropdown-toggle') && dd.contains(event.target)) {
-            dd.classList.toggle('open');
-        } else if (!dd.contains(event.target)) {
-            dd.classList.remove('open');
-        }
-    });
-
-    // Existing modal logic
-    const modal = document.getElementById('task-modal');
-    if (event.target == modal) {
-        closeTaskModal();
-    }
-    const eModal = document.getElementById('event-modal');
-    if (event.target == eModal) {
-        closeEventModal();
-    }
-});
 
 // --- DASHBOARD RENDERING ---
 function renderDashboard() {
@@ -3258,7 +3211,7 @@ function handleGlobalClick(e) {
     }
 }
 
-document.addEventListener('click', handleGlobalClick, true); // Use capture phase to catch it early
+document.addEventListener('click', handleGlobalClick);
 
 
 // Toggle Messages
@@ -3272,7 +3225,7 @@ function toggleMessages(e) {
 
     if (!isActive) {
         dropdown.classList.add('active');
-        dropdown.style.display = 'flex';
+        dropdown.style.setProperty('display', 'flex', 'important');
         if (typeof renderMessages === 'function') renderMessages();
     }
 }
@@ -3288,7 +3241,7 @@ function toggleNotifications(e) {
 
     if (!isActive) {
         dropdown.classList.add('active');
-        dropdown.style.display = 'flex';
+        dropdown.style.setProperty('display', 'flex', 'important');
         if (typeof generateNotifications === 'function') generateNotifications();
         if (typeof renderNotifications === 'function') renderNotifications();
     }
@@ -3305,9 +3258,15 @@ function toggleProfileMenu(e) {
 
     if (!isActive) {
         dropdown.classList.add('active');
-        dropdown.style.display = 'flex';
+        dropdown.style.setProperty('display', 'flex', 'important');
     }
 }
+
+// Ensure they are global
+window.toggleMessages = toggleMessages;
+window.toggleNotifications = toggleNotifications;
+window.toggleProfileMenu = toggleProfileMenu;
+window.closeAllDropdowns = closeAllDropdowns;
 
 
 

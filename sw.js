@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pitch-io-v5';
+const CACHE_NAME = 'pitch-io-v6';
 const ASSETS_TO_CACHE = [
     '/',
     '/index.html',
