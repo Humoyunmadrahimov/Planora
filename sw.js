@@ -1,10 +1,11 @@
-const CACHE_NAME = 'pitch-io-v4';
+const CACHE_NAME = 'pitch-io-v5';
 const ASSETS_TO_CACHE = [
     '/',
     '/index.html',
     '/dashboard.html',
     '/style.css',
     '/script.js',
+    '/assets/Frame1.png',
     'https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap',
     'https://unpkg.com/lucide@latest'
 ];
