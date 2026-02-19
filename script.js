@@ -3268,6 +3268,7 @@ function resetSettingsForm() {
 }
 
 
+
 // --- Refined Toggle System for Mobile & Desktop ---
 
 function closeAllDropdowns() {
@@ -3277,7 +3278,7 @@ function closeAllDropdowns() {
     });
 }
 
-// Global click/touch listener to close dropdowns when clicking outside
+// Global click listener to close dropdowns when clicking outside
 function handleGlobalClick(e) {
     if (!e.target.closest('.user-profile') && !e.target.closest('.action-wrapper')) {
         closeAllDropdowns();
@@ -3285,14 +3286,10 @@ function handleGlobalClick(e) {
 }
 
 document.addEventListener('click', handleGlobalClick);
-document.addEventListener('touchstart', handleGlobalClick, { passive: true });
 
 // Toggle Messages
 function toggleMessages(e) {
-    if (e) {
-        e.preventDefault();
-        e.stopPropagation();
-    }
+    if (e) e.stopPropagation();
     const dropdown = document.getElementById('messages-dropdown');
     if (!dropdown) return;
 
@@ -3307,10 +3304,7 @@ function toggleMessages(e) {
 
 // Toggle Notifications
 function toggleNotifications(e) {
-    if (e) {
-        e.preventDefault();
-        e.stopPropagation();
-    }
+    if (e) e.stopPropagation();
     const dropdown = document.getElementById('notifications-dropdown');
     if (!dropdown) return;
 
@@ -3325,10 +3319,7 @@ function toggleNotifications(e) {
 
 // Toggle Profile
 function toggleProfileMenu(e) {
-    if (e) {
-        e.preventDefault();
-        e.stopPropagation();
-    }
+    if (e) e.stopPropagation();
     const dropdown = document.getElementById('profile-menu');
     if (!dropdown) return;
 
@@ -3340,6 +3331,7 @@ function toggleProfileMenu(e) {
         dropdown.style.display = 'flex';
     }
 }
+
 
 
 // Mock Data Generators for UI

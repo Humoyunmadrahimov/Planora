@@ -5375,38 +5375,52 @@ textarea.modal-input {
 
 @media (max-width: 768px) {
     .top-bar {
-        margin: -10px -1.5rem 1.5rem -1.5rem !important;
-        padding: 15px 1.5rem !important;
+        margin: 0 0 1rem 0 !important;
+        padding: 12px 16px !important;
+        position: sticky;
+        top: 0;
+        left: 0;
+        right: 0;
         z-index: 1001 !important;
-        pointer-events: auto !important;
+        background: var(--white) !important;
+        /* Solid background on mobile */
+        width: 100% !important;
+        box-sizing: border-box !important;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
     }
 
     .top-bar-actions {
-        z-index: 1002 !important;
-        pointer-events: auto !important;
         display: flex !important;
-        gap: 0.5rem !important;
+        align-items: center !important;
+        gap: 8px !important;
+        z-index: 1002 !important;
     }
 
     .icon-btn,
     .user-profile {
-        pointer-events: auto !important;
-        -webkit-tap-highlight-color: transparent !important;
-        touch-action: manipulation !important;
-        z-index: 1003 !important;
+        width: 40px !important;
+        height: 40px !important;
+        padding: 8px !important;
+        margin: 0 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
     }
 
-    /* Prevent page-title from overlapping */
+    .username {
+        display: none !important;
+        /* Hide username on mobile to save space */
+    }
+
     .page-title {
-        flex: 1;
-        min-width: 0;
-        pointer-events: none;
-    }
-
-    .page-title * {
-        pointer-events: auto;
+        display: none !important;
+        /* Better to hide title on mobile if it crowds everything */
     }
 }
+
 
 @media (max-width: 576px) {
 
