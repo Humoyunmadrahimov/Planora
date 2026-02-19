@@ -97,7 +97,7 @@
                 <div class="top-bar-actions">
                     <div id="live-clock" class="top-clock">00:00</div>
                     <div class="action-wrapper">
-                        <button class="icon-btn" onclick="toggleMessages()">
+                        <button class="icon-btn" onclick="toggleMessages(event)">
                             <i data-lucide="mail"></i>
                             <span id="msg-badge" class="badge-count" style="display: none;">0</span>
                         </button>
@@ -115,7 +115,7 @@
                     </div>
 
                     <div class="action-wrapper">
-                        <button class="icon-btn" onclick="toggleNotifications()">
+                        <button class="icon-btn" onclick="toggleNotifications(event)">
                             <i data-lucide="bell"></i>
                             <span id="notif-badge" class="badge-count" style="display: none;">0</span>
                         </button>
@@ -130,12 +130,12 @@
                             </div>
                         </div>
                     </div>
-                    <div class="user-profile" onclick="toggleProfileMenu()">
+                    <div class="user-profile" onclick="toggleProfileMenu(event)">
                         <div class="avatar">AD</div>
                         <span class="username">Admin</span>
                         <i data-lucide="chevron-down"></i>
                         <div id="profile-menu" class="profile-dropdown">
-                            <button onclick="switchTab('settings', this); toggleProfileMenu();">
+                            <button onclick="switchTab('settings', this); toggleProfileMenu(event);">
                                 <i data-lucide="settings" style="width:16px"></i>
                                 Sozlamalar
                             </button>

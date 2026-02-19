@@ -3276,3 +3276,189 @@ function resetSettingsForm() {
     showSettingsTab('personal');
 }
 
+/* --- Missing UI Functions (Restored) --- */
+
+function closeAllDropdowns() {
+    document.querySelectorAll('.action-dropdown, .profile-dropdown').forEach(el => {
+        el.classList.remove('active');
+        el.style.display = 'none';
+    });
+}
+
+// Toggle Messages
+function toggleMessages(e) {
+    if (e) e.stopPropagation();
+    const dropdown = document.getElementById('messages-dropdown');
+    if (!dropdown) return;
+
+    const isActive = dropdown.classList.contains('active');
+    closeAllDropdowns();
+
+    // Toggle
+    if (!isActive) {
+        dropdown.classList.add('active');
+        dropdown.style.display = 'flex';
+    }
+}
+
+// Toggle Notifications
+function toggleNotifications(e) {
+    if (e) e.stopPropagation();
+    const dropdown = document.getElementById('notifications-dropdown');
+    if (!dropdown) return;
+
+    const isActive = dropdown.classList.contains('active');
+    closeAllDropdowns();
+
+    if (!isActive) {
+        dropdown.classList.add('active');
+        dropdown.style.display = 'flex';
+    }
+}
+
+// Toggle Profile
+function toggleProfileMenu(e) {
+    if (e) e.stopPropagation();
+    const dropdown = document.getElementById('profile-menu');
+    if (!dropdown) return;
+
+    const isActive = dropdown.classList.contains('active');
+    closeAllDropdowns();
+
+    if (!isActive) {
+        dropdown.classList.add('active');
+        dropdown.style.display = 'flex';
+    }
+}
+
+// Click Outside to Close
+document.addEventListener('click', (e) => {
+    if (!e.target.closest('.action-wrapper') && !e.target.closest('.user-profile')) {
+        closeAllDropdowns();
+    }
+});
+
+// Mock Data Generators for UI
+function generateNotifications() {
+    if (!window.notifications) window.notifications = [
+        { id: 1, title: 'Yangi vazifa', desc: 'Sizga yangi "Dizayn" vazifasi yuklatildi.', time: '5 daqiqa oldin', read: false },
+        { id: 2, title: 'Tizim xabari', desc: 'Tizimda texnik ishlar yakunlandi.', time: '1 soat oldin', read: false },
+        { id: 3, title: 'Xavfsizlik', desc: 'Yangi qurilmadan kirildi.', time: 'Kecha', read: true }
+    ];
+}
+
+function renderNotifications() {
+    const list = document.getElementById('notifications-list');
+    const badge = document.getElementById('notif-badge');
+    if (!list) return;
+
+    list.innerHTML = '';
+    const notifs = window.notifications || [];
+
+    if (notifs.length === 0) {
+        list.innerHTML = `
+            <div class="empty-dropdown">
+                <i data-lucide="bell-off"></i>
+                <span>Bildirishnomalar yo'q</span>
+            </div>`;
+    } else {
+        notifs.forEach(n => {
+            const item = document.createElement('div');
+            item.className = `dropdown-item ${n.read ? '' : 'unread'}`;
+            item.innerHTML = `
+                <div class="dropdown-item-icon"><i data-lucide="bell"></i></div>
+                <div class="dropdown-item-content">
+                    <div class="dropdown-item-title">${n.title}</div>
+                    <div class="dropdown-item-desc">${n.desc}</div>
+                    <span class="dropdown-item-time">${n.time}</span>
+                </div>
+            `;
+            list.appendChild(item);
+        });
+    }
+
+    // Update badge
+    const unreadCount = notifs.filter(n => !n.read).length;
+    if (badge) {
+        badge.textContent = unreadCount;
+        badge.style.display = unreadCount > 0 ? 'flex' : 'none';
+        badge.style.background = '#EF5C91';
+        badge.style.color = 'white';
+        badge.style.position = 'absolute';
+        badge.style.top = '-2px';
+        badge.style.right = '-2px';
+        badge.style.minWidth = '18px';
+        badge.style.height = '18px';
+        badge.style.borderRadius = '9px';
+        badge.style.alignItems = 'center';
+        badge.style.justifyContent = 'center';
+        badge.style.fontSize = '10px';
+        badge.style.padding = '0 4px';
+    }
+
+    if (window.lucide) window.lucide.createIcons();
+}
+
+function renderMessages() {
+    const list = document.getElementById('messages-list');
+    const badge = document.getElementById('msg-badge');
+    if (!list) return;
+
+    list.innerHTML = '';
+    // Mock messages
+    const msgs = [
+        { id: 1, title: 'Admin', desc: 'Xush kelibsiz! Tizimdan foydalanishni boshlang.', time: 'Hozirgina', read: false }
+    ];
+
+    msgs.forEach(m => {
+        const item = document.createElement('div');
+        item.className = `dropdown-item ${m.read ? '' : 'unread'}`;
+        item.innerHTML = `
+            <div class="dropdown-item-icon" style="background: #EBF5FF; color: #3B82F6;"><i data-lucide="mail"></i></div>
+            <div class="dropdown-item-content">
+                <div class="dropdown-item-title">${m.title}</div>
+                <div class="dropdown-item-desc">${m.desc}</div>
+                <span class="dropdown-item-time">${m.time}</span>
+            </div>
+        `;
+        list.appendChild(item);
+    });
+
+    if (badge) {
+        badge.textContent = msgs.filter(m => !m.read).length;
+        badge.style.display = 'flex';
+        badge.style.position = 'absolute';
+        badge.style.top = '-2px';
+        badge.style.right = '-2px';
+        badge.style.minWidth = '18px';
+        badge.style.height = '18px';
+        badge.style.borderRadius = '9px';
+        badge.style.alignItems = 'center';
+        badge.style.justifyContent = 'center';
+        badge.style.fontSize = '10px';
+        badge.style.padding = '0 4px';
+        badge.style.background = '#3B82F6';
+        badge.style.color = 'white';
+    }
+
+    if (window.lucide) window.lucide.createIcons();
+}
+
+function markAllMessagesRead() {
+    alert('Barcha xabarlar o\'qildi.');
+    const badge = document.getElementById('msg-badge');
+    if (badge) badge.style.display = 'none';
+}
+
+function clearNotifications() {
+    window.notifications = [];
+    renderNotifications();
+}
+
+function logout() {
+    showLogoutConfirmModal('Tizimdan chiqmoqchimisiz?', () => {
+        localStorage.removeItem('dashboard_current_user');
+        window.location.href = 'index.html';
+    });
+}
+
