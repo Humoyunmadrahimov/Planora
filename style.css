@@ -5424,10 +5424,24 @@ textarea.modal-input {
         touch-action: manipulation;
     }
 
-    .icon-btn i,
-    .avatar {
+    .icon-btn i {
         pointer-events: none !important;
         display: block !important;
+    }
+
+    .user-profile .avatar {
+        width: 36px !important;
+        height: 36px !important;
+        border-radius: 50% !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        flex-shrink: 0 !important;
+    }
+
+    .user-profile i {
+        display: none !important;
+        /* Hide chevron on mobile */
     }
 
     .username {
