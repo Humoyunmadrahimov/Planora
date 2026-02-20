@@ -3223,9 +3223,10 @@ function handleGlobalClick(e) {
 document.addEventListener('click', handleGlobalClick);
 
 // Exposed global toggle functions for Header
-window.toggleMessages = function (e) {
-    if (e && typeof e.stopPropagation === 'function') {
-        e.stopPropagation();
+function toggleMessages(e) {
+    if (e) {
+        if (typeof e.preventDefault === 'function') e.preventDefault();
+        if (typeof e.stopPropagation === 'function') e.stopPropagation();
     }
     const dropdown = document.getElementById('messages-dropdown');
     if (!dropdown) return;
@@ -3239,11 +3240,12 @@ window.toggleMessages = function (e) {
         if (typeof renderMessages === 'function') renderMessages();
         if (window.lucide) window.lucide.createIcons();
     }
-};
+}
 
-window.toggleNotifications = function (e) {
-    if (e && typeof e.stopPropagation === 'function') {
-        e.stopPropagation();
+function toggleNotifications(e) {
+    if (e) {
+        if (typeof e.preventDefault === 'function') e.preventDefault();
+        if (typeof e.stopPropagation === 'function') e.stopPropagation();
     }
     const dropdown = document.getElementById('notifications-dropdown');
     if (!dropdown) return;
@@ -3258,11 +3260,12 @@ window.toggleNotifications = function (e) {
         if (typeof renderNotifications === 'function') renderNotifications();
         if (window.lucide) window.lucide.createIcons();
     }
-};
+}
 
-window.toggleProfileMenu = function (e) {
-    if (e && typeof e.stopPropagation === 'function') {
-        e.stopPropagation();
+function toggleProfileMenu(e) {
+    if (e) {
+        if (typeof e.preventDefault === 'function') e.preventDefault();
+        if (typeof e.stopPropagation === 'function') e.stopPropagation();
     }
     const dropdown = document.getElementById('profile-menu');
     if (!dropdown) return;
@@ -3275,7 +3278,33 @@ window.toggleProfileMenu = function (e) {
         dropdown.style.setProperty('display', 'flex', 'important');
         if (window.lucide) window.lucide.createIcons();
     }
-};
+}
+
+// Attach to window
+window.toggleMessages = toggleMessages;
+window.toggleNotifications = toggleNotifications;
+window.toggleProfileMenu = toggleProfileMenu;
+
+window.toggleProfileMenu = toggleProfileMenu;
+
+// Re-binding for mobile touch handling
+document.addEventListener('DOMContentLoaded', () => {
+    const msgBtn = document.querySelector('[onclick*="toggleMessages"]');
+    const notifBtn = document.querySelector('[onclick*="toggleNotifications"]');
+    const profBtn = document.querySelector('[onclick*="toggleProfileMenu"]');
+
+    const addMobileTouch = (el, fn) => {
+        if (el) {
+            el.addEventListener('touchstart', (e) => {
+                fn(e);
+            }, { passive: false });
+        }
+    };
+
+    addMobileTouch(msgBtn, toggleMessages);
+    addMobileTouch(notifBtn, toggleNotifications);
+    addMobileTouch(profBtn, toggleProfileMenu);
+});
 
 function logout() {
     showLogoutConfirmModal('Tizimdan chiqmoqchimisiz?', () => {

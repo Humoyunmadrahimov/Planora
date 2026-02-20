@@ -926,12 +926,12 @@
         window.firebaseServerTimestamp = serverTimestamp;
         window.firebaseUpdate = update;
     </script>
-    <script src="script.js?v=2.0_debug"></script>
+    <script src="script.js?v=2.2_debug"></script>
     <script>
-        lucide.createIcons();
+        if (window.lucide) lucide.createIcons();
         // Force version update
         (function () {
-            const VERSION = '2.0.1';
+            const VERSION = '2.0.5';
             if (localStorage.getItem('app_v') !== VERSION) {
                 localStorage.setItem('app_v', VERSION);
                 if ('caches' in window) {
