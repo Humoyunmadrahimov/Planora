@@ -5488,15 +5488,15 @@ textarea.modal-input {
     .action-dropdown,
     .profile-dropdown {
         position: fixed !important;
-        top: 85px !important;
-        right: 2.5rem !important;
+        /* Dynamic top/left handled by JS positionDropdown() */
         z-index: 10000 !important;
         display: none;
         flex-direction: column;
         background: white !important;
         border-radius: 16px !important;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1) !important;
-        border: 1px solid rgba(0, 0, 0, 0.05) !important;
+        box-shadow: 0 15px 50px rgba(0, 0, 0, 0.12) !important;
+        border: 1px solid rgba(0, 0, 0, 0.06) !important;
+        overflow: hidden;
     }
 
     .action-dropdown {

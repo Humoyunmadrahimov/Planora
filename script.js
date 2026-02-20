@@ -3222,6 +3222,33 @@ function handleGlobalClick(e) {
     }
 }
 
+/**
+ * Positions a dropdown relative to its trigger button on Desktop.
+ */
+function positionDropdown(btnId, dropdownId) {
+    const btn = document.getElementById(btnId);
+    const dropdown = document.getElementById(dropdownId);
+    if (!btn || !dropdown) return;
+
+    if (window.innerWidth > 576) {
+        const rect = btn.getBoundingClientRect();
+        dropdown.style.setProperty('top', (rect.bottom + 10) + 'px', 'important');
+
+        // Profiles are narrower
+        const dropdownWidth = dropdownId === 'profile-menu' ? 200 : 340;
+        // Align right edge of dropdown with right edge of button
+        const leftPos = rect.right - dropdownWidth;
+
+        dropdown.style.setProperty('left', leftPos + 'px', 'important');
+        dropdown.style.setProperty('right', 'auto', 'important');
+    } else {
+        // Clear JS styles on mobile to let CSS fixed positioning take over
+        dropdown.style.removeProperty('top');
+        dropdown.style.removeProperty('left');
+        dropdown.style.removeProperty('right');
+    }
+}
+
 // Attach listener to document
 document.addEventListener('click', handleGlobalClick);
 
@@ -3236,6 +3263,7 @@ function toggleMessages(e) {
     closeAllDropdowns();
 
     if (!isActive) {
+        positionDropdown('msg-btn', 'messages-dropdown');
         dropdown.classList.add('active');
         dropdown.style.setProperty('display', 'flex', 'important');
         if (typeof renderMessages === 'function') renderMessages();
@@ -3253,6 +3281,7 @@ function toggleNotifications(e) {
     closeAllDropdowns();
 
     if (!isActive) {
+        positionDropdown('notif-btn', 'notifications-dropdown');
         dropdown.classList.add('active');
         dropdown.style.setProperty('display', 'flex', 'important');
         if (typeof generateNotifications === 'function') generateNotifications();
@@ -3271,6 +3300,7 @@ function toggleProfileMenu(e) {
     closeAllDropdowns();
 
     if (!isActive) {
+        positionDropdown('profile-btn', 'profile-menu');
         dropdown.classList.add('active');
         dropdown.style.setProperty('display', 'flex', 'important');
         if (window.lucide) window.lucide.createIcons();
