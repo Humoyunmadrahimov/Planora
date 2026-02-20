@@ -5396,16 +5396,13 @@ textarea.modal-input {
     .top-bar-actions {
         display: flex !important;
         align-items: center !important;
-        gap: 8px !important;
+        gap: 4px !important;
         z-index: 9999 !important;
-        /* Extremely high */
         pointer-events: auto !important;
-        background: var(--white) !important;
-        /* Solid background for mobile */
-        border-radius: 50px;
-        padding: 4px 12px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        border: 1px solid rgba(0, 0, 0, 0.05);
+        background: transparent !important;
+        padding: 0 !important;
+        border: none !important;
+        box-shadow: none !important;
     }
 
     .icon-btn,
