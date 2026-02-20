@@ -5488,15 +5488,23 @@ textarea.modal-input {
     .action-dropdown,
     .profile-dropdown {
         position: fixed !important;
-        top: 70px !important;
+        top: 85px !important;
         right: 2.5rem !important;
-        width: 340px !important;
         z-index: 10000 !important;
         display: none;
         flex-direction: column;
-        border-radius: 16px !important;
-        box-shadow: var(--shadow-lg) !important;
         background: white !important;
+        border-radius: 16px !important;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1) !important;
+        border: 1px solid rgba(0, 0, 0, 0.05) !important;
+    }
+
+    .action-dropdown {
+        width: 340px !important;
+    }
+
+    .profile-dropdown {
+        width: 200px !important;
     }
 
     .action-dropdown.active,
