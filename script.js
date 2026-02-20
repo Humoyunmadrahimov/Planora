@@ -3194,6 +3194,8 @@ function resetSettingsForm() {
 
 // --- Refined Toggle System for Mobile & Desktop ---
 
+// --- Robust Toggle System for Mobile & Desktop ---
+
 function closeAllDropdowns() {
     document.querySelectorAll('.action-dropdown, .profile-dropdown').forEach(el => {
         el.classList.remove('active');
@@ -3206,15 +3208,16 @@ function closeAllDropdowns() {
  * Uses event.target.closest to identify if a click is INSIDE an interactive area.
  */
 function handleGlobalClick(e) {
-    const isProfile = e.target.closest('.user-profile');
-    const isAction = e.target.closest('.action-wrapper');
-    const isDropdownToggle = e.target.closest('.icon-btn') || e.target.closest('.user-profile');
-
     // If clicking on a toggle, we let the specific toggle function handle it.
-    // Otherwise, if we aren't clicking inside any toggle or active dropdown, close everything.
-    if (!isProfile && !isAction) {
+    // If clicking INSIDE a dropdown, we don't close it (handled by stopPropagation in HTML but here as fallback)
+    const isProfileBtn = e.target.closest('#profile-btn');
+    const isMsgBtn = e.target.closest('#msg-btn');
+    const isNotifBtn = e.target.closest('#notif-btn');
+    const isInsideDropdown = e.target.closest('.action-dropdown') || e.target.closest('.profile-dropdown');
+
+    if (!isProfileBtn && !isMsgBtn && !isNotifBtn && !isInsideDropdown) {
         closeAllDropdowns();
-        // Also handling legacy dropdowns (e.g. in Notes)
+        // Also handling legacy dropdowns
         document.querySelectorAll('.dropdown.open').forEach(dd => dd.classList.remove('open'));
     }
 }
@@ -3224,10 +3227,8 @@ document.addEventListener('click', handleGlobalClick);
 
 // Exposed global toggle functions for Header
 function toggleMessages(e) {
-    if (e) {
-        if (typeof e.preventDefault === 'function') e.preventDefault();
-        if (typeof e.stopPropagation === 'function') e.stopPropagation();
-    }
+    if (e && typeof e.stopPropagation === 'function') e.stopPropagation();
+
     const dropdown = document.getElementById('messages-dropdown');
     if (!dropdown) return;
 
@@ -3243,10 +3244,8 @@ function toggleMessages(e) {
 }
 
 function toggleNotifications(e) {
-    if (e) {
-        if (typeof e.preventDefault === 'function') e.preventDefault();
-        if (typeof e.stopPropagation === 'function') e.stopPropagation();
-    }
+    if (e && typeof e.stopPropagation === 'function') e.stopPropagation();
+
     const dropdown = document.getElementById('notifications-dropdown');
     if (!dropdown) return;
 
@@ -3263,10 +3262,8 @@ function toggleNotifications(e) {
 }
 
 function toggleProfileMenu(e) {
-    if (e) {
-        if (typeof e.preventDefault === 'function') e.preventDefault();
-        if (typeof e.stopPropagation === 'function') e.stopPropagation();
-    }
+    if (e && typeof e.stopPropagation === 'function') e.stopPropagation();
+
     const dropdown = document.getElementById('profile-menu');
     if (!dropdown) return;
 
@@ -3280,31 +3277,11 @@ function toggleProfileMenu(e) {
     }
 }
 
-// Attach to window
+// Export to window
 window.toggleMessages = toggleMessages;
 window.toggleNotifications = toggleNotifications;
 window.toggleProfileMenu = toggleProfileMenu;
-
-window.toggleProfileMenu = toggleProfileMenu;
-
-// Re-binding for mobile touch handling
-document.addEventListener('DOMContentLoaded', () => {
-    const msgBtn = document.querySelector('[onclick*="toggleMessages"]');
-    const notifBtn = document.querySelector('[onclick*="toggleNotifications"]');
-    const profBtn = document.querySelector('[onclick*="toggleProfileMenu"]');
-
-    const addMobileTouch = (el, fn) => {
-        if (el) {
-            el.addEventListener('touchstart', (e) => {
-                fn(e);
-            }, { passive: false });
-        }
-    };
-
-    addMobileTouch(msgBtn, toggleMessages);
-    addMobileTouch(notifBtn, toggleNotifications);
-    addMobileTouch(profBtn, toggleProfileMenu);
-});
+window.closeAllDropdowns = closeAllDropdowns;
 
 function logout() {
     showLogoutConfirmModal('Tizimdan chiqmoqchimisiz?', () => {
@@ -3312,8 +3289,7 @@ function logout() {
         window.location.href = 'index.html';
     });
 }
-
-// Ensure global access
 window.logout = logout;
+
 
 

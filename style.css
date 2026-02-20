@@ -5447,17 +5447,18 @@ textarea.modal-input {
     .profile-dropdown,
     .action-dropdown {
         position: fixed !important;
-        top: 65px !important;
-        /* Slightly adjusted for better alignment */
+        top: 70px !important;
         left: 10px !important;
         right: 10px !important;
-        width: calc(100% - 20px) !important;
+        width: auto !important;
         max-height: 80vh !important;
+        margin: 0 !important;
         z-index: 10000 !important;
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4) !important;
-        pointer-events: auto !important;
         display: none;
-        /* Controlled by .active class */
+        flex-direction: column;
+        border-radius: 20px !important;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3) !important;
+        pointer-events: auto !important;
     }
 
     .action-dropdown.active,
@@ -5470,6 +5471,28 @@ textarea.modal-input {
     }
 }
 
+/* Desktop positioning for root-level dropdowns */
+@media (min-width: 577px) {
+
+    .action-dropdown,
+    .profile-dropdown {
+        position: fixed !important;
+        top: 70px !important;
+        right: 2.5rem !important;
+        width: 340px !important;
+        z-index: 10000 !important;
+        display: none;
+        flex-direction: column;
+        border-radius: 16px !important;
+        box-shadow: var(--shadow-lg) !important;
+        background: white !important;
+    }
+
+    .action-dropdown.active,
+    .profile-dropdown.active {
+        display: flex !important;
+    }
+}
 
 .user-profile,
 .icon-btn {
