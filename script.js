@@ -2194,12 +2194,7 @@ async function saveCurrentNote() {
 }
 
 // --- Note Helper Tools ---
-function insertHorizontalLine() {
-    const textarea = document.getElementById('note-content');
-    if (!textarea) return;
-    textarea.value += "\n────────────────────────────────────────\n";
-    saveCurrentNote();
-}
+
 
 function deleteCurrentNote() {
     if (!currentNoteId) return;
