@@ -160,6 +160,7 @@ let notes = [];
 let currentNoteId = null;
 let editingEventId = null;
 let financeTrashHistory = []; // Stores last 3 deletion operations
+let completedTasksArchive = []; // Stores tasks older than 1 week
 
 // --- Firebase Cloud Storage Handlers ---
 async function saveToCloud() {
@@ -184,7 +185,8 @@ async function saveToCloud() {
                     ...t,
                     date: t.date instanceof Date ? t.date.getTime() : t.date
                 }))
-            }))
+            })),
+            completedTasksArchive: completedTasksArchive || []
         };
 
         await window.firebaseUpdate(userRef, cleanData);
@@ -250,6 +252,9 @@ async function initializeSession() {
                                 data: (Array.isArray(h.data) ? h.data : Object.values(h.data || {})).map(t => ({ ...t, date: new Date(t.date) }))
                             }));
 
+                            completedTasksArchive = safeArray(data.completedTasksArchive);
+                            completedTasksArchive = completedTasksArchive.filter(x => x);
+
                             // Filter out any potential nulls if array was sparse
                             tasks = tasks.filter(x => x);
                             events = events.filter(x => x);
@@ -273,6 +278,7 @@ async function initializeSession() {
     // Listeners are initialized in waitForFirebaseAndInit or manually if needed
     // initializeMessagesListener(); // Moved to be called only if not already active
 
+    cleanOldCompletedTasks();
     updateUserUI();
 }
 
@@ -408,6 +414,7 @@ function updateTaskStatus(id, newStatus) {
             task.completedDate = new Date().toISOString().split('T')[0];
         }
         task.status = newStatus;
+        cleanOldCompletedTasks();
         saveToCloud();
         renderKanbanTasks();
     }
@@ -447,6 +454,24 @@ function renderKanbanTasks() {
 
     if (window.lucide) window.lucide.createIcons();
     renderDashboard();
+}
+
+function cleanOldCompletedTasks() {
+    const today = new Date();
+    tasks = tasks.filter(task => {
+        if (task.status === 'done' && task.completedDate) {
+            const compDate = new Date(task.completedDate);
+            const diffTime = Math.abs(today - compDate);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+            if (diffDays > 7) {
+                // Move to memory/archive
+                completedTasksArchive.push(task);
+                return false; // Remove from normal tasks
+            }
+        }
+        return true;
+    });
 }
 
 function createKanbanCard(task) {
@@ -591,6 +616,7 @@ function drop(ev, newStatus) {
         }
     }
 
+    cleanOldCompletedTasks();
     saveToCloud();
     renderKanbanTasks();
 }
