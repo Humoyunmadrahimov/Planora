@@ -410,6 +410,9 @@ function switchTab(tabId, element) {
 function updateTaskStatus(id, newStatus) {
     const task = tasks.find(t => t.id === Number(id));
     if (task && task.status !== newStatus) {
+        if (newStatus === 'in-progress' && !task.startedDate) {
+            task.startedDate = new Date().toISOString().split('T')[0];
+        }
         if (newStatus === 'done') {
             task.completedDate = new Date().toISOString().split('T')[0];
         }
@@ -456,15 +459,24 @@ function renderKanbanTasks() {
     renderDashboard();
 }
 
+function getStartOfWeek(date) {
+    const d = new Date(date);
+    d.setHours(0, 0, 0, 0);
+    const day = d.getDay();
+    const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+    return new Date(d.setDate(diff));
+}
+
 function cleanOldCompletedTasks() {
     const today = new Date();
+    const startOfWeek = getStartOfWeek(today);
+
     tasks = tasks.filter(task => {
         if (task.status === 'done' && task.completedDate) {
             const compDate = new Date(task.completedDate);
-            const diffTime = Math.abs(today - compDate);
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            compDate.setHours(0, 0, 0, 0);
 
-            if (diffDays > 7) {
+            if (compDate < startOfWeek) {
                 // Move to memory/archive
                 completedTasksArchive.push(task);
                 return false; // Remove from normal tasks
@@ -597,8 +609,13 @@ function drop(ev, newStatus) {
     tasks.splice(taskIndex, 1);
 
     // Update status
-    if (task.status !== newStatus && newStatus === 'done') {
-        task.completedDate = new Date().toISOString().split('T')[0];
+    if (task.status !== newStatus) {
+        if (newStatus === 'in-progress' && !task.startedDate) {
+            task.startedDate = new Date().toISOString().split('T')[0];
+        }
+        if (newStatus === 'done') {
+            task.completedDate = new Date().toISOString().split('T')[0];
+        }
     }
     task.status = newStatus;
 
@@ -719,6 +736,97 @@ function deleteTask(id) {
         renderKanbanTasks();
         renderDashboardSummary();
     });
+}
+
+// --- Archive Modal Logic ---
+let currentArchiveWeekOffset = 0;
+
+function openArchiveModal() {
+    currentArchiveWeekOffset = 0;
+    renderArchiveModal();
+    document.getElementById('archive-modal').style.display = 'flex';
+}
+
+function closeArchiveModal() {
+    document.getElementById('archive-modal').style.display = 'none';
+}
+
+function changeArchiveWeek(delta) {
+    currentArchiveWeekOffset += delta;
+    renderArchiveModal();
+}
+
+function renderArchiveModal() {
+    const today = new Date();
+    today.setDate(today.getDate() + (currentArchiveWeekOffset * 7));
+
+    const startOfWeek = getStartOfWeek(today);
+    const endOfWeek = new Date(startOfWeek);
+    endOfWeek.setDate(startOfWeek.getDate() + 6);
+
+    const weekLabel = `${startOfWeek.toLocaleDateString('uz-UZ')} - ${endOfWeek.toLocaleDateString('uz-UZ')}`;
+    const labelEle = document.getElementById('archive-week-label');
+    if (labelEle) {
+        if (currentArchiveWeekOffset === 0) labelEle.textContent = 'Joriy Haftalik';
+        else labelEle.textContent = weekLabel;
+    }
+
+    const startTimestamp = startOfWeek.getTime();
+    endOfWeek.setHours(23, 59, 59, 999);
+    const endTimestamp = endOfWeek.getTime();
+
+    const activeDoneList = tasks.filter(t => t.status === 'done');
+    const allDone = [...activeDoneList, ...completedTasksArchive];
+
+    const thisWeekTasks = allDone.filter(task => {
+        if (!task.completedDate) return false;
+        const compTime = new Date(task.completedDate).getTime();
+        return compTime >= startTimestamp && compTime <= endTimestamp;
+    });
+
+    const listContainer = document.getElementById('archive-list');
+    if (!listContainer) return;
+    listContainer.innerHTML = '';
+
+    if (thisWeekTasks.length === 0) {
+        listContainer.innerHTML = `
+            <div style="text-align:center; padding: 2rem; color: var(--text-muted); opacity: 0.6;">
+                <i data-lucide="archive" style="width: 32px; height: 32px; margin-bottom: 10px;"></i>
+                <p>Ushbu haftada yakunlangan vazifalar mavjud emas</p>
+            </div>
+        `;
+    } else {
+        thisWeekTasks.forEach(task => {
+            const startStr = task.startedDate || task.completedDate || "Noma'lum";
+            const endStr = task.completedDate;
+            let durationDays = 1;
+            if (task.startedDate && task.completedDate) {
+                const s = new Date(task.startedDate).getTime();
+                const e = new Date(task.completedDate).getTime();
+                durationDays = Math.max(1, Math.ceil(Math.abs(e - s) / (1000 * 60 * 60 * 24)));
+            }
+            if (!task.startedDate) durationDays = 1;
+
+            const item = document.createElement('div');
+            item.style.cssText = "display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; background: #FAFAFA; border: 1px solid #EEE; border-radius: 8px;";
+
+            item.innerHTML = `
+                <div>
+                    <h4 style="margin: 0 0 5px 0; font-size: 1rem; color: var(--dark);">${task.title}</h4>
+                    <div style="font-size: 0.8rem; color: var(--text-muted); display: flex; gap: 15px; flex-wrap: wrap;">
+                        <span><i data-lucide="play" style="width: 12px; height: 12px; display: inline-block; margin-bottom: -2px;"></i> Boshladi: ${startStr}</span>
+                        <span><i data-lucide="check-circle" style="width: 12px; height: 12px; display: inline-block; margin-bottom: -2px; color: #4ADB97;"></i> Yakunlandi: ${endStr}</span>
+                    </div>
+                </div>
+                <div style="text-align: right; min-width: 80px; flex-shrink: 0;">
+                    <span style="font-size: 0.8rem; color: var(--text-muted);">Sarflandi:</span><br>
+                    <strong style="color: var(--primary);">${durationDays} kun</strong>
+                </div>
+            `;
+            listContainer.appendChild(item);
+        });
+    }
+    if (window.lucide) window.lucide.createIcons();
 }
 
 
