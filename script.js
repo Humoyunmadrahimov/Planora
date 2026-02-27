@@ -423,7 +423,7 @@ function renderKanbanTasks() {
     tasks.forEach(task => {
         if (counts.hasOwnProperty(task.status)) {
             counts[task.status]++;
-            const card = task.status === 'done' ? createCompletedTaskCard(task) : createKanbanCard(task);
+            const card = createKanbanCard(task);
             const targetList = document.getElementById(`list-${task.status}`);
             if (targetList) targetList.appendChild(card);
         }
@@ -433,19 +433,11 @@ function renderKanbanTasks() {
     listIds.forEach(id => {
         const list = document.getElementById(`list-${id}`);
         if (list && list.children.length === 0) {
-            if (id === 'done') {
-                list.innerHTML = `
-                    <div class="empty-state" style="padding: 1.5rem 1rem; border: none; background: transparent; flex-direction: row; justify-content: center; gap: 10px;">
-                        <i data-lucide="check-circle" style="width:20px; opacity:0.3; margin-bottom: 0;"></i>
-                        <p style="font-size: 0.8rem; opacity: 0.6;">Yakunlangan vazifalar yo'q</p>
-                    </div>`;
-            } else {
-                list.innerHTML = `
-                    <div class="empty-state" style="padding: 1.5rem 1rem; border: none; background: transparent;">
-                        <i data-lucide="inbox" style="width:20px; opacity:0.3; margin-bottom: 0.5rem;"></i>
-                        <p style="font-size: 0.8rem; opacity: 0.6;">Vazifalar yo'q</p>
-                    </div>`;
-            }
+            list.innerHTML = `
+                <div class="empty-state" style="padding: 1.5rem 1rem; border: none; background: transparent;">
+                    <i data-lucide="inbox" style="width:20px; opacity:0.3; margin-bottom: 0.5rem;"></i>
+                    <p style="font-size: 0.8rem; opacity: 0.6;">Vazifalar yo'q</p>
+                </div>`;
         }
     });
 
@@ -501,11 +493,20 @@ function createKanbanCard(task) {
         `;
     }
 
-    const deadlineHTML = task.deadline ? `
-        <div class="card-meta-item deadline">
-            <span>${task.deadline}</span>
-        </div>
-    ` : '';
+    let deadlineHTML = '';
+    if (task.status === 'done' && task.completedDate) {
+        deadlineHTML = `
+            <div class="card-meta-item deadline" style="color: #4ADB97; background: rgba(74, 219, 151, 0.1);">
+                <span>Yakunlandi: ${task.completedDate}</span>
+            </div>
+        `;
+    } else if (task.deadline) {
+        deadlineHTML = `
+            <div class="card-meta-item deadline">
+                <span>${task.deadline}</span>
+            </div>
+        `;
+    }
 
     div.innerHTML = `
         <div class="card-title">${task.title}</div>
@@ -521,47 +522,6 @@ function createKanbanCard(task) {
                     <i data-lucide="trash-2"></i>
                 </button>
             </div>
-        </div>
-    `;
-    return div;
-}
-
-function createCompletedTaskCard(task) {
-    const div = document.createElement('div');
-    div.className = `completed-task-item`;
-    div.setAttribute('draggable', true);
-    div.setAttribute('ondragstart', `drag(event, ${task.id})`);
-    div.setAttribute('ondragend', 'dragEnd(event)');
-    div.setAttribute('data-task-id', task.id);
-    div.style.cssText = "display: flex; align-items: center; justify-content: space-between; background: var(--white); padding: 12px 16px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); border: 1px solid rgba(0,0,0,0.05); margin-bottom: 5px; cursor: grab;";
-
-    div.onclick = (e) => {
-        if (!e.target.closest('.card-delete-btn') && !e.target.closest('.card-move-btn')) {
-            openEditTaskModal(task.id);
-        }
-    };
-
-    const compDate = task.completedDate ? `Yakunlandi: ${task.completedDate}` : 'Yakunlangan';
-
-    div.innerHTML = `
-        <div class="ct-info" style="display: flex; align-items: center; gap: 12px; flex: 1;">
-            <span class="ct-icon" style="display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 50%; background: rgba(74, 219, 151, 0.1); color: #4ADB97;">
-                <i data-lucide="check" style="width: 16px; height: 16px; stroke-width: 3px;"></i>
-            </span>
-            <div class="ct-text">
-                <div class="ct-title" style="font-weight: 500; font-size: 1rem; color: var(--dark); text-decoration: line-through; opacity: 0.7;">${task.title}</div>
-                <div class="ct-date" style="font-size: 0.8rem; color: var(--text-muted); margin-top: 2px;">${compDate}</div>
-            </div>
-        </div>
-        
-        <div class="ct-actions" style="display: flex; gap: 8px; align-items: center;">
-            <button class="card-move-btn prev" onclick="updateTaskStatus(${task.id}, 'in-progress'); event.stopPropagation();" title="Qaytarish" style="background: var(--white); border: 1px solid var(--gray-medium); border-radius: 6px; padding: 6px 10px; display: flex; align-items: center; gap: 5px; cursor: pointer; color: var(--text-muted); transition: all 0.2s;">
-                <i data-lucide="rotate-ccw" style="width: 14px; height: 14px;"></i>
-                <span style="font-size: 0.8rem; font-weight: 500;">Qaytarish</span>
-            </button>
-            <button class="card-delete-btn" onclick="deleteTask(${task.id}); event.stopPropagation();" title="O'chirish" style="background: rgba(239, 92, 145, 0.05); border: 1px solid rgba(239, 92, 145, 0.1); color: #EF5C91; border-radius: 6px; cursor: pointer; padding: 6px; display: flex; align-items: center; justify-content: center; transition: all 0.2s;">
-                <i data-lucide="trash-2" style="width: 16px; height: 16px;"></i>
-            </button>
         </div>
     `;
     return div;

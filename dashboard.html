@@ -291,22 +291,17 @@
                                 <!-- Tasks injected here -->
                             </div>
                         </div>
-                    </div>
-
-                    <!-- Completed Tasks Bottom List -->
-                    <div class="completed-tasks-wrapper" style="margin-top: 2rem;">
-                        <div class="kanban-column completed-list-container" id="col-done" ondrop="drop(event, 'done')"
-                            ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)"
-                            style="background: rgba(255, 255, 255, 0.6); max-height: max-content;">
-                            <div class="column-header header-green" style="border-bottom: 1px solid rgba(0,0,0,0.05);">
+                        <!-- Column 3: Yakunlangan (Green) -->
+                        <div class="kanban-column" id="col-done" ondrop="drop(event, 'done')"
+                            ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)">
+                            <div class="column-header header-green">
                                 <div class="header-title">
                                     <span class="dot green"></span>
-                                    <h3>Yakunlangan Vazifalar</h3>
+                                    <h3>Yakunlangan</h3>
                                 </div>
                                 <span class="count-badge" id="count-done">0</span>
                             </div>
-                            <div class="task-list-container" id="list-done"
-                                style="display: flex; flex-direction: column; gap: 10px; padding: 15px;">
+                            <div class="task-list-container" id="list-done">
                                 <!-- Tasks injected here -->
                             </div>
                         </div>
