@@ -407,17 +407,21 @@ function switchTab(tabId, element) {
 }
 
 // --- Kanban Logic ---
+function getLocalDateStr() {
+    const d = new Date();
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+}
+
 function updateTaskStatus(id, newStatus) {
     const task = tasks.find(t => t.id === Number(id));
     if (task && task.status !== newStatus) {
         if (newStatus === 'in-progress' && !task.startedDate) {
-            task.startedDate = new Date().toISOString().split('T')[0];
+            task.startedDate = getLocalDateStr();
         }
         if (newStatus === 'done') {
-            task.completedDate = new Date().toISOString().split('T')[0];
+            task.completedDate = getLocalDateStr();
         }
         task.status = newStatus;
-        cleanOldCompletedTasks();
         saveToCloud();
         renderKanbanTasks();
     }
@@ -473,13 +477,16 @@ function cleanOldCompletedTasks() {
 
     tasks = tasks.filter(task => {
         if (task.status === 'done' && task.completedDate) {
-            const compDate = new Date(task.completedDate);
-            compDate.setHours(0, 0, 0, 0);
+            const parts = task.completedDate.split('-');
+            if (parts.length === 3) {
+                const compDate = new Date(parts[0], parts[1] - 1, parts[2]);
+                compDate.setHours(0, 0, 0, 0);
 
-            if (compDate < startOfWeek) {
-                // Move to memory/archive
-                completedTasksArchive.push(task);
-                return false; // Remove from normal tasks
+                if (compDate < startOfWeek) {
+                    // Move to memory/archive
+                    completedTasksArchive.push(task);
+                    return false; // Remove from normal tasks
+                }
             }
         }
         return true;
@@ -611,10 +618,10 @@ function drop(ev, newStatus) {
     // Update status
     if (task.status !== newStatus) {
         if (newStatus === 'in-progress' && !task.startedDate) {
-            task.startedDate = new Date().toISOString().split('T')[0];
+            task.startedDate = getLocalDateStr();
         }
         if (newStatus === 'done') {
-            task.completedDate = new Date().toISOString().split('T')[0];
+            task.completedDate = getLocalDateStr();
         }
     }
     task.status = newStatus;
@@ -633,7 +640,6 @@ function drop(ev, newStatus) {
         }
     }
 
-    cleanOldCompletedTasks();
     saveToCloud();
     renderKanbanTasks();
 }
