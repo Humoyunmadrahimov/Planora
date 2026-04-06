@@ -1,4 +1,4 @@
-﻿/* Reset & Variables */
+/* Reset & Variables */
 :root {
     --primary: #7C4DFF;
     --primary-light: #F1EDFF;
@@ -245,6 +245,17 @@ body {
     display: flex;
     align-items: center;
     gap: 1rem;
+}
+
+.top-clock {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--primary);
+    background: var(--primary-light);
+    padding: 6px 14px;
+    border-radius: var(--radius-md);
+    letter-spacing: 0.5px;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
 }
 
 .icon-btn {

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -95,7 +95,6 @@
                     </div>
                 </div>
                 <div class="top-bar-actions">
-                    <div id="live-clock" class="top-clock">00:00</div>
                     <div class="action-wrapper">
                         <button id="msg-btn" class="icon-btn" onclick="toggleMessages(event)">
                             <i data-lucide="mail"></i>
@@ -465,8 +464,13 @@
                     </div>
                     <div class="summary-card balance">
                         <div class="card-icon"><i data-lucide="wallet"></i></div>
-                        <div class="card-info">
-                            <span class="label">Joriy Qoldiq</span>
+                        <div class="card-info" style="width: 100%;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                                <span class="label">Joriy Qoldiq</span>
+                                <button onclick="resetTotalBalance()" class="icon-btn" title="0 dan boshlash" style="padding: 4px; width: 26px; height: 26px; min-height: 26px; background: rgba(124, 77, 255, 0.1); color: var(--primary);">
+                                    <i data-lucide="refresh-cw" style="width: 14px; height: 14px;"></i>
+                                </button>
+                            </div>
                             <h3 id="total-balance">0 so'm</h3>
                         </div>
                     </div>
@@ -500,7 +504,14 @@
                         </div>
                         <div class="form-group">
                             <label>Izoh</label>
-                            <input type="text" id="expense-desc" placeholder="Nima uchun?" class="modal-input">
+                            <select id="expense-desc" class="modal-select">
+                                <option value="Oila">Oila</option>
+                                <option value="Do'stlar bilan o'yin kulgu">Do'stlar bilan o'yin kulgu</option>
+                                <option value="O'zim">O'zim</option>
+                                <option value="Taksi">Taksi</option>
+                                <option value="Ovqatlanish">Ovqatlanish</option>
+                                <option value="Boshqa xarajat">Boshqa xarajat</option>
+                            </select>
                         </div>
                         <button class="danger-btn full-width" onclick="addTransaction('expense')">Chiqarish</button>
                     </div>

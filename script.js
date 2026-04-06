@@ -1,4 +1,4 @@
-﻿// --- Custom Confirm Modal Logic ---
+// --- Custom Confirm Modal Logic ---
 let confirmCallback = null;
 
 function showConfirmModal(message, onConfirm, btnText = 'Ha, O\'chirish') {
@@ -186,7 +186,8 @@ async function saveToCloud() {
                     date: t.date instanceof Date ? t.date.getTime() : t.date
                 }))
             })),
-            completedTasksArchive: completedTasksArchive || []
+            completedTasksArchive: completedTasksArchive || [],
+            balanceOffset: currentUser.balanceOffset || 0
         };
 
         await window.firebaseUpdate(userRef, cleanData);
@@ -260,6 +261,10 @@ async function initializeSession() {
                             events = events.filter(x => x);
                             transactions = transactions.filter(x => x);
                             notes = notes.filter(x => x);
+
+                            if (data.balanceOffset !== undefined) {
+                                currentUser.balanceOffset = data.balanceOffset;
+                            }
                         } catch (parseError) {
                             console.error("Data parsing error:", parseError);
                         }
@@ -1494,7 +1499,7 @@ function addTransaction(type) {
         desc = catLabel + ' Kirim';
     } else {
         amount = document.getElementById('expense-amount').value;
-        desc = document.getElementById('expense-desc').value.trim() || 'Xarajat';
+        desc = document.getElementById('expense-desc').value || 'Xarajat';
         category = 'expense';
     }
 
@@ -1502,6 +1507,7 @@ function addTransaction(type) {
         alert('Iltimos, to\'g\'ri summa kiriting');
         return;
     }
+
 
     transactions.unshift({
         id: Date.now(),
@@ -1615,6 +1621,23 @@ function clearCurrentPeriodFinance() {
     });
 }
 
+function resetTotalBalance() {
+    showConfirmModal('Haqiqatdan ham joriy qoldiqni 0 dan boshlamoqchimisiz? (Oldingi ma\'lumotlar saqlanib qoladi)', () => {
+        let allTimeIncome = 0;
+        let allTimeExpense = 0;
+        transactions.forEach(t => {
+            if (t.type === 'income') allTimeIncome += t.amount;
+            else allTimeExpense += t.amount;
+        });
+        
+        currentUser.balanceOffset = allTimeIncome - allTimeExpense;
+        localStorage.setItem('dashboard_current_user', JSON.stringify(currentUser));
+        
+        saveToCloud();
+        renderFinance();
+        renderDashboardSummary();
+    });
+}
 function renderFinance() {
     const list = document.getElementById('transaction-list');
     const totalIncEle = document.getElementById('total-income');
@@ -1718,7 +1741,8 @@ function renderFinance() {
         if (t.type === 'income') allTimeIncome += t.amount;
         else allTimeExpense += t.amount;
     });
-    const balance = allTimeIncome - allTimeExpense;
+    let offset = (currentUser && currentUser.balanceOffset) ? currentUser.balanceOffset : 0;
+    const balance = allTimeIncome - allTimeExpense - offset;
 
     if (totalBalEle) {
         totalBalEle.textContent = formatMoney(balance);
@@ -1963,7 +1987,8 @@ function renderDashBalance() {
         if (t.type === 'income') allTimeIncome += t.amount;
         else allTimeExpense += t.amount;
     });
-    const balance = allTimeIncome - allTimeExpense;
+    let offset = (currentUser && currentUser.balanceOffset) ? currentUser.balanceOffset : 0;
+    const balance = allTimeIncome - allTimeExpense - offset;
     const dashBalEle = document.getElementById('dash-balance');
     const eyeIcon = document.getElementById('balance-eye-icon');
 
