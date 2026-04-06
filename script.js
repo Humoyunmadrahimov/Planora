@@ -376,18 +376,10 @@ function switchTab(tabId, element) {
         'settings': 'Sozlamalar'
     };
 
-    // Update Sidebar Logo dynamically
-    const logoMap = {
-        'dashboard': 'logo.png',
-        'tasks': 'vazifa-01.png',
-        'finance': 'moliya-01.png',
-        'calendar': 'kalendar-01.png',
-        'notes': 'qaydlar-01.png'
-    };
+    // Static Logo dynamically
     const logoEle = document.getElementById('sidebar-logo');
     if (logoEle) {
-        const logoFile = logoMap[tabId] || 'logo.png';
-        logoEle.style.backgroundImage = `url('assets/${logoFile}')`;
+        logoEle.style.backgroundImage = `url('assets/logo.png')`;
     }
 
     if (tabId === 'dashboard') renderDashboard();
@@ -2297,7 +2289,10 @@ function renderNotesList() {
         try {
             const d = note.date instanceof Date ? note.date : new Date(note.date);
             if (!isNaN(d.getTime())) {
-                dateDisplay = d.toLocaleDateString('uz-UZ', { day: 'numeric', month: 'long' });
+                const day = String(d.getDate()).padStart(2, '0');
+                const month = String(d.getMonth() + 1).padStart(2, '0');
+                const year = d.getFullYear();
+                dateDisplay = `${day}.${month}.${year}`;
             }
         } catch (e) { }
 

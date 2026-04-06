@@ -481,39 +481,43 @@
                     <!-- Income Form -->
                     <div class="finance-form-box">
                         <h4>Kirim Qo'shish</h4>
-                        <div class="form-group">
-                            <label>Summa</label>
-                            <input type="number" id="income-amount" placeholder="0" class="modal-input">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                            <div class="form-group">
+                                <label>Summa</label>
+                                <input type="number" id="income-amount" placeholder="0" class="modal-input">
+                            </div>
+                            <div class="form-group">
+                                <label>Turi</label>
+                                <select id="income-type" class="modal-select">
+                                    <option value="salary">Oylik</option>
+                                    <option value="extra">Qo'shimcha</option>
+                                </select>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label>Turi</label>
-                            <select id="income-type" class="modal-select">
-                                <option value="salary">Oylik</option>
-                                <option value="extra">Qo'shimcha</option>
-                            </select>
-                        </div>
-                        <button class="primary-btn full-width" onclick="addTransaction('income')">Qo'shish</button>
+                        <button class="primary-btn full-width" onclick="addTransaction('income')" style="margin-top: 15px;">Qo'shish</button>
                     </div>
 
                     <!-- Expense Form -->
                     <div class="finance-form-box">
                         <h4>Chiqim Qo'shish</h4>
-                        <div class="form-group">
-                            <label>Summa</label>
-                            <input type="number" id="expense-amount" placeholder="0" class="modal-input">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                            <div class="form-group">
+                                <label>Summa</label>
+                                <input type="number" id="expense-amount" placeholder="0" class="modal-input">
+                            </div>
+                            <div class="form-group">
+                                <label>Izoh</label>
+                                <select id="expense-desc" class="modal-select">
+                                    <option value="Oila">Oila</option>
+                                    <option value="Do'stlar bilan o'yin kulgu">Do'stlar bilan o'yin kulgu</option>
+                                    <option value="O'zim">O'zim</option>
+                                    <option value="Taksi">Taksi</option>
+                                    <option value="Ovqatlanish">Ovqatlanish</option>
+                                    <option value="Boshqa xarajat">Boshqa xarajat</option>
+                                </select>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label>Izoh</label>
-                            <select id="expense-desc" class="modal-select">
-                                <option value="Oila">Oila</option>
-                                <option value="Do'stlar bilan o'yin kulgu">Do'stlar bilan o'yin kulgu</option>
-                                <option value="O'zim">O'zim</option>
-                                <option value="Taksi">Taksi</option>
-                                <option value="Ovqatlanish">Ovqatlanish</option>
-                                <option value="Boshqa xarajat">Boshqa xarajat</option>
-                            </select>
-                        </div>
-                        <button class="danger-btn full-width" onclick="addTransaction('expense')">Chiqarish</button>
+                        <button class="danger-btn full-width" onclick="addTransaction('expense')" style="margin-top: 15px;">Chiqarish</button>
                     </div>
                 </div>
 
@@ -587,27 +591,27 @@
                         </div>
                     </div>
                     <div class="notes-editor" id="note-editor-container">
-                        <div class="editor-header">
-                            <div class="editor-actions">
+                        <div class="editor-header" style="display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 2rem;">
+                            <input type="text" id="note-title" class="note-title-input" placeholder="Sarlavha yozing..." style="margin-bottom: 0; flex: 1;">
+                            <div class="editor-actions" style="margin-bottom: 0;">
                                 <span id="note-status"
                                     style="font-size: 0.8rem; color: #888; margin-right: 10px;"></span>
                                 <div class="dropdown">
-                                    <button class="secondary-btn dropdown-toggle">
-                                        <i data-lucide="download"></i> <span class="hide-mobile">Yuklab olish</span>
+                                    <button class="secondary-btn dropdown-toggle" style="padding: 6px 12px; font-size: 0.85rem;">
+                                        <i data-lucide="download" style="width: 16px; height: 16px;"></i> <span class="hide-mobile">Yuklab olish</span>
                                     </button>
                                     <div class="dropdown-menu">
                                         <a href="#" onclick="downloadNotePDF()">PDF formatida</a>
                                         <a href="#" onclick="downloadNoteWord()">Word formatida</a>
                                     </div>
                                 </div>
-                                <button class="danger-btn icon-only" onclick="deleteCurrentNote()" title="O'chirish">
-                                    <i data-lucide="trash-2"></i>
+                                <button class="danger-btn icon-only" onclick="deleteCurrentNote()" title="O'chirish" style="padding: 6px; width: auto; height: auto;">
+                                    <i data-lucide="trash-2" style="width: 16px; height: 16px;"></i>
                                 </button>
                             </div>
                         </div>
-                        <input type="text" id="note-title" class="note-title-input" placeholder="Sarlavha yozing...">
                         <textarea id="note-content" class="note-content-area"
-                            placeholder="Matnni shu yerga yozing..."></textarea>
+                            placeholder="Matnni shu yerga yozing..." style="flex: 1; height: 100%;"></textarea>
                     </div>
                 </div>
             </div>
