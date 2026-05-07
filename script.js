@@ -3491,14 +3491,7 @@ function logout() {
 }
 window.logout = logout;
 
-// --- AI Tahlil Logic ---
-function saveGeminiKey() {
-    const key = document.getElementById('gemini-key-input').value.trim();
-    if (!key) return alert('Iltimos, kalitni kiriting!');
-    localStorage.setItem('gemini_api_key', key);
-    alert('Kalit muvaffaqiyatli saqlandi!');
-    document.getElementById('ai-api-key-setup').style.display = 'none';
-}
+
 
 function parseSimpleMarkdown(text) {
     let html = text
@@ -3514,11 +3507,8 @@ function parseSimpleMarkdown(text) {
 }
 
 async function generateAiAnalysis() {
-    const apiKey = localStorage.getItem('gemini_api_key');
-    if (!apiKey) {
-        document.getElementById('ai-api-key-setup').style.display = 'block';
-        return;
-    }
+    // API kalit endi bevosita Vercel serverida yashirin holatda saqlanadi
+    // Foydalanuvchi hech qanday kalit kiritishi shart emas
 
     const btn = document.getElementById('btn-generate-ai');
     const loading = document.getElementById('ai-loading');
@@ -3552,7 +3542,6 @@ async function generateAiAnalysis() {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                apiKey: apiKey,
                 prompt: prompt
             })
         });
@@ -3579,12 +3568,6 @@ async function generateAiAnalysis() {
         alert('Tahlil qilishda xatolik yuz berdi: ' + error.message);
         btn.style.display = 'inline-flex';
         loading.style.display = 'none';
-        
-        if (error.message.includes('xato')) {
-            document.getElementById('ai-api-key-setup').style.display = 'block';
-            localStorage.removeItem('gemini_api_key');
-        }
     }
 }
 window.generateAiAnalysis = generateAiAnalysis;
-window.saveGeminiKey = saveGeminiKey;
