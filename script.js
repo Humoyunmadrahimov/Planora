@@ -726,10 +726,7 @@ function addKanbanTask() {
     closeTaskModal();
 
     if (deadline && !editId) {
-        // Avtomatik ravishda so'raymiz
-        if (confirm("Bu vazifa uchun telefoningiz kalendariga avtomatik eslatma (budilnik) qo'shishni xohlaysizmi?")) {
-            downloadICS(title, desc, deadline, '09:00'); // Default time for tasks without time
-        }
+        openReminderModal(title, desc, deadline, '09:00');
     }
 
     // Reset inputs
@@ -1362,9 +1359,7 @@ function addEvent() {
     closeEventModal();
 
     if (!editingEventId) {
-        if (confirm("Bu uchrashuv/voqeani telefoningiz kalendariga va eslatmalarga (budilnik) qo'shishni xohlaysizmi?")) {
-            downloadICS(title, desc, dateVal, time);
-        }
+        openReminderModal(title, desc, dateVal, time);
     }
 }
 
@@ -3587,13 +3582,56 @@ async function generateAiAnalysis() {
 window.generateAiAnalysis = generateAiAnalysis;
 
 // --- Eslatma (Calendar Sync) Logic ---
+let pendingReminder = null;
+
+function openReminderModal(title, description, defaultDate, defaultTime) {
+    pendingReminder = { title, description };
+    const dateInput = document.getElementById('remind-date');
+    const timeInput = document.getElementById('remind-time');
+    
+    if (dateInput) {
+        dateInput.value = defaultDate || new Date().toISOString().split('T')[0];
+    }
+    if (timeInput) {
+        timeInput.value = defaultTime || '09:00';
+    }
+    
+    const modal = document.getElementById('reminder-modal');
+    if (modal) modal.style.display = 'flex';
+    if (window.lucide) window.lucide.createIcons();
+}
+
+function closeReminderModal() {
+    const modal = document.getElementById('reminder-modal');
+    if (modal) modal.style.display = 'none';
+    pendingReminder = null;
+}
+
+function confirmReminder() {
+    if (!pendingReminder) return;
+    const rDate = document.getElementById('remind-date').value;
+    const rTime = document.getElementById('remind-time').value;
+    
+    if (!rDate || !rTime) {
+        alert("Iltimos, sanani va vaqtni kiriting!");
+        return;
+    }
+
+    downloadICS(pendingReminder.title, pendingReminder.description, rDate, rTime);
+    closeReminderModal();
+}
+
+window.openReminderModal = openReminderModal;
+window.closeReminderModal = closeReminderModal;
+window.confirmReminder = confirmReminder;
+
 function downloadICS(title, description, dateStr, timeStr) {
-    if (!timeStr) timeStr = '09:00'; // Default vaqt
+    if (!timeStr) timeStr = '09:00'; 
     if (!dateStr) return;
     
     try {
         const start = new Date(`${dateStr}T${timeStr}:00`);
-        const end = new Date(start.getTime() + 60 * 60 * 1000); // +1 soat davom etadi
+        const end = new Date(start.getTime() + 15 * 60 * 1000); 
         
         const formatDate = (date) => {
             return date.toISOString().replace(/-|:|\.\d+/g, '').substring(0, 15) + 'Z';
@@ -3611,19 +3649,19 @@ function downloadICS(title, description, dateStr, timeStr) {
             `SUMMARY:${title}`,
             `DESCRIPTION:${description || ''}`,
             "BEGIN:VALARM",
-            "TRIGGER:-PT15M", // 15 daqiqa oldin eslatadi
+            "TRIGGER:-PT0M", 
             "ACTION:DISPLAY",
             `DESCRIPTION:Eslatma: ${title}`,
             "END:VALARM",
             "END:VEVENT",
             "END:VCALENDAR"
-        ].join('\\r\\n');
+        ].join('\r\n');
 
         const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = url;
-        link.download = `${title.replace(/\\s+/g, '_')}.ics`;
+        link.download = `${title.replace(/\s+/g, '_')}.ics`;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
