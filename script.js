@@ -3630,22 +3630,35 @@ function downloadICS(title, description, dateStr, timeStr) {
     if (!dateStr) return;
     
     try {
-        const start = new Date(`${dateStr}T${timeStr}:00`);
-        const end = new Date(start.getTime() + 15 * 60 * 1000); 
+        // Build local date object from inputs
+        const localDT = new Date(`${dateStr}T${timeStr}:00`);
         
-        const formatDate = (date) => {
-            return date.toISOString().replace(/-|:|\.\d+/g, '').substring(0, 15) + 'Z';
+        // Google Calendar needs UTC for .ics if using 'Z' suffix
+        // Or local time WITHOUT 'Z' suffix. Let's use local time format as it's more reliable for users' local zones.
+        const formatDateLocal = (date) => {
+            const y = date.getFullYear();
+            const m = String(date.getMonth() + 1).padStart(2, '0');
+            const d = String(date.getDate()).padStart(2, '0');
+            const hh = String(date.getHours()).padStart(2, '0');
+            const mm = String(date.getMinutes()).padStart(2, '0');
+            const ss = String(date.getSeconds()).padStart(2, '0');
+            return `${y}${m}${d}T${hh}${mm}${ss}`;
         };
+
+        const dtStart = formatDateLocal(localDT);
+        const dtEnd = formatDateLocal(new Date(localDT.getTime() + 30 * 60 * 1000)); // 30 min duration
 
         const icsContent = [
             "BEGIN:VCALENDAR",
             "VERSION:2.0",
+            "CALSCALE:GREGORIAN",
+            "METHOD:PUBLISH",
             "PRODID:-//PlanPro//UZ",
             "BEGIN:VEVENT",
-            `UID:${new Date().getTime()}@planpro.uz`,
-            `DTSTAMP:${formatDate(new Date())}`,
-            `DTSTART:${formatDate(start)}`,
-            `DTEND:${formatDate(end)}`,
+            `UID:${Date.now()}@planpro.uz`,
+            `DTSTAMP:${formatDateLocal(new Date())}`,
+            `DTSTART:${dtStart}`,
+            `DTEND:${dtEnd}`,
             `SUMMARY:${title}`,
             `DESCRIPTION:${description || ''}`,
             "BEGIN:VALARM",
