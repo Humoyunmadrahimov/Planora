@@ -3548,20 +3548,22 @@ async function generateAiAnalysis() {
         Foydalanuvchi ma'lumotlari:
         ${JSON.stringify(summaryData)}`;
 
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+        const response = await fetch(`https://planpro.uz/api/ai`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                contents: [{ parts: [{ text: prompt }] }]
+                apiKey: apiKey,
+                prompt: prompt
             })
         });
 
+        const data = await response.json();
+
         if (!response.ok) {
-            throw new Error(response.status === 400 ? 'API kalit xato bo\'lishi mumkin' : 'Tarmoqda xatolik yuz berdi');
+            throw new Error(data.error || 'Tarmoqda xatolik yuz berdi');
         }
 
-        const data = await response.json();
-        const textResponse = data.candidates[0].content.parts[0].text;
+        const textResponse = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Tahlil olinmadi';
         
         resultContent.innerHTML = parseSimpleMarkdown(textResponse);
         dateEle.textContent = new Date().toLocaleDateString('uz-UZ') + ' holatiga';
