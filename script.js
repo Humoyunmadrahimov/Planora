@@ -981,12 +981,13 @@ function renderWeekView(container) {
     for (let i = 0; i < 7; i++) {
         const cellDate = new Date(startOfWeek);
         cellDate.setDate(startOfWeek.getDate() + i);
-        const dateStr = cellDate.toISOString().split('T')[0];
+        const dateStr = `${cellDate.getFullYear()}-${(cellDate.getMonth() + 1).toString().padStart(2, '0')}-${cellDate.getDate().toString().padStart(2, '0')}`;
 
         const cell = document.createElement('div');
         cell.className = 'v3-cell';
         const today = new Date();
-        if (dateStr === today.toISOString().split('T')[0]) cell.classList.add('today');
+        const todayStr = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}`;
+        if (dateStr === todayStr) cell.classList.add('today');
 
         const uzbekDaysFull = ['Dushanba', 'Seshanba', 'Chorshanba', 'Payshanba', 'Juma', 'Shanba', 'Yakshanba'];
         const dayName = uzbekDaysFull[i];
@@ -1014,7 +1015,7 @@ function renderWeekView(container) {
         });
 
         cell.onclick = (e) => {
-            if (e.target === cell || e.target.classList.contains('v3-day-num')) {
+            if (e.target === cell || e.target.classList.contains('v3-day-num') || e.target.closest('.v3-cell-top')) {
                 editingEventId = null;
                 openEventModalWithDate(dateStr, '09:00');
             }
@@ -1050,12 +1051,13 @@ function renderMonthView(container) {
         container.appendChild(empty);
     }
 
-    const todayStr = new Date().toISOString().split('T')[0];
-    const selDateStr = selectedDate.toISOString().split('T')[0];
+    const today = new Date();
+    const todayStr = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getDate().toString().padStart(2, '0')}`;
+    const selDateStr = `${selectedDate.getFullYear()}-${(selectedDate.getMonth() + 1).toString().padStart(2, '0')}-${selectedDate.getDate().toString().padStart(2, '0')}`;
 
     for (let i = 1; i <= lastDayOfMonth.getDate(); i++) {
         const cellDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), i);
-        const dateStr = cellDate.toISOString().split('T')[0];
+        const dateStr = `${cellDate.getFullYear()}-${(cellDate.getMonth() + 1).toString().padStart(2, '0')}-${cellDate.getDate().toString().padStart(2, '0')}`;
 
         const cell = document.createElement('div');
         cell.className = 'v3-cell';
@@ -1087,7 +1089,7 @@ function renderMonthView(container) {
 
         cell.onclick = (e) => {
             if (window.innerWidth <= 768) {
-                selectedDate = new Date(dateStr);
+                selectedDate = new Date(cellDate);
                 renderMonthView(container);
                 renderDayEvents(dateStr);
             } else {
@@ -1107,7 +1109,8 @@ function renderDayEvents(dateStr) {
     if (!panel) return;
 
     const dayEvents = events.filter(e => e.date === dateStr);
-    const d = new Date(dateStr);
+    const parts = dateStr.split('-');
+    const d = new Date(parts[0], parts[1] - 1, parts[2]);
     const monthNames = ["Yanvar", "Fevral", "Mart", "Aprel", "May", "Iyun", "Iyul", "Avgust", "Sentabr", "Oktabr", "Noyabr", "Dekabr"];
     const formattedDate = `${d.getDate()}-${monthNames[d.getMonth()]}`;
 
