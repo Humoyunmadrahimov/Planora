@@ -3549,7 +3549,8 @@ async function generateAiAnalysis() {
         const data = await response.json();
 
         if (!response.ok) {
-            throw new Error(data.error || 'Tarmoqda xatolik yuz berdi');
+            const errorMsg = data.error?.message || data.error || 'Tarmoqda noma\'lum xatolik';
+            throw new Error(typeof errorMsg === 'object' ? JSON.stringify(errorMsg) : errorMsg);
         }
 
         const textResponse = data.candidates?.[0]?.content?.parts?.[0]?.text || 'Tahlil olinmadi';
