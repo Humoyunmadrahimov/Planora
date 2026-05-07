@@ -74,6 +74,10 @@
                     <i data-lucide="edit-3"></i>
                     <span>Qaydlar</span>
                 </a>
+                <a href="#" id="nav-ai" class="nav-item ai-nav-item" onclick="switchTab('ai', this)">
+                    <i data-lucide="sparkles"></i>
+                    <span style="background: linear-gradient(90deg, #8b5cf6, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 600;">AI Tahlil</span>
+                </a>
                 <a href="#" id="admin-nav-item" class="nav-item admin-only" style="display: none;"
                     onclick="switchTab('admin', this)">
                     <i data-lucide="shield-check"></i>
@@ -877,6 +881,54 @@
                                 <div class="info-value" id="det-last-seen">-</div>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI ANALYSIS VIEW -->
+            <div id="view-ai" class="content-view" style="display: none;">
+                <div class="ai-header" style="text-align: center; margin-bottom: 2rem;">
+                    <div class="ai-icon-wrapper" style="font-size: 3rem; margin-bottom: 1rem; display: inline-block; padding: 20px; background: rgba(139, 92, 246, 0.1); border-radius: 50%;">
+                        ✨
+                    </div>
+                    <h2 style="font-size: 2rem; margin-bottom: 10px; background: linear-gradient(90deg, #8b5cf6, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Sun'iy Intellekt Tahlili</h2>
+                    <p style="color: var(--text-muted); max-width: 600px; margin: 0 auto; line-height: 1.6;">
+                        AI sizning barcha kiritilgan vazifalaringiz, kalendar rejalaringiz va moliya tarixini o'rganib chiqib sizga maxsus yutuqlar, xatolar va kelajak uchun moliyaviy maslahatlar tayyorlaydi.
+                    </p>
+                </div>
+
+                <div id="ai-api-key-setup" style="display: none; background: #fff; padding: 2rem; border-radius: 16px; max-width: 600px; margin: 0 auto 2rem; box-shadow: 0 4px 20px rgba(0,0,0,0.05); border: 1px solid var(--border-color);">
+                    <h3 style="margin-bottom: 1rem;"><i data-lucide="key" style="vertical-align: middle; margin-right: 8px;"></i> API Kalit kiritilmagan!</h3>
+                    <p style="margin-bottom: 1.5rem; color: var(--text-muted); font-size: 0.95rem;">
+                        Sun'iy intellekt ishlashi uchun Google Gemini API kaliti kerak. U mutlaqo bepul.<br>
+                        1. <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color: #3b82f6; text-decoration: underline;">aistudio.google.com</a> saytiga kiring.<br>
+                        2. "Create API Key" ni bosing va nusxalang.<br>
+                        3. Pastga joylashtiring.
+                    </p>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="password" id="gemini-key-input" placeholder="AIzaSy..." style="flex: 1; padding: 12px 16px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 1rem; outline: none;">
+                        <button onclick="saveGeminiKey()" class="primary-btn" style="background: #3b82f6;">Saqlash</button>
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin-bottom: 3rem;">
+                    <button id="btn-generate-ai" onclick="generateAiAnalysis()" style="background: linear-gradient(135deg, #8b5cf6, #ec4899); color: white; border: none; padding: 16px 32px; border-radius: 12px; font-size: 1.1rem; font-weight: 600; cursor: pointer; box-shadow: 0 10px 25px rgba(139, 92, 246, 0.3); transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 10px;">
+                        <i data-lucide="zap"></i> Tahlilni Boshlash
+                    </button>
+                </div>
+
+                <div id="ai-loading" style="display: none; text-align: center; padding: 3rem;">
+                    <div class="loader" style="border: 4px solid rgba(139, 92, 246, 0.1); border-left-color: #8b5cf6; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto 1rem;"></div>
+                    <p style="color: var(--text-muted); font-weight: 500;">Ma'lumotlar o'qilmoqda va AI o'ylanmoqda...<br><span style="font-size:0.85rem; opacity:0.7">Bu 10-15 soniya vaqt olishi mumkin</span></p>
+                </div>
+
+                <div id="ai-result-container" style="display: none; background: #fff; border-radius: 20px; padding: 2.5rem; box-shadow: 0 10px 40px rgba(0,0,0,0.06); border: 1px solid rgba(139, 92, 246, 0.1); line-height: 1.8;">
+                    <div class="ai-result-header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem; margin-bottom: 1.5rem;">
+                        <h3 style="margin: 0; color: #1e293b; font-size: 1.4rem;">Tahlil Xulosasi</h3>
+                        <span id="ai-date" style="font-size: 0.9rem; color: var(--text-muted); background: var(--bg-color); padding: 4px 12px; border-radius: 20px;"></span>
+                    </div>
+                    <div id="ai-result-content" class="markdown-body" style="color: #334155;">
+                        <!-- AI HTML Result goes here -->
                     </div>
                 </div>
             </div>

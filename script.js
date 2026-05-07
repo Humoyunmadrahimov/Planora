@@ -3491,5 +3491,98 @@ function logout() {
 }
 window.logout = logout;
 
+// --- AI Tahlil Logic ---
+function saveGeminiKey() {
+    const key = document.getElementById('gemini-key-input').value.trim();
+    if (!key) return alert('Iltimos, kalitni kiriting!');
+    localStorage.setItem('gemini_api_key', key);
+    alert('Kalit muvaffaqiyatli saqlandi!');
+    document.getElementById('ai-api-key-setup').style.display = 'none';
+}
 
+function parseSimpleMarkdown(text) {
+    let html = text
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*(.*?)\*/g, '<em>$1</em>')
+        .replace(/### (.*?)\n/g, '<h4>$1</h4>')
+        .replace(/## (.*?)\n/g, '<h3>$1</h3>')
+        .replace(/# (.*?)\n/g, '<h2>$1</h2>')
+        .replace(/\n- (.*?)(?=\n|$)/g, '<ul><li>$1</li></ul>')
+        .replace(/<\/ul>\n<ul>/g, '\n')
+        .replace(/\n/g, '<br>');
+    return html;
+}
 
+async function generateAiAnalysis() {
+    const apiKey = localStorage.getItem('gemini_api_key');
+    if (!apiKey) {
+        document.getElementById('ai-api-key-setup').style.display = 'block';
+        return;
+    }
+
+    const btn = document.getElementById('btn-generate-ai');
+    const loading = document.getElementById('ai-loading');
+    const resultContainer = document.getElementById('ai-result-container');
+    const resultContent = document.getElementById('ai-result-content');
+    const dateEle = document.getElementById('ai-date');
+
+    btn.style.display = 'none';
+    loading.style.display = 'block';
+    resultContainer.style.display = 'none';
+
+    try {
+        // Collect user data
+        const summaryData = {
+            tasks: tasks.map(t => ({ title: t.title, status: t.status, deadline: t.deadline })),
+            events: events.map(e => ({ title: e.title, date: e.date, type: e.type })),
+            transactions: transactions.map(t => ({ type: t.type, amount: t.amount, category: t.desc || 'Boshqa', date: new Date(t.date).toLocaleDateString() }))
+        };
+
+        const prompt = `Sen foydalanuvchining shaxsiy yordamchisi va moliyaviy tahlilchisisan. Quyidagi ma'lumotlar foydalanuvchining oylik rejalari, vazifalari va moliyaviy harajatlaridir. Shu ma'lumotlarni tahlil qilib, o'zbek tilida chiroyli, motivatsion va foydali hisobot yozib ber. 
+        Tahlilda bo'lishi shart:
+        1. Vazifalar va kalendar rejalari bo'yicha xulosa (Qancha ish bajargan, nimalarga ko'proq e'tibor berish kerak).
+        2. Moliyaviy tahlil (Kirim va chiqimlarni taqqoslash, qaysi yo'nalishga eng ko'p pul ketgani).
+        3. Tejash va samaradorlik uchun 2-3 ta shaxsiy maslahat.
+        Markdown formatidan foydalanib chiroyli qilib yoz (qalin harflar, emoji va listlar bilan).
+
+        Foydalanuvchi ma'lumotlari:
+        ${JSON.stringify(summaryData)}`;
+
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                contents: [{ parts: [{ text: prompt }] }]
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error(response.status === 400 ? 'API kalit xato bo\'lishi mumkin' : 'Tarmoqda xatolik yuz berdi');
+        }
+
+        const data = await response.json();
+        const textResponse = data.candidates[0].content.parts[0].text;
+        
+        resultContent.innerHTML = parseSimpleMarkdown(textResponse);
+        dateEle.textContent = new Date().toLocaleDateString('uz-UZ') + ' holatiga';
+        
+        loading.style.display = 'none';
+        resultContainer.style.display = 'block';
+        btn.style.display = 'inline-flex';
+        btn.innerHTML = '<i data-lucide="refresh-cw"></i> Qaytadan Tahlil Qilish';
+        if (window.lucide) window.lucide.createIcons();
+
+    } catch (error) {
+        console.error('AI xatosi:', error);
+        alert('Tahlil qilishda xatolik yuz berdi: ' + error.message);
+        btn.style.display = 'inline-flex';
+        loading.style.display = 'none';
+        
+        if (error.message.includes('xato')) {
+            document.getElementById('ai-api-key-setup').style.display = 'block';
+            localStorage.removeItem('gemini_api_key');
+        }
+    }
+}
+window.generateAiAnalysis = generateAiAnalysis;
+window.saveGeminiKey = saveGeminiKey;
