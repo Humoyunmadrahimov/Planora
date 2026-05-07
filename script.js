@@ -3538,7 +3538,7 @@ async function generateAiAnalysis() {
         Foydalanuvchi ma'lumotlari:
         ${JSON.stringify(summaryData)}`;
 
-        const response = await fetch(`https://planpro.uz/api/ai`, {
+        const response = await fetch(`/api/ai`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
