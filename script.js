@@ -725,6 +725,13 @@ function addKanbanTask() {
     renderDashboardSummary();
     closeTaskModal();
 
+    if (deadline && !editId) {
+        // Avtomatik ravishda so'raymiz
+        if (confirm("Bu vazifa uchun telefoningiz kalendariga avtomatik eslatma (budilnik) qo'shishni xohlaysizmi?")) {
+            downloadICS(title, desc, deadline, '09:00'); // Default time for tasks without time
+        }
+    }
+
     // Reset inputs
     titleEle.value = '';
     descEle.value = '';
@@ -1353,6 +1360,12 @@ function addEvent() {
     renderCalendar();
     renderDashboardSummary();
     closeEventModal();
+
+    if (!editingEventId) {
+        if (confirm("Bu uchrashuv/voqeani telefoningiz kalendariga va eslatmalarga (budilnik) qo'shishni xohlaysizmi?")) {
+            downloadICS(title, desc, dateVal, time);
+        }
+    }
 }
 
 function deleteCurrentEvent() {
@@ -3572,3 +3585,51 @@ async function generateAiAnalysis() {
     }
 }
 window.generateAiAnalysis = generateAiAnalysis;
+
+// --- Eslatma (Calendar Sync) Logic ---
+function downloadICS(title, description, dateStr, timeStr) {
+    if (!timeStr) timeStr = '09:00'; // Default vaqt
+    if (!dateStr) return;
+    
+    try {
+        const start = new Date(`${dateStr}T${timeStr}:00`);
+        const end = new Date(start.getTime() + 60 * 60 * 1000); // +1 soat davom etadi
+        
+        const formatDate = (date) => {
+            return date.toISOString().replace(/-|:|\.\d+/g, '').substring(0, 15) + 'Z';
+        };
+
+        const icsContent = [
+            "BEGIN:VCALENDAR",
+            "VERSION:2.0",
+            "PRODID:-//PlanPro//UZ",
+            "BEGIN:VEVENT",
+            `UID:${new Date().getTime()}@planpro.uz`,
+            `DTSTAMP:${formatDate(new Date())}`,
+            `DTSTART:${formatDate(start)}`,
+            `DTEND:${formatDate(end)}`,
+            `SUMMARY:${title}`,
+            `DESCRIPTION:${description || ''}`,
+            "BEGIN:VALARM",
+            "TRIGGER:-PT15M", // 15 daqiqa oldin eslatadi
+            "ACTION:DISPLAY",
+            `DESCRIPTION:Eslatma: ${title}`,
+            "END:VALARM",
+            "END:VEVENT",
+            "END:VCALENDAR"
+        ].join('\\r\\n');
+
+        const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `${title.replace(/\\s+/g, '_')}.ics`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+    } catch (e) {
+        console.error("Kalendarga qo'shishda xatolik:", e);
+    }
+}
+window.downloadICS = downloadICS;
