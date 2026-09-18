@@ -171,6 +171,9 @@
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta name="apple-mobile-web-app-title" content="Intizom" />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
     <link rel="apple-touch-icon" href="/icon-192.png" />
   </head>
 
@@ -180,18 +183,38 @@
     </noscript>
     <!-- The root element for your Expo app. -->
     <div id="root"></div>
-    <script src="/_expo/static/js/web/index-ab4b17a82c1714020a2bca72c5267e96.js" defer></script>
+    <script src="/_expo/static/js/web/index-c14e54ef5d6ca548aebe64a8e2d8c8c2.js?v=2" defer></script>
     <script>
+      // Service Worker registration with instant update
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', function() {
           navigator.serviceWorker.register('/sw.js', { updateViaCache: 'none' }).then(function(reg) {
             reg.update();
-            console.log('Intizom Service Worker registered successfully with scope:', reg.scope);
+            console.log('Intizom Service Worker active:', reg.scope);
           }).catch(function(err) {
-            console.warn('Service Worker registration failed:', err);
+            console.warn('Service Worker registration:', err);
           });
         });
       }
+
+      // Auto-recovery: if user has a stale/broken cached bundle and #root is empty after 2.5s, clean and reload
+      window.addEventListener('load', function() {
+        setTimeout(function() {
+          var root = document.getElementById('root');
+          if (root && (!root.innerHTML || root.innerHTML.trim() === '')) {
+            console.warn('Empty root detected. Auto-recovering...');
+            if ('caches' in window) {
+              caches.keys().then(function(keys) {
+                keys.forEach(function(k) { caches.delete(k); });
+              });
+            }
+            if (!sessionStorage.getItem('reloaded_auto_fix')) {
+              sessionStorage.setItem('reloaded_auto_fix', '1');
+              window.location.reload();
+            }
+          }
+        }, 2500);
+      });
     </script>
   </body>
 </html>
