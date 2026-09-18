@@ -163,6 +163,15 @@
     </style>
 
     <link rel="icon" href="/favicon.ico"/>
+
+    <!-- PWA & Mobile Web App Meta Tags -->
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#3525CD" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Intizom" />
+    <link rel="apple-touch-icon" href="/icon-192.png" />
   </head>
 
   <body>
@@ -171,6 +180,17 @@
     </noscript>
     <!-- The root element for your Expo app. -->
     <div id="root"></div>
-    <script src="/_expo/static/js/web/index-14ee33624dfb0d2de785ad0a2de90f4e.js" defer></script>
+    <script src="/_expo/static/js/web/index-ab4b17a82c1714020a2bca72c5267e96.js" defer></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('/sw.js').then(function(reg) {
+            console.log('Intizom Service Worker registered successfully with scope:', reg.scope);
+          }).catch(function(err) {
+            console.warn('Service Worker registration failed:', err);
+          });
+        });
+      }
+    </script>
   </body>
 </html>
