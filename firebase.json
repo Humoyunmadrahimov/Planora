@@ -1,5 +1,6 @@
 {
   "hosting": {
+    "site": "myplans-62ccd",
     "public": ".",
     "ignore": [
       "firebase.json",
