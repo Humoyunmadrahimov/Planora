@@ -165,6 +165,65 @@
       }
     </style>
 
+    <!-- Micro-animations & Interactive Web Styles -->
+    <style id="planora-micro-animations">
+      /* 1. Live Radar Pulse Ping for ongoing meetings */
+      @keyframes pulseRadarWave {
+        0% {
+          transform: scale(0.9);
+          opacity: 0.85;
+        }
+        70% {
+          transform: scale(2.4);
+          opacity: 0;
+        }
+        100% {
+          transform: scale(2.4);
+          opacity: 0;
+        }
+      }
+
+      /* 2. Streak Flame Gentle Glow & Pulse */
+      @keyframes flameFlicker {
+        0%, 100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.22);
+          filter: drop-shadow(0 0 4px rgba(245, 158, 11, 0.7));
+        }
+      }
+
+      .web-pulse-wave {
+        animation: pulseRadarWave 1.6s infinite cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+      }
+
+      .web-flame-icon {
+        display: inline-block;
+        animation: flameFlicker 2s infinite ease-in-out !important;
+      }
+
+      /* Interactive Web Card Elevation on Hover */
+      .web-card-hover {
+        transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease !important;
+      }
+      .web-card-hover:hover {
+        transform: translateY(-3px) !important;
+        box-shadow: 0 12px 28px -6px rgba(15, 23, 42, 0.08) !important;
+        border-color: rgba(53, 37, 205, 0.3) !important;
+      }
+
+      /* Interactive Task Row */
+      .web-task-hover {
+        transition: transform 0.18s ease, background-color 0.18s ease, border-color 0.18s ease !important;
+      }
+      .web-task-hover:hover {
+        transform: translateX(4px) !important;
+        background-color: #F8FAFC !important;
+        border-color: rgba(53, 37, 205, 0.25) !important;
+      }
+    </style>
+
     <link rel="icon" href="/favicon.ico"/>
 
     <!-- PWA & Mobile Web App Meta Tags -->
@@ -186,7 +245,7 @@
     </noscript>
     <!-- The root element for your Expo app. -->
     <div id="root"></div>
-    <script src="/_expo/static/js/web/index-2cba512441c2e7e627bb07bc0855b879.js?v=34" defer></script>
+    <script src="/_expo/static/js/web/index-55fca2864d1d8267e09e979facde75ee.js?v=35" defer></script>
     <script>
       // Service Worker registration with instant update
       if ('serviceWorker' in navigator) {
