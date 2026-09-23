@@ -245,7 +245,7 @@
     </noscript>
     <!-- The root element for your Expo app. -->
     <div id="root"></div>
-    <script src="/_expo/static/js/web/index-b0d327c480ac31395544b37b8c79e69f.js?v=37" defer></script>
+    <script src="/_expo/static/js/web/index-b6436e2c86a6252c78e853bfc0ea91e1.js?v=50" defer></script>
     <script>
       // Service Worker registration with instant update
       if ('serviceWorker' in navigator) {
@@ -259,7 +259,7 @@
         });
       }
 
-      // Auto-recovery: if user has a stale/broken cached bundle and #root is empty after 2.5s, clean and reload
+      // Auto-recovery: if user has a stale/broken cached bundle and #root is empty after 6s, clean and reload
       window.addEventListener('load', function() {
         setTimeout(function() {
           var root = document.getElementById('root');
@@ -275,7 +275,7 @@
               window.location.reload();
             }
           }
-        }, 2500);
+        }, 6000);
       });
     </script>
   </body>
