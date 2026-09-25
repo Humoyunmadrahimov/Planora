@@ -1,4 +1,4 @@
-// Service Worker for Intizom PWA & Push Notifications - v78
+// Service Worker for Intizom PWA & Push Notifications - v79
 self.addEventListener('install', (event) => {
   self.skipWaiting();
 });
