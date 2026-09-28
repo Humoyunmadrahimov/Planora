@@ -1,282 +1,589 @@
 <!DOCTYPE html>
-<html lang="uz">
-  <head>
-    <meta charset="utf-8" />
-    <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-    <meta http-equiv="Pragma" content="no-cache" />
-    <meta http-equiv="Expires" content="0" />
-    <title>My Plans — Shaxsiy mahsuldorlik, kun tartibi va odatlar tizimi</title>
+<html lang="en">
 
-    <!-- Google Fonts: Plus Jakarta Sans & Material Symbols -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
-
-    <!-- The `react-native-web` recommended style reset -->
-    <style id="expo-reset">
-      html,
-      body {
-        height: 100%;
-        margin: 0;
-        padding: 0;
-        background-color: #FAF8FF;
-      }
-      body {
-        overflow: hidden;
-        font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      }
-      #root {
-        display: flex;
-        height: 100%;
-        flex: 1;
-      }
-    </style>
-
-    <!-- Vector Icon Fonts Definition -->
-    <style id="expo-vector-icons">
-      @font-face {
-        font-family: 'ionicons';
-        src: url('/fonts/Ionicons.ttf') format('truetype'),
-             url('https://cdn.jsdelivr.net/npm/@expo/vector-icons@14.0.0/build/vendor/react-native-vector-icons/Fonts/Ionicons.ttf') format('truetype');
-        font-weight: normal;
-        font-style: normal;
-      }
-      @font-face {
-        font-family: 'Ionicons';
-        src: url('/fonts/Ionicons.ttf') format('truetype'),
-             url('https://cdn.jsdelivr.net/npm/@expo/vector-icons@14.0.0/build/vendor/react-native-vector-icons/Fonts/Ionicons.ttf') format('truetype');
-        font-weight: normal;
-        font-style: normal;
-      }
-      @font-face {
-        font-family: 'material';
-        src: url('/fonts/MaterialIcons.ttf') format('truetype'),
-             url('https://cdn.jsdelivr.net/npm/@expo/vector-icons@14.0.0/build/vendor/react-native-vector-icons/Fonts/MaterialIcons.ttf') format('truetype');
-        font-weight: normal;
-        font-style: normal;
-      }
-      @font-face {
-        font-family: 'MaterialIcons';
-        src: url('/fonts/MaterialIcons.ttf') format('truetype'),
-             url('https://cdn.jsdelivr.net/npm/@expo/vector-icons@14.0.0/build/vendor/react-native-vector-icons/Fonts/MaterialIcons.ttf') format('truetype');
-        font-weight: normal;
-        font-style: normal;
-      }
-      @font-face {
-        font-family: 'Material Icons';
-        src: url('/fonts/MaterialIcons.ttf') format('truetype'),
-             url('https://cdn.jsdelivr.net/npm/@expo/vector-icons@14.0.0/build/vendor/react-native-vector-icons/Fonts/MaterialIcons.ttf') format('truetype');
-        font-weight: normal;
-        font-style: normal;
-      }
-      @font-face {
-        font-family: 'material-community';
-        src: url('/fonts/MaterialCommunityIcons.ttf') format('truetype'),
-             url('https://cdn.jsdelivr.net/npm/@expo/vector-icons@14.0.0/build/vendor/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf') format('truetype');
-        font-weight: normal;
-        font-style: normal;
-      }
-      @font-face {
-        font-family: 'MaterialCommunityIcons';
-        src: url('/fonts/MaterialCommunityIcons.ttf') format('truetype'),
-             url('https://cdn.jsdelivr.net/npm/@expo/vector-icons@14.0.0/build/vendor/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf') format('truetype');
-        font-weight: normal;
-        font-style: normal;
-      }
-      @font-face {
-        font-family: 'feather';
-        src: url('/fonts/Feather.ttf') format('truetype'),
-             url('https://cdn.jsdelivr.net/npm/@expo/vector-icons@14.0.0/build/vendor/react-native-vector-icons/Fonts/Feather.ttf') format('truetype');
-        font-weight: normal;
-        font-style: normal;
-      }
-      @font-face {
-        font-family: 'Feather';
-        src: url('/fonts/Feather.ttf') format('truetype'),
-             url('https://cdn.jsdelivr.net/npm/@expo/vector-icons@14.0.0/build/vendor/react-native-vector-icons/Fonts/Feather.ttf') format('truetype');
-        font-weight: normal;
-        font-style: normal;
-      }
-      @font-face {
-        font-family: 'fontawesome';
-        src: url('/fonts/FontAwesome.ttf') format('truetype'),
-             url('https://cdn.jsdelivr.net/npm/@expo/vector-icons@14.0.0/build/vendor/react-native-vector-icons/Fonts/FontAwesome.ttf') format('truetype');
-        font-weight: normal;
-        font-style: normal;
-      }
-      @font-face {
-        font-family: 'FontAwesome';
-        src: url('/fonts/FontAwesome.ttf') format('truetype'),
-             url('https://cdn.jsdelivr.net/npm/@expo/vector-icons@14.0.0/build/vendor/react-native-vector-icons/Fonts/FontAwesome.ttf') format('truetype');
-        font-weight: normal;
-        font-style: normal;
-      }
-
-      /* Global font styling and anti-aliasing */
-      *, *::before, *::after {
-        -webkit-font-smoothing: antialiased !important;
-        -moz-osx-font-smoothing: grayscale !important;
-        text-rendering: optimizeLegibility !important;
-      }
-
-      body, #root, input, button, select, textarea {
-        font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
-        -webkit-font-smoothing: antialiased !important;
-        -moz-osx-font-smoothing: grayscale !important;
-        text-rendering: optimizeLegibility !important;
-      }
-
-      /* Icon font overrides to ensure vector icons render correctly */
-      [style*="font-family: ionicons"],
-      [style*="font-family: Ionicons"],
-      [style*='font-family: "ionicons"'],
-      [style*='font-family: "Ionicons"'],
-      [style*="font-family: 'ionicons'"],
-      [style*="font-family: 'Ionicons'"] {
-        font-family: 'ionicons', 'Ionicons' !important;
-      }
-      [style*="font-family: material"],
-      [style*="font-family: MaterialIcons"],
-      [style*="font-family: 'Material Icons'"],
-      [style*='font-family: "Material Icons"'],
-      [style*='font-family: "MaterialIcons"'] {
-        font-family: 'material', 'MaterialIcons', 'Material Icons' !important;
-      }
-      [style*="font-family: material-community"],
-      [style*="font-family: MaterialCommunityIcons"],
-      [style*='font-family: "material-community"'],
-      [style*='font-family: "MaterialCommunityIcons"'] {
-        font-family: 'material-community', 'MaterialCommunityIcons' !important;
-      }
-      [style*="font-family: feather"],
-      [style*="font-family: Feather"],
-      [style*='font-family: "feather"'],
-      [style*='font-family: "Feather"'] {
-        font-family: 'feather', 'Feather' !important;
-      }
-      [style*="font-family: fontawesome"],
-      [style*="font-family: FontAwesome"],
-      [style*='font-family: "fontawesome"'],
-      [style*='font-family: "FontAwesome"'] {
-        font-family: 'fontawesome', 'FontAwesome' !important;
-      }
-    </style>
-
-    <!-- Micro-animations & Interactive Web Styles -->
-    <style id="planora-micro-animations">
-      /* 1. Live Radar Pulse Ping for ongoing meetings */
-      @keyframes pulseRadarWave {
-        0% {
-          transform: scale(0.9);
-          opacity: 0.85;
-        }
-        70% {
-          transform: scale(2.4);
-          opacity: 0;
-        }
-        100% {
-          transform: scale(2.4);
-          opacity: 0;
-        }
-      }
-
-      /* 2. Streak Flame Gentle Glow & Pulse */
-      @keyframes flameFlicker {
-        0%, 100% {
-          transform: scale(1);
-        }
-        50% {
-          transform: scale(1.22);
-          filter: drop-shadow(0 0 4px rgba(245, 158, 11, 0.7));
-        }
-      }
-
-      .web-pulse-wave {
-        animation: pulseRadarWave 1.6s infinite cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
-      }
-
-      .web-flame-icon {
-        display: inline-block;
-        animation: flameFlicker 2s infinite ease-in-out !important;
-      }
-
-      /* Interactive Web Card Elevation on Hover */
-      .web-card-hover {
-        transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease !important;
-      }
-      .web-card-hover:hover {
-        transform: translateY(-3px) !important;
-        box-shadow: 0 12px 28px -6px rgba(15, 23, 42, 0.08) !important;
-        border-color: rgba(53, 37, 205, 0.3) !important;
-      }
-
-      /* Interactive Task Row */
-      .web-task-hover {
-        transition: transform 0.18s ease, background-color 0.18s ease, border-color 0.18s ease !important;
-      }
-      .web-task-hover:hover {
-        transform: translateX(4px) !important;
-        background-color: #F8FAFC !important;
-        border-color: rgba(53, 37, 205, 0.25) !important;
-      }
-    </style>
-
-    <link rel="icon" href="/favicon.ico"/>
-
-    <!-- PWA & Mobile Web App Meta Tags -->
-    <link rel="manifest" href="/manifest.json" />
-    <meta name="theme-color" content="#3525CD" />
-    <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-    <meta name="apple-mobile-web-app-title" content="Intizom" />
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-    <meta http-equiv="Pragma" content="no-cache" />
-    <meta http-equiv="Expires" content="0" />
-    <link rel="apple-touch-icon" href="/icon-192.png" />
-  </head>
-
-  <body>
-    <noscript>
-      You need to enable JavaScript to run this app.
-    </noscript>
-    <!-- The root element for your Expo app. -->
-    <div id="root"></div>
-    <script src="/_expo/static/js/web/index-ab798468e919ccf0bcda835961419bd4.js?v=81" defer></script>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PlanPro - Sizning online yordamchinggiz</title>
+    <link rel="manifest" href="manifest.json?v=2">
+    <meta name="theme-color" content="#6B4EFF">
+    <link rel="icon" type="image/png" href="assets/p.png">
+    <link rel="apple-touch-icon" href="assets/p.png">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=2.0_debug">
+    <script src="https://unpkg.com/lucide@latest"></script>
     <script>
-      // Service Worker registration with instant update
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', function() {
-          navigator.serviceWorker.register('/sw.js', { updateViaCache: 'none' }).then(function(reg) {
-            reg.update();
-            console.log('Intizom Service Worker active:', reg.scope);
-          }).catch(function(err) {
-            console.warn('Service Worker registration:', err);
-          });
-        });
-      }
+        // Agar foydalanuvchi tizimga kirgan bo'lsa, to'g'ridan-to'g'ri dashboardga o'tish
+        try {
+            if (localStorage.getItem('dashboard_current_user')) {
+                window.location.replace('dashboard.html');
+            }
+        } catch (e) {}
 
-      // Auto-recovery: if user has a stale/broken cached bundle and #root is empty after 6s, clean and reload
-      window.addEventListener('load', function() {
-        setTimeout(function() {
-          var root = document.getElementById('root');
-          if (root && (!root.innerHTML || root.innerHTML.trim() === '')) {
-            console.warn('Empty root detected. Auto-recovering...');
-            if ('caches' in window) {
-              caches.keys().then(function(keys) {
-                keys.forEach(function(k) { caches.delete(k); });
-              });
+        // Force version update
+        (function () {
+            const VERSION = '3.0.0';
+            if (localStorage.getItem('app_v') !== VERSION) {
+                localStorage.setItem('app_v', VERSION);
+                if ('caches' in window) {
+                    caches.keys().then(names => names.forEach(n => caches.delete(n)));
+                }
+                window.location.reload(true);
             }
-            if (!sessionStorage.getItem('reloaded_auto_fix')) {
-              sessionStorage.setItem('reloaded_auto_fix', '1');
-              window.location.reload();
-            }
-          }
-        }, 6000);
-      });
+        })();
     </script>
-  </body>
+    <style>
+        body,
+        html {
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #F7F8FA 0%, #EBE6FB 100%);
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .auth-container {
+            width: 100%;
+            max-width: 480px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .auth-header h1 {
+            font-size: 2rem;
+            color: #5D6370;
+            margin-bottom: 8px;
+        }
+
+        .auth-header p {
+            color: #718096;
+            font-size: 0.95rem;
+        }
+
+        .logo-text-large {
+            display: block;
+            width: 320px;
+            /* Increased from 250px */
+            height: 100px;
+            /* Increased from 80px */
+            margin: 0 auto 30px;
+            background-image: url('assets/logo.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #2D3748;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #E2E8F0;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-family: inherit;
+            color: #2D3748;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #7C4DFF;
+            box-shadow: 0 0 0 4px rgba(124, 77, 255, 0.1);
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            background: #7C4DFF;
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-submit:hover {
+            background: #6A38F0;
+            transform: translateY(-2px);
+        }
+
+        .error-message {
+            color: #EF5C91;
+            font-size: 0.9rem;
+            text-align: center;
+            margin-top: 5px;
+            min-height: 20px;
+            display: none;
+        }
+
+        .switch-auth {
+            text-align: center;
+            margin-top: 15px;
+            color: #718096;
+            font-size: 0.9rem;
+        }
+
+        .switch-auth a {
+            color: #7C4DFF;
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .switch-auth a:hover {
+            text-decoration: underline;
+        }
+
+        .forgot-pass {
+            text-align: right;
+            margin-top: 8px;
+            font-size: 0.85rem;
+        }
+
+        .forgot-pass a {
+            color: #718096;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .forgot-pass a:hover {
+            color: #7C4DFF;
+        }
+
+        #recovery-success {
+            color: #4CAF50;
+            background: #E8F5E9;
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 15px;
+            display: none;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        /* Success Modal Styles */
+        .success-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(124, 77, 255, 0.1);
+            backdrop-filter: blur(8px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .success-card {
+            background: white;
+            padding: 40px;
+            border-radius: 30px;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 90%;
+            transform: scale(0.8);
+            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: #4ADB97;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 40px;
+            box-shadow: 0 10px 20px rgba(74, 219, 151, 0.3);
+        }
+
+        .success-card h2 {
+            color: #2D3748;
+            margin-bottom: 10px;
+            font-size: 1.5rem;
+        }
+
+        .success-card p {
+            color: #718096;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes popIn {
+            to {
+                transform: scale(1);
+            }
+        }
+
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #7C4DFF;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="auth-container">
+        <div class="logo-text-large"></div>
+
+        <div id="login-form">
+            <div class="auth-header">
+                <h1>Hush kelibsiz!</h1>
+                <p>Vazifalar, moliya xisob-kitoblar, kalendar va qaydlar bir joyda!</p>
+            </div>
+            <form onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label>Login</label>
+                    <input type="text" id="username" class="form-input" placeholder="admin" required>
+                </div>
+                <div class="form-group" style="margin-top: 15px;">
+                    <label>Parol</label>
+                    <input type="password" id="password" class="form-input" placeholder="Parolni kiriting" required>
+                </div>
+                <div class="forgot-pass">
+                    <a onclick="toggleAuth('recovery')">Parolni unutdingizmi?</a>
+                </div>
+                <p id="login-error" class="error-message">Login yoki parol noto'g'ri.</p>
+                <button type="submit" class="btn-submit" style="margin-top: 20px;">Kirish <i
+                        data-lucide="arrow-right"></i></button>
+            </form>
+            <div class="switch-auth">
+                Accountingiz yo'qmi? <a onclick="toggleAuth('register')">Ro'yxatdan o'tish</a>
+            </div>
+        </div>
+
+        <div id="register-form" style="display: none;">
+            <div class="auth-header">
+                <h1>Ro'yxatdan o'tish</h1>
+                <p>PlanPro bilan ishlashni boshlang</p>
+            </div>
+            <form onsubmit="handleRegister(event)">
+                <div class="form-group">
+                    <label>Ism Familiya</label>
+                    <input type="text" id="reg-name" class="form-input" placeholder="Aziz Rahimov" required>
+                </div>
+                <div class="form-group">
+                    <label>Telefon raqam</label>
+                    <input type="tel" id="reg-phone" class="form-input" placeholder="+998 90 123 45 67" required>
+                </div>
+                <div class="form-group">
+                    <label>Gmail</label>
+                    <input type="email" id="reg-email" class="form-input" placeholder="aziz@gmail.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Login</label>
+                    <input type="text" id="reg-login" class="form-input" placeholder="aziz_dev" required>
+                </div>
+                <div class="form-group">
+                    <label>Parol</label>
+                    <input type="password" id="reg-password" class="form-input" placeholder="Parol o'ylab toping"
+                        required>
+                </div>
+                <p id="reg-error" class="error-message"></p>
+                <button type="submit" class="btn-submit" style="margin-top: 20px;">Ro'yxatdan o'tish <i
+                        data-lucide="user-plus"></i></button>
+            </form>
+            <div class="switch-auth">
+                Accountingiz bormi? <a onclick="toggleAuth('login')">Kirish</a>
+            </div>
+        </div>
+
+        <div id="recovery-form" style="display: none;">
+            <div class="auth-header">
+                <h1>Parolni tiklash</h1>
+                <p>Gmail va Telefon orqali parolni bilib oling</p>
+            </div>
+            <form onsubmit="handleRecovery(event)">
+                <div class="form-group">
+                    <label>Gmail manzilingiz</label>
+                    <input type="email" id="rec-email" class="form-input" placeholder="aziz@gmail.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Telefon raqam</label>
+                    <input type="tel" id="rec-phone" class="form-input" placeholder="+998 90 123 45 67" required>
+                </div>
+                <p id="recovery-error" class="error-message"></p>
+                <div id="recovery-success"></div>
+                <button type="submit" class="btn-submit" style="margin-top: 20px;">Tekshirish <i
+                        data-lucide="search"></i></button>
+            </form>
+            <div class="switch-auth">
+                <a onclick="toggleAuth('login')">Kirishga qaytish</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="success-modal" class="success-overlay">
+        <div class="success-card">
+            <div class="success-icon">
+                <i data-lucide="party-popper"></i>
+            </div>
+            <h2>Tabriklaymiz! ЁЯОЙ</h2>
+            <p>Siz muvaffaqiyatli ro'yxatdan o'tdingiz! Endi platformadan to'liq foydalanishingiz mumkin.</p>
+            <button class="btn-submit" onclick="closeSuccessModal()">Davom etish</button>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, set, get, child, update, remove, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyB2rC90acnHu8X0HAgZtZUBoHXrcXAbk6g",
+            authDomain: "planora-d4b14.firebaseapp.com",
+            projectId: "planora-d4b14",
+            storageBucket: "planora-d4b14.firebasestorage.app",
+            messagingSenderId: "651562345074",
+            appId: "1:651562345074:web:87c5857cabf5f6bdaa18eb",
+            measurementId: "G-G0S3K55N7X"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        // Export to window for global access
+        window.firebaseDB = db;
+        window.firebaseRef = ref;
+        window.firebaseSet = set;
+        window.firebaseGet = get; // Added explicit export
+        window.firebaseChild = child;
+        window.firebaseUpdate = update;
+        window.firebaseRemove = remove;
+        window.firebaseOnValue = onValue;
+
+        // Backward compatibility for old calls in this file
+        window.db = db;
+        window.ref = ref;
+        window.set = set;
+        window.get = get;
+        window.child = child;
+    </script>
+
+    <script>
+        lucide.createIcons();
+
+        function toggleAuth(mode) {
+            const loginForm = document.getElementById('login-form');
+            const registerForm = document.getElementById('register-form');
+            const recoveryForm = document.getElementById('recovery-form');
+
+            document.getElementById('login-error').style.display = 'none';
+            document.getElementById('reg-error').style.display = 'none';
+            document.getElementById('recovery-error').style.display = 'none';
+            document.getElementById('recovery-success').style.display = 'none';
+
+            loginForm.style.display = (mode === 'login') ? 'block' : 'none';
+            registerForm.style.display = (mode === 'register') ? 'block' : 'none';
+            recoveryForm.style.display = (mode === 'recovery') ? 'block' : 'none';
+        }
+
+        async function handleRecovery(e) {
+            e.preventDefault();
+            const email = document.getElementById('rec-email').value.trim();
+            const phone = document.getElementById('rec-phone').value.trim();
+            const errorMsg = document.getElementById('recovery-error');
+            const successMsg = document.getElementById('recovery-success');
+
+            errorMsg.textContent = 'Tekshirilmoqda...';
+            errorMsg.style.display = 'block';
+
+            try {
+                const snapshot = await window.get(window.ref(window.db, 'users'));
+                if (snapshot.exists()) {
+                    const usersData = snapshot.val();
+                    let foundUser = null;
+
+                    for (let login in usersData) {
+                        const u = usersData[login];
+                        if (u.email === email && u.phone === phone) {
+                            foundUser = u;
+                            break;
+                        }
+                    }
+
+                    if (foundUser) {
+                        errorMsg.style.display = 'none';
+                        successMsg.style.display = 'block';
+                        successMsg.innerHTML = `Sizning parolingiz: <strong style="font-size: 1.2rem; color: #7C4DFF;">${foundUser.password}</strong><br><small>Iltimos, uni eslab qoling!</small>`;
+                    } else {
+                        throw new Error('Bunday ma\'lumotlarga ega foydalanuvchi topilmadi.');
+                    }
+                } else {
+                    throw new Error('Hali hech qanday foydalanuvchi ro\'yxatdan o\'tmagan.');
+                }
+            } catch (error) {
+                successMsg.style.display = 'none';
+                errorMsg.style.display = 'block';
+                errorMsg.textContent = error.message;
+            }
+        }
+
+        async function handleLogin(e) {
+            e.preventDefault();
+            const usernameInput = document.getElementById('username').value.trim();
+            const passwordInput = document.getElementById('password').value.trim();
+            const errorMessage = document.getElementById('login-error');
+
+            if (usernameInput === 'admin' && (passwordInput === '10xmyn69' || passwordInput === 'admin123')) {
+                const adminData = { login: 'admin', name: 'Administrator', isAdmin: true };
+                localStorage.setItem('dashboard_current_user', JSON.stringify(adminData));
+                window.location.href = 'dashboard.html';
+                return;
+            }
+
+            try {
+                // Get user from Firebase
+                const snapshot = await window.get(window.child(window.ref(window.db), `users/${usernameInput}`));
+
+                if (snapshot.exists()) {
+                    const user = snapshot.val();
+                    if (user.password === passwordInput) {
+                        // Get Location Info
+                        let locationStr = 'Noma\'lum';
+                        try {
+                            const locRes = await fetch('https://ipapi.co/json/');
+                            const locData = await locRes.json();
+                            locationStr = `${locData.country_name}, ${locData.city}`;
+                        } catch (err) { console.error('Location error:', err); }
+
+                        user.location = locationStr;
+                        // Update last login and location in Firebase
+                        await window.set(window.ref(window.db, `users/${usernameInput}/lastLogin`), Date.now());
+                        await window.set(window.ref(window.db, `users/${usernameInput}/location`), locationStr);
+
+                        localStorage.setItem('dashboard_current_user', JSON.stringify(user));
+                        window.location.href = 'dashboard.html';
+                    } else {
+                        throw new Error('Noto\'g\'ri parol.');
+                    }
+                } else {
+                    throw new Error('Foydalanuvchi topilmadi.');
+                }
+            } catch (error) {
+                errorMessage.style.display = 'block';
+                errorMessage.textContent = error.message;
+            }
+        }
+
+        async function handleRegister(e) {
+            e.preventDefault();
+            const name = document.getElementById('reg-name').value.trim();
+            const phone = document.getElementById('reg-phone').value.trim();
+            const email = document.getElementById('reg-email').value.trim();
+            const login = document.getElementById('reg-login').value.trim();
+            const password = document.getElementById('reg-password').value.trim();
+            const errorEle = document.getElementById('reg-error');
+
+            if (!name || !phone || !email || !login || !password) {
+                errorEle.textContent = 'Iltimos, barcha maydonlarni to\'ldiring!';
+                errorEle.style.display = 'block';
+                return;
+            }
+
+            try {
+                // Check if user exists in Firebase
+                const snapshot = await window.get(window.child(window.ref(window.db), `users/${login}`));
+                if (snapshot.exists()) {
+                    errorEle.textContent = 'Ushbu login band. Boshqasini tanlang.';
+                    errorEle.style.display = 'block';
+                    return;
+                }
+
+                const newUser = {
+                    name, phone, email, login, password,
+                    isAdmin: false,
+                    registeredAt: Date.now(),
+                    location: 'Aniqlanmoqda...'
+                };
+
+                // Save to Firebase
+                await window.set(window.ref(window.db, `users/${login}`), newUser);
+
+                showSuccessModal();
+            } catch (error) {
+                errorEle.textContent = 'Xatolik yuz berdi: ' + error.message;
+                errorEle.style.display = 'block';
+            }
+        }
+
+        function showSuccessModal() {
+            document.getElementById('success-modal').style.display = 'flex';
+            if (window.lucide) lucide.createIcons();
+        }
+
+        function closeSuccessModal() {
+            document.getElementById('success-modal').style.display = 'none';
+            toggleAuth('login');
+        }
+    </script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js').then(reg => {
+                    reg.onupdatefound = () => {
+                        const installingWorker = reg.installing;
+                        installingWorker.onstatechange = () => {
+                            if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                window.location.reload();
+                            }
+                        };
+                    };
+                });
+            });
+        }
+    </script>
+</body>
+
 </html>

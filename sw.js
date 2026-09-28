@@ -1,59 +1,37 @@
-// Service Worker for Intizom PWA & Push Notifications - v81
+const CACHE_NAME = 'planpro-restore-v1';
+const ASSETS_TO_CACHE = [
+    '/assets/Frame1.png',
+    'https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap',
+    'https://unpkg.com/lucide@latest'
+];
+
 self.addEventListener('install', (event) => {
-  self.skipWaiting();
+    self.skipWaiting();
 });
 
 self.addEventListener('activate', (event) => {
-  event.waitUntil(
-    caches.keys().then((keys) => {
-      return Promise.all(keys.map((key) => caches.delete(key)));
-    }).then(() => self.clients.claim())
-  );
+    event.waitUntil(
+        caches.keys().then((cacheNames) => {
+            return Promise.all(
+                cacheNames.map((cacheName) => caches.delete(cacheName))
+            );
+        }).then(() => self.clients.claim())
+    );
 });
 
+// Network-only for main files, Cache-first for others
+self.addEventListener('fetch', (event) => {
+    const url = new URL(event.request.url);
 
-// Handle incoming push notifications
-self.addEventListener('push', (event) => {
-  let data = { title: 'Intizom Eslatmasi', body: 'Yangi reja yoki odatingiz vaqti keldi!' };
-  if (event.data) {
-    try {
-      data = event.data.json();
-    } catch (e) {
-      data.body = event.data.text();
+    // IF it is a local file that is likely to change (HTML, JS, CSS)
+    if (url.pathname.endsWith('.html') || url.pathname.endsWith('.js') || url.pathname.endsWith('.css') || url.pathname === '/') {
+        event.respondWith(fetch(event.request)); // Always network
+        return;
     }
-  }
 
-  const options = {
-    body: data.body,
-    icon: '/icon-192.png',
-    badge: '/icon-192.png',
-    vibrate: [200, 100, 200],
-    data: {
-      url: data.url || '/'
-    }
-  };
-
-  event.waitUntil(
-    self.registration.showNotification(data.title || 'Intizom', options)
-  );
-});
-
-// Handle clicking on notification
-self.addEventListener('notificationclick', (event) => {
-  event.notification.close();
-
-  const targetUrl = event.notification.data?.url || '/';
-
-  event.waitUntil(
-    clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
-      for (const client of clientList) {
-        if (client.url.includes(self.location.origin) && 'focus' in client) {
-          return client.focus();
-        }
-      }
-      if (clients.openWindow) {
-        return clients.openWindow(targetUrl);
-      }
-    })
-  );
+    event.respondWith(
+        caches.match(event.request).then((response) => {
+            return response || fetch(event.request);
+        })
+    );
 });

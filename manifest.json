@@ -1,29 +1,21 @@
-﻿{
-  short_name: Intizom,
-  name: Intizom — Shaxsiy Reja va Odatlar,
-  icons: [
+{
+  "name": "PlanPro - Sizning online yordamchinggiz",
+  "short_name": "PlanPro",
+  "description": "Professional Dashboard for Tasks, Finance, and Planning",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#6B4EFF",
+  "icons": [
     {
-      src: /icon-192.png,
-      type: image/png,
-      sizes: 192x192
+      "src": "assets/Frame1.png?v=2",
+      "sizes": "192x192",
+      "type": "image/png"
     },
     {
-      src: /icon-512.png,
-      type: image/png,
-      sizes: 512x512
-    },
-    {
-      src: /icon-192.png,
-      type: image/png,
-      sizes: 192x192,
-      purpose: maskable
+      "src": "assets/Frame1.png?v=2",
+      "sizes": "512x512",
+      "type": "image/png"
     }
-  ],
-  start_url: /,
-  background_color: #FAF8FF,
-  theme_color: #3525CD,
-  display: standalone,
-  scope: /,
-  orientation: portrait-primary,
-  description: Kunlik reja, intizomli odatlar va vaqt boshqaruvi dasturi
+  ]
 }
